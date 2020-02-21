@@ -18,16 +18,6 @@ class CampusToggleButton extends Component {
         }
     }
 
-    buttonTextStyling(campusSelected) {
-        const { currentCampusView } = this.state;
-        return {
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: 18,
-            textAlign: 'center',
-        }
-    }
-
     toggleCampusView(campusSelected) {
         const { setMapLocation } = this.props;
         const { currentCampusView } = this.state;
@@ -44,10 +34,10 @@ class CampusToggleButton extends Component {
         return (
             <View style={styles.campusToggle}>
                 <TouchableOpacity style={this.buttonStyling('SGW')} onPress={() => this.toggleCampusView('SGW')}>
-                    <Text style={this.buttonTextStyling('SGW')}>SGW</Text>
+                    <Text style={styles.buttonText}>SGW</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={this.buttonStyling('Loyola')} onPress={() => this.toggleCampusView('Loyola')}>
-                    <Text style={this.buttonTextStyling('Loyola')}>Loyola</Text>
+                    <Text style={styles.buttonText}>Loyola</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -65,6 +55,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: "hidden"
     },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18,
+        textAlign: 'center'
+    }
 });
 
 export default CampusToggleButton;
