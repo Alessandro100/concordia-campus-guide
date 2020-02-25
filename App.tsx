@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Alert } from 'react-native';
-import MapView, {Polygon, PROVIDER_GOOGLE} from 'react-native-maps';
+import { StyleSheet, View, Dimensions, Alert, Text } from 'react-native';
+import MapView, {Marker, Polygon, PROVIDER_GOOGLE} from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import { buildingPolygons } from "./constants/CampusPolygons";
+import { markers } from './constants/CampusMarkers';
 
 class App extends Component {
   constructor() {
     // @ts-ignore
       super();
-
-    this.state = {
-        region: {
-            // this is the SGW campus location
-            latitude: 45.497406,
-            longitude: -73.577102,
-            latitudeDelta: 0,
-            longitudeDelta: 0.01,
+      let polygons = buildingPolygons.slice(0);
+      let markersList = markers.slice(0);
+        this.state = {
+            region: {
+               // this is the SGW campus location
+                latitude: 45.497406,
+                longitude: -73.577102,
+                latitudeDelta: 0,
+                longitudeDelta: 0.01,
         },
+        polygons: polygons,
+        markers: markersList
     };
   }
 
@@ -48,20 +52,33 @@ class App extends Component {
     // @ts-ignore
       const { region } = this.state;
 
-    return (
+    // @ts-ignore
+      // @ts-ignore
+      return (
         <View style={styles.container}>
           <View style={styles.search}/>
           <CampusToggleButton setMapLocation={this.setMapLocation}/>
           <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
-              {buildingPolygons.map((polygon, index) => (
+              {this.state.polygons.map((polygon, index) => (
                   <View key={index}>
                       <Polygon
                           coordinates={polygon}
                           strokeColor='rgb(163, 9, 9)'
                           strokeWidth={1}
-                          fillColor = 'rgba(163, 9, 9, 0.1)'
+                          fillColor = 'rgba(163, 9, 9, 0.05)'
                       />
                   </View>
+              ))}
+              {this.state.markers.map(marker => (
+                  <Marker
+                      coordinate={marker.coordinate}
+                      title={marker.title}
+                      description={marker.description}
+                      pinColor={marker.pinColor}>
+                      <View style={styles.circle}>
+                          <Text style={styles.pinText}>{marker.label}</Text>
+                      </View>
+                  </Marker>
               ))}
           </MapView>
         </View>
@@ -102,6 +119,19 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
+  circle: {
+      width: 30,
+      height: 30,
+      borderRadius: 30 / 2,
+      backgroundColor: 'rgba(84,24,5,0.99)',
+  },
+  pinText: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      fontSize: 20,
+      marginBottom: 10,
+  }
 });
 
 export default App;
