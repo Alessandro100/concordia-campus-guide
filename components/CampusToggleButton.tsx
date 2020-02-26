@@ -19,6 +19,7 @@ class CampusToggleButton extends Component {
     }
 
     toggleCampusView(campusSelected) {
+        // @ts-ignore
         const { setMapLocation } = this.props;
         const { currentCampusView } = this.state;
         if (currentCampusView == 'SGW' && campusSelected != 'SGW') {
@@ -42,7 +43,6 @@ class CampusToggleButton extends Component {
             </View>
         )
     }
-
 }
 
 const styles = StyleSheet.create({
