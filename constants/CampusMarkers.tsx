@@ -1,4 +1,4 @@
-export const markers = [
+export const Markers = [
     //SGW Campus (none exhaustive list)
     {
         coordinate: {

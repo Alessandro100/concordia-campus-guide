@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Dimensions, Alert, Text } from 'react-native';
 import MapView, {Marker, Polygon, PROVIDER_GOOGLE} from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
-import { buildingPolygons } from "./constants/CampusPolygons";
-import { markers } from './constants/CampusMarkers';
+import { BuildingPolygons } from "./constants/CampusPolygons";
+import { Markers } from './constants/CampusMarkers';
+import Colors from './constants/Colors';
 
 class App extends Component {
   constructor() {
-    // @ts-ignore
       super();
-      let polygons = buildingPolygons.slice(0);
-      let markersList = markers.slice(0);
+      let polygons = BuildingPolygons.slice(0);
+      let markersList = Markers.slice(0);
         this.state = {
             region: {
                // this is the SGW campus location
@@ -49,11 +49,9 @@ class App extends Component {
   };
 
   render() {
-    // @ts-ignore
+
       const { region } = this.state;
 
-    // @ts-ignore
-      // @ts-ignore
       return (
         <View style={styles.container}>
           <View style={styles.search}/>
@@ -63,9 +61,9 @@ class App extends Component {
                   <View key={index}>
                       <Polygon
                           coordinates={polygon}
-                          strokeColor='rgb(163, 9, 9)'
+                          strokeColor= {Colors.polygonStroke}
                           strokeWidth={1}
-                          fillColor = 'rgba(163, 9, 9, 0.05)'
+                          fillColor = {Colors.polygonFill}
                       />
                   </View>
               ))}

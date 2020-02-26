@@ -1,4 +1,4 @@
-export const buildingPolygons = [
+export const BuildingPolygons = [
     //SGW/*\*/
     //H building coordinates
     [

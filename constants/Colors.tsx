@@ -13,4 +13,6 @@ export default {
   warningText: '#666804',
   noticeBackground: tintColor,
   noticeText: '#fff',
+  polygonStroke: '#a30909',
+  polygonFill: 'rgba(163, 9, 9, 0.1)'
 };
