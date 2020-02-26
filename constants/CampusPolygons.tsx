@@ -112,6 +112,14 @@ export const buildingPolygons = [
         {latitude: 45.496872, longitude: -73.580146},
         {latitude: 45.497095, longitude: -73.579910}
     ],
+    //LS building coordinates
+    [
+        {latitude: 45.496079, longitude: -73.579269},
+        {latitude: 45.496246, longitude: -73.579773},
+        {latitude: 45.496487, longitude: -73.579607},
+        {latitude: 45.496329, longitude: -73.579172},
+        {latitude: 45.496079, longitude: -73.579269}
+    ],
     //LOYOLA
     //RA, PC, DO
     [
