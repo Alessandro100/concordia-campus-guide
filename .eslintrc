@@ -5,6 +5,14 @@
         "prettier/react"
     ],
     "parser": "babel-eslint",
+    "env": {
+        "react-native/react-native": true
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
     "rules": {
         "prettier/prettier": [
             "error",
