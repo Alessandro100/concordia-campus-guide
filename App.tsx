@@ -38,8 +38,14 @@ class App extends Component {
         </View>
         <View style={styles.search}></View>
        <CampusToggleButton setMapLocation={this.setMapLocation} />
-       <ShowDirection />
        
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.mapStyle}
+          region={region}       
+        >
+           <ShowDirection />
+        </MapView>       
       </View>
     );
   }

@@ -4,6 +4,7 @@ export default {
   primaryColor: '#932439',
   grey: '#746D75',
   tintColor,
+  mapsPolyline: '#6d99ec',
   tabIconDefault: '#ccc',
   tabIconSelected: tintColor,
   tabBar: '#fefefe',
