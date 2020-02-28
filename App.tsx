@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
+import ShowDirection from './components/ShowDirection';
 
 class App extends Component {
 
@@ -10,6 +11,7 @@ class App extends Component {
       // this is the SGW campus location
       latitude: 45.497406,
       longitude: -73.577102,
+
       latitudeDelta: 0,
       longitudeDelta: 0.01,
     }
@@ -31,13 +33,13 @@ class App extends Component {
 
     return (
       <View style={styles.container}>
+        <View style={styles.directionLine}>
+         
+        </View>
         <View style={styles.search}></View>
-        <CampusToggleButton setMapLocation={this.setMapLocation} />
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.mapStyle}
-          region={region}
-        />
+       <CampusToggleButton setMapLocation={this.setMapLocation} />
+       <ShowDirection />
+      
       </View>
     );
   }
@@ -76,6 +78,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
+  directionLine:{
+    position: "absolute"
+ },
 });
 
 export default App;
