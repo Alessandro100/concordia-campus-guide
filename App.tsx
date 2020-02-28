@@ -39,7 +39,7 @@ class App extends Component {
         <View style={styles.search}></View>
        <CampusToggleButton setMapLocation={this.setMapLocation} />
        <ShowDirection />
-      
+       
       </View>
     );
   }
