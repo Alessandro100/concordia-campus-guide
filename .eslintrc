@@ -4,6 +4,7 @@
         "prettier",
         "prettier/react"
     ],
+    "parser": "babel-eslint",
     "rules": {
         "prettier/prettier": [
             "error",
