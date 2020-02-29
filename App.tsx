@@ -3,6 +3,7 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
+import transportMode from './classes/transportMode';
 
 class App extends Component {
 
@@ -44,7 +45,13 @@ class App extends Component {
           style={styles.mapStyle}
           region={region}       
         >
-           <ShowDirection />
+          <ShowDirection 
+            startLat={45.458488} 
+            startLon={-73.639862} 
+            endLat={45.503490} 
+            endLon={-73.572182}
+            transportType={transportMode.transit}
+          ></ShowDirection>
         </MapView>       
       </View>
     );

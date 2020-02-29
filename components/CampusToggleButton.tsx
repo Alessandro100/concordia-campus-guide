@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Colors from '../constants/Colors';
 import { TouchableOpacity, View, StyleSheet, Text } from "react-native";
 
-class CampusToggleButton extends Component {
+class CampusToggleButton extends Component<{setMapLocation}> {
 
     state = {
         currentCampusView: 'SGW',
