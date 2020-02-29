@@ -38,7 +38,7 @@ exports[`Sample Test Suite Sample Snapshot Test 1`] = `
       id="toggle-sgw"
       style={
         Object {
-          "color": "white",
+          "color": "#fff",
           "fontSize": 18,
           "fontWeight": "bold",
           "textAlign": "center",
@@ -72,7 +72,7 @@ exports[`Sample Test Suite Sample Snapshot Test 1`] = `
       id="toggle-loyola"
       style={
         Object {
-          "color": "white",
+          "color": "#fff",
           "fontSize": 18,
           "fontWeight": "bold",
           "textAlign": "center",
