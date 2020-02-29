@@ -19,9 +19,7 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "npm run prettier",
-      "eslint --fix",
-      "prettier --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "dependencies": {
