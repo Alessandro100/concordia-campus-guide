@@ -6,13 +6,12 @@
     "sdkVersion": "36.0.0",
     "ios": {
       "bundleIdentifier": "com.soen390.navconcordia",
-      "googleMapsApiKey": "AIzaSyCOaYVkQiBqA0hHNOgqCnRWVZgfBLEld8Y",
       "supportsTablet": true
     },
     "android": {
       "package": "com.soen390.navconcordia",
       "config": {
-        "googleMaps": { "apiKey": "AIzaSyCOaYVkQiBqA0hHNOgqCnRWVZgfBLEld8Y" }   
+        "googleMaps": { "apiKey": "AIzaSyCOaYVkQiBqA0hHNOgqCnRWVZgfBLEld8Y" }
       }
     },
     "platforms": [
