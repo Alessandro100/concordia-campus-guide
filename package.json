@@ -7,7 +7,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "prettier": "prettier '**/*.tsx'",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "test": "jest --config ./jest.config.json"
   },
   "husky": {
     "hooks": {
@@ -39,6 +40,8 @@
     "@types/react-native": "^0.60.31",
     "babel-eslint": "^10.1.0",
     "babel-preset-expo": "~8.0.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
@@ -47,9 +50,11 @@
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-native": "^3.8.1",
     "husky": "^4.2.3",
+    "jest": "^25.1.0",
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
+    "react-test-renderer": "^16.13.0",
     "typescript": "~3.6.3"
   },
   "private": true
