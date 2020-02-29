@@ -2,7 +2,8 @@
     "extends": [
         "airbnb",
         "prettier",
-        "prettier/react"
+        "prettier/react",
+        "plugin:react/recommended"
     ],
     "parser": "babel-eslint",
     "env": {
@@ -42,6 +43,7 @@
                 ]
             }
         ],
+        "global-require": 0,
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
         "import/extensions": 0,
         "react-native/no-unused-styles": 2,
