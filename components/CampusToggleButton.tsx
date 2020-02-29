@@ -35,10 +35,10 @@ class CampusToggleButton extends Component {
         return (
             <View style={styles.campusToggle}>
                 <TouchableOpacity style={this.buttonStyling('SGW')} onPress={() => this.toggleCampusView('SGW')}>
-                    <Text style={styles.buttonText}>SGW</Text>
+                    <Text id='toggle-sgw' style={styles.buttonText}>SGW</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={this.buttonStyling('Loyola')} onPress={() => this.toggleCampusView('Loyola')}>
-                    <Text style={styles.buttonText}>Loyola</Text>
+                    <Text id='toggle-loyola' style={styles.buttonText}>Loyola</Text>
                 </TouchableOpacity>
             </View>
         )

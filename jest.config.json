@@ -1,4 +1,8 @@
 {
   "testRegex": "((\\.|/*.)(test))\\.js?$",
-  "preset": "react-native"
+  "testEnvironment": "jsdom",
+  "preset": "react-native",
+  "setupFilesAfterEnv": [
+    "<rootDir>/jest.setup.js"
+  ]
 }

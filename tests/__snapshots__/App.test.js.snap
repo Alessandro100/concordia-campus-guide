@@ -35,6 +35,7 @@ exports[`Sample Test Suite Sample Snapshot Test 1`] = `
     }
   >
     <Text
+      id="toggle-sgw"
       style={
         Object {
           "color": "white",
@@ -68,6 +69,7 @@ exports[`Sample Test Suite Sample Snapshot Test 1`] = `
     }
   >
     <Text
+      id="toggle-loyola"
       style={
         Object {
           "color": "white",

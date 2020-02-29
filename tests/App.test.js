@@ -1,6 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import CampusToggleButton from '../components/CampusToggleButton'
+import { shallow, mount, render } from 'enzyme';
+import CampusToggleButton from '../components/CampusToggleButton';
 
 describe('Sample Test Suite', () => {
   test('Sample Test Case', () => {
@@ -11,5 +12,10 @@ describe('Sample Test Suite', () => {
       .create(<CampusToggleButton />)
       .toJSON();
     expect(tree).toMatchSnapshot();
+  }),
+  test('Sample Enzyme Test', () => {
+    const wrapper = render(<CampusToggleButton />);
+    expect(wrapper.find('#toggle-sgw').text()).toEqual("SGW");
+    expect(wrapper.find('#toggle-loyola').text()).toEqual("Loyola");
   });
 });
