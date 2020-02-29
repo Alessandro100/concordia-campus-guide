@@ -18,6 +18,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
+      "npm run test",
       "npm run prettier",
       "eslint --fix",
       "prettier --fix",
