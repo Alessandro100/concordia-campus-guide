@@ -48,10 +48,10 @@ describe('Get Directions Suite', () => {
           color: 'blue'
         }
       }
-    }
+    };
     expect(instance.getPolylineColor(step)).toEqual('blue');
     expect(instance.getPinLocation(step)).toEqual({ latitude: 45.458488, longitude: -73.6398621 });
     expect(instance.getPinLocation(null)).toEqual({ latitude: 0, longitude: 0 });
     done();
-  })
+  });
 });

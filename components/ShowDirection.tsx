@@ -38,7 +38,9 @@ class ShowDirection extends Component<directionProps, { steps: any[] }> {
   // Time and distance are unused but left here for potential extra.
   async getDirectionsSteps() {
     const { startLat, startLon, endLat, endLon, transportType } = this.props;
-    const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${startLat},${startLon}&destination=${endLat},${endLon}&mode=${transportType}&key=AIzaSyDpY_ACPWoo3mVPPmiLKQe1aBhjkDYlwJI`;
+    const baseUrl = 'https://maps.googleapis.com/maps/api/directions/json';
+    const apiKey = 'AIzaSyDpY_ACPWoo3mVPPmiLKQe1aBhjkDYlwJI';
+    const url = `${baseUrl}?origin=${startLat},${startLon}&destination=${endLat},${endLon}&mode=${transportType}&key=${apiKey}`;
     const resp = await fetch(url);
     const respJson = await resp.json();
     // variables will be needed for future developement
@@ -68,13 +70,12 @@ class ShowDirection extends Component<directionProps, { steps: any[] }> {
 
   decodePoints = rawPoints => {
     const points = Polyline.decode(rawPoints);
-    const coords = points.map(point => {
+    return points.map(point => {
       return {
         latitude: point[0],
         longitude: point[1],
       };
     });
-    return coords;
   };
 
   render() {
