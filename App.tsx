@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Alert, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Alert, Text, TouchableOpacity,Image } from 'react-native';
 import MapView, {Marker, Polygon, PROVIDER_GOOGLE} from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import { BuildingPolygons } from "./constants/CampusPolygons";
 import { Markers } from './constants/CampusMarkers';
 import Colors from './constants/Colors';
+import InputBtn from './components/InputBtn';
+
 
 class App extends Component {
   constructor() {
@@ -12,6 +14,9 @@ class App extends Component {
       let polygons = BuildingPolygons.slice(0);
       let markersList = Markers.slice(0);
         this.state = {
+          ready: false,
+          coordinate: {latitude:null, longitude:null},
+          error: null,
             region: {
                // this is the SGW campus location
                 latitude: 45.497406,
@@ -21,10 +26,31 @@ class App extends Component {
         },
         polygons: polygons,
         markers: markersList
+       
     };
   }
+ 
 
-
+componentDidMount(){
+  let options = {
+      enableHighAccuracy: true,
+      timeOut: 20000,
+      maximumAge: 60 * 60 * 24
+  };
+  this.setState({ready:false, error: null });
+  navigator.geolocation.getCurrentPosition( this.success,this.failure,options);
+}
+success = (position) => {
+  
+  this.setState({
+      ready:true,
+      coordinate: {latitude: position.coords.latitude,longitude:position.coords.longitude }
+  })
+}
+failure = (err) => {
+  this.setState({error: err.message});
+}
+  
   setMapLocation = (latitude, longitude) => {
     this.setState({
       region: {
@@ -36,27 +62,26 @@ class App extends Component {
     })
   };
 
-  getLocalPosition = () => {
-    navigator.geolocation.getCurrentPosition(
-        position => {
-          const location = JSON.stringify(position);
-
-          this.setState({ location });
-        },
-        error => Alert.alert(error.message),
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-  };
+  
 
   render() {
 
       const { region } = this.state;
+    
+   
 
       return (
         <View style={styles.container}>
           <View style={styles.search}/>
           <CampusToggleButton setMapLocation={this.setMapLocation}/>
+          <InputBtn/>
           <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
+        {this.state.ready && (
+        <Marker 
+         coordinate={this.state.coordinate}
+         title= "me"
+        description= "Curernt Position"
+        pinColor= 'rgb(163, 9, 9)'/>)}
               {this.state.polygons.map((polygon, index) => (
                   <View key={index}>
                       <Polygon
@@ -77,11 +102,16 @@ class App extends Component {
                           <Text style={styles.pinText}>{marker.label}</Text>
                       </View>
                   </Marker>
+                 
               ))}
+         
           </MapView>
+          
         </View>
-    );
-  }
+    );}
+    
+    
+  
 }
 
 const styles = StyleSheet.create({
@@ -129,7 +159,8 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       fontSize: 20,
       marginBottom: 10,
-  }
+  },
+  
 });
 
 export default App;
