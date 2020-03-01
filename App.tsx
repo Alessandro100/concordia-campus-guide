@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Dimensions, Text } from 'react-native';
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polygon, PROVIDER_GOOGLE, LatLng } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
@@ -50,6 +50,9 @@ const styles = StyleSheet.create({
 });
 
 type appState = {
+  ready: Boolean;
+  coordinate: LatLng;
+  error: String;
   region: {
     latitude: number;
     longitude: number;
@@ -65,6 +68,9 @@ class App extends Component<{}, appState> {
     super(props);
 
     this.state = {
+      ready: true,
+      coordinate: {latitude:null, longitude:null},
+      error: null,
       region: {
         // this is the SGW campus location
         latitude: 45.497406,
@@ -74,8 +80,30 @@ class App extends Component<{}, appState> {
       },
       polygons: CampusPolygons.slice(0),
       markers: CampusMarkers.slice(0),
+      
     };
   }
+  componentDidMount(){
+    let options = {
+        enableHighAccuracy: true,
+        timeOut: 20000,
+        maximumAge: 60 * 60 * 24
+    };
+    this.setState({ready:false, error: null });
+    navigator.geolocation.getCurrentPosition( 
+        this.success,this.failure,options);}
+    
+        success = (position) => {
+            this.setState({
+                ready:true,
+                coordinate: {latitude: position.coords.latitude,longitude:position.coords.longitude }
+            })
+        }
+        failure = (err) => {
+            this.setState({error: err.message});
+        }
+    
+
 
   setMapLocation = (latitude, longitude) => {
     this.setState({
@@ -90,12 +118,18 @@ class App extends Component<{}, appState> {
 
   render() {
     const { region, polygons, markers } = this.state;
-
+    const { coordinate }= this.state;
     return (
       <View style={styles.container}>
         <View style={styles.search} />
         <CampusToggleButton setMapLocation={this.setMapLocation} />
+        <InputBtn></InputBtn>
         <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
+          {this.state.ready && (
+          <Marker coordinate={coordinate}
+              title='Position'
+              description='Current Position'
+              pinColor='rgb(163, 9, 9)'/>)}
           {polygons.map(polygon => (
             <View key={`${String(polygon.latitude)}-${String(polygon.longitude)}`}>
               <Polygon
