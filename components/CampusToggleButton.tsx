@@ -43,7 +43,6 @@ class CampusToggleButton extends Component<
   }
 
   toggleCampusView(campusSelected) {
-    // @ts-ignore
     const { setMapLocation } = this.props;
     const { currentCampusView } = this.state;
     if (currentCampusView === 'SGW' && campusSelected !== 'SGW') {
@@ -62,15 +61,16 @@ class CampusToggleButton extends Component<
           style={this.buttonStyling('SGW')}
           onPress={() => this.toggleCampusView('SGW')}
         >
-          <Text id="toggle-sgw" style={styles.buttonText}>
+          <Text testID="toggle-sgw" style={styles.buttonText}>
             SGW
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          testID="toggle-loyola-button"
           style={this.buttonStyling('Loyola')}
           onPress={() => this.toggleCampusView('Loyola')}
         >
-          <Text id="toggle-loyola" style={styles.buttonText}>
+          <Text testID="toggle-loyola" style={styles.buttonText}>
             Loyola
           </Text>
         </TouchableOpacity>

@@ -15,7 +15,7 @@ describe('Sample Test Suite', () => {
   }),
   test('Sample Enzyme Test', () => {
     const wrapper = render(<CampusToggleButton />);
-    expect(wrapper.find('#toggle-sgw').text()).toEqual("SGW");
-    expect(wrapper.find('#toggle-loyola').text()).toEqual("Loyola");
+    expect(wrapper.find('[testID="toggle-sgw"]').text()).toEqual("SGW");
+    expect(wrapper.find('[testID="toggle-loyola"]').text()).toEqual("Loyola");
   });
 });
