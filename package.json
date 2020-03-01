@@ -5,14 +5,33 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "prettier": "prettier '**/*.tsx'",
+    "pre-commit": "lint-staged && npm test",
+    "test": "jest --config ./jest.config.json"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "flow": "npm run flow"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "npm run prettier",
+      "eslint --fix"
+    ]
   },
   "dependencies": {
+    "@mapbox/polyline": "^1.1.0",
+    "eslint": "^6.8.0",
     "expo": "~36.0.0",
+    "mapbox": "^1.0.0-beta10",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-geolocation-service": "^4.0.0",
+    "react-native-google-maps-directions": "^2.1.1",
     "react-native-maps": "0.26.1",
     "react-native-screens": "2.0.0-alpha.12",
     "react-native-web": "~0.11.7",
@@ -22,7 +41,23 @@
     "@babel/core": "^7.0.0",
     "@types/react": "~16.9.0",
     "@types/react-native": "^0.60.31",
+    "babel-eslint": "^10.1.0",
     "babel-preset-expo": "~8.0.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react-native": "^3.8.1",
+    "husky": "^4.2.3",
+    "jest": "^25.1.0",
+    "lint-staged": "^10.0.8",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
+    "react-test-renderer": "^16.13.0",
     "typescript": "~3.6.3"
   },
   "private": true

@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Get Directions Suite ShowDirection snapshot 1`] = `
+Array [
+  <AIRMapMarker
+    coordinate={
+      Object {
+        "latitude": 0,
+        "longitude": 0,
+      }
+    }
+    description="Ending point of the trip"
+    onPress={[Function]}
+    stopPropagation={false}
+    style={
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+          "position": "absolute",
+        },
+        undefined,
+      ]
+    }
+    title="Ending Point"
+  />,
+  <AIRMapMarker
+    coordinate={
+      Object {
+        "latitude": 0,
+        "longitude": 0,
+      }
+    }
+    description="Starting point of the trip"
+    onPress={[Function]}
+    opacity={0.7}
+    stopPropagation={false}
+    style={
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+          "position": "absolute",
+        },
+        undefined,
+      ]
+    }
+    title="Starting Point"
+  >
+    <Image
+      source={
+        Object {
+          "testUri": "../../../assets/starting_icon.png",
+        }
+      }
+      style={
+        Object {
+          "height": 30,
+          "width": 30,
+        }
+      }
+    />
+  </AIRMapMarker>,
+]
+`;
