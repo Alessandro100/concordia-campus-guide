@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sample Test Suite CampusToggleButton snapshot 1`] = `
+<View
+  style={
+    Object {
+      "borderRadius": 10,
+      "display": "flex",
+      "flexDirection": "row",
+      "overflow": "hidden",
+      "position": "absolute",
+      "top": 110,
+      "zIndex": 2,
+    }
+  }
+>
+  <View
+    accessible={true}
+    focusable={true}
+    isTVSelectable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#932439",
+        "opacity": 1,
+        "padding": 7,
+        "width": 100,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#fff",
+          "fontSize": 18,
+          "fontWeight": "bold",
+          "textAlign": "center",
+        }
+      }
+      testID="toggle-sgw"
+    >
+      SGW
+    </Text>
+  </View>
+  <View
+    accessible={true}
+    focusable={true}
+    isTVSelectable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#746D75",
+        "opacity": 0.7,
+        "padding": 7,
+        "width": 100,
+      }
+    }
+    testID="toggle-loyola-button"
+  >
+    <Text
+      style={
+        Object {
+          "color": "#fff",
+          "fontSize": 18,
+          "fontWeight": "bold",
+          "textAlign": "center",
+        }
+      }
+      testID="toggle-loyola"
+    >
+      Loyola
+    </Text>
+  </View>
+</View>
+`;
