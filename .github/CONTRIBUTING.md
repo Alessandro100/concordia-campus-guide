@@ -52,3 +52,52 @@ Include details about your configuration and environment:
 * Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
 * Limit the first line to 72 characters or less
 * Reference issues and pull requests liberally after the first line
+
+### Naming Conventions
+A folder and sub folder name should always start with small letters and the files belong the folders is always in pascal case
+
+Pascal case -> SampleFileName.js
+Ex: components/common/CustomButton.js
+
+When importing modules, leave a space between the brackets and end with a semicolon
+
+Ex: import { ScrollView, View, TouchableOpacity, KeyboardAvoidingView, ListView, AsyncStorage, Alert  } from ‘react-native’;
+
+Javascript variable names should be camel case
+
+Camel Case -> var sampleVariable;
+
+### Layout Conventions
+
+Always end statements with a semicolon ‘;’
+Do NOT use setState() in the render() function
+
+### Commenting Conventions
+* Place the comment on a separate line, not at the end of a line of code.
+* Insert one space between the comment delimiter (//) and the comment text.
+* Begin comment text with an uppercase letter.
+* End comment text with a period.
+* Make sure to add a comment if your method/logic is not super clear
+
+Ex: // This is a test comment.
+
+### Language Guidelines
+Define variables using ‘const’ whenever you can, if not use ‘let’ over ‘var’
+Props should not be changed as they are considered immutable
+
+### Git Guidelines
+* Each feature / user story will have it’s separate branch to work on
+> Branch Structure: Master - Staging - [Features]
+* Before any commits are entered into master, they must be approved by a pull request. Request any of us to review.
+When working on user stories, ALWAYS branch off from staging (i assume this is develop) into your own feature branch (feature/#19-add-toggle-button). Work on your story then after you run the test, make a pull request to merge to staging (develop). Code review will follow. At the end of the sprint (or release) a dedicated teammate will merge staging into master.
+When adding a bug to github, add:
+* Which branch and commit it was found on
+* How to replicate the bug
+* Which user story (github issue) it affects
+* When making git commits
+* Make each commit focused on one thing
+* Making refactoring commits should be as such
+        Ex: “Refactored code for pull request #12 for issue#16”
+* Have relevant names and tag the user story it's connected to at the end
+        Ex: “Added toggle button to google maps [Issue #16]”
+        Where Issue #16 is the github issue
