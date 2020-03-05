@@ -4,9 +4,11 @@ import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
+import Location from './classes/location';
 import CampusPolygons from './constants/CampusPolygons';
 import CampusMarkers from './constants/CampusMarkers';
 import Colors from './constants/Colors';
+import OutdoorPOI from './classes/outdoorPOI';
 
 const styles = StyleSheet.create({
   container: {
@@ -106,6 +108,7 @@ class App extends Component<{}, appState> {
           ))}
           {markers.map(marker => (
             <Marker
+              key={marker.title}
               coordinate={marker.coordinate}
               title={marker.title}
               description={marker.description}
@@ -117,10 +120,8 @@ class App extends Component<{}, appState> {
             </Marker>
           ))}
           <ShowDirection
-            startLat={45.458488}
-            startLon={-73.639862}
-            endLat={45.50349}
-            endLon={-73.572182}
+            startLocation={new OutdoorPOI(new Location(45.458488, -73.639862), 'test-start')}
+            endLocation={new OutdoorPOI(new Location(45.50349, -73.572182), 'test-end')}
             transportType={transportMode.transit}
           />
         </MapView>
