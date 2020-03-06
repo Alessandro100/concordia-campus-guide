@@ -1,0 +1,61 @@
+{
+  "building": "CCH",
+  "floor_number": 1,
+  "number_of_rows": 5,
+  "number_of_columns": 15,
+  "location_of_navigable_tiles": [
+    {
+      "row": 3,
+      "column": 3
+    },
+    {
+      "row": 3,
+      "column": 4
+    },
+    {
+      "row": 3,
+      "column": 5
+    }
+  ],
+  "class_rooms": [
+    {
+      "number": "124-1",
+      "row": 2,
+      "column": 3
+    },
+    {
+      "number": "122",
+      "row": 2,
+      "column": 4
+    }
+  ],
+  "rest_rooms": [
+    {
+      "row": 0,
+      "column": 0
+    }
+  ],
+  "water_fountains": [
+    {
+      "rows": 0,
+      "column": 0
+    },
+    {
+      "rows": 0,
+      "column": 0
+    }
+  ],
+  "elevator": [
+    {
+      "rows": 0,
+      "column": 0
+    }
+  ],
+  "stairs": [
+    {
+      "rows": 2,
+      "column": 6
+    }
+  ]
+}
+    
