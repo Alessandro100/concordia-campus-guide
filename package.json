@@ -25,6 +25,7 @@
   "dependencies": {
     "@mapbox/polyline": "^1.1.0",
     "eslint": "^6.8.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
     "expo": "~36.0.0",
     "mapbox": "^1.0.0-beta10",
     "react": "~16.9.0",
