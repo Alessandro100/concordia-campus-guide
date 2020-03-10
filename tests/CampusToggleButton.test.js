@@ -3,9 +3,10 @@ import renderer from 'react-test-renderer';
 import { shallow, mount, render } from 'enzyme';
 import CampusToggleButton from '../components/CampusToggleButton';
 import { TouchableOpacity, Text } from 'react-native';
-import transportMode from '../classes/transportMode';
+import Campus from '../classes/campus';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import Colors from '../constants/Colors';
+import Location from '../classes/location';
 
 describe('Sample Test Suite', () => {
   test('CampusToggleButton snapshot', () => {
@@ -47,4 +48,13 @@ describe('Sample Test Suite', () => {
       .onPress();
     expect(wrapperButton.state().currentCampusView).toEqual('Loyola');
   });
+  test('Campus Object Init', () => {
+    const location = new Location(45.4582, -73.6405);
+    const campusObject =  new Campus(location, 'Loyola', 'This is the description for the Loyola Campus');
+    expect(campusObject.getIdentifier()).toEqual('Loyola');
+    expect(campusObject.getLocation().getLatitude()).toEqual(45.4582);
+    expect(campusObject.getLocation().getLongitude()).toEqual(-73.6405);
+    campusObject.setDescription('new test');
+    expect(campusObject.getDescription()).toEqual('new test');
+  })
 });

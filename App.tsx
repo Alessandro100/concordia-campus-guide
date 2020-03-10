@@ -77,11 +77,11 @@ class App extends Component<{}, appState> {
     };
   }
 
-  setMapLocation = (latitude, longitude) => {
+  setMapLocation = (location: Location) => {
     this.setState({
       region: {
-        latitude,
-        longitude,
+        latitude: location.getLatitude(),
+        longitude: location.getLongitude(),
         latitudeDelta: 0,
         longitudeDelta: 0.01,
       },
