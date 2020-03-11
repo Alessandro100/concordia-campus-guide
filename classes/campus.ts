@@ -1,11 +1,12 @@
 import Location from './location';
-import OutdoorPOI from './outdoorPOI';
+import outdoorPOI from './outdoorPOI';
 
-class campus extends OutdoorPOI {
+class Campus extends outdoorPOI {
   description: String;
 
-  constructor(description: String, location: Location, identifier: String) {
+  constructor(location: Location, identifier: String, description: String) {
     super(location, identifier);
+
     this.description = description;
   }
 
@@ -13,8 +14,8 @@ class campus extends OutdoorPOI {
     return this.description;
   }
 
-  setDescription(description: String) {
-    this.description = description;
+  setDescription(newDescription: String) {
+    this.description = newDescription;
   }
 }
-export default campus;
+export default Campus;
