@@ -5,6 +5,6 @@
   "setupFilesAfterEnv": [
     "<rootDir>/jest.setup.js"
   ],
-  "collectCoverage": true,
+  "collectCoverage": false,
   "coverageReporters": ["json", "html"]
 }
