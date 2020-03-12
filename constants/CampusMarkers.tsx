@@ -1,3 +1,5 @@
+import Colors from './Colors';
+
 const Markers = [
   // SGW Campus (none exhaustive list)
   {
@@ -7,7 +9,7 @@ const Markers = [
     },
     title: 'Hall',
     description: 'Henry F. Hall Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'H',
   },
   {
@@ -17,7 +19,7 @@ const Markers = [
     },
     title: 'Library',
     description: 'Webster Library',
-    pinColor: 'rgb(130,0,39)',
+    pinColor: Colors.markersPinColor,
     label: 'LB',
   },
   {
@@ -27,7 +29,7 @@ const Markers = [
     },
     title: 'EV Building',
     description: 'Engineering, Computer Science and Visual Arts Integrated Complex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'EV',
   },
   {
@@ -37,7 +39,7 @@ const Markers = [
     },
     title: 'JMSB',
     description: 'John Molson School Of Business',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'MB',
   },
   {
@@ -47,7 +49,7 @@ const Markers = [
     },
     title: 'GM Building',
     description: 'Guy de Maisonneuve Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'GM',
   },
   {
@@ -57,7 +59,7 @@ const Markers = [
     },
     title: 'Faubourg',
     description: 'Faubourg  Sainte-Catherine Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'FG',
   },
   {
@@ -67,7 +69,7 @@ const Markers = [
     },
     title: 'Faubourg Building',
     description: 'Faubourg Guy Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'FB',
   },
   {
@@ -77,7 +79,7 @@ const Markers = [
     },
     title: 'Grey Nuns',
     description: 'Grey Nuns Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'GN',
   },
   {
@@ -87,7 +89,7 @@ const Markers = [
     },
     title: 'CL',
     description: 'Concordia Continuing Education Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'CL',
   },
   {
@@ -97,7 +99,7 @@ const Markers = [
     },
     title: 'LS',
     description: 'Learning Square Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'LS',
   },
   {
@@ -107,7 +109,7 @@ const Markers = [
     },
     title: 'VA',
     description: 'Visual Arts Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'VA',
   },
   {
@@ -117,7 +119,7 @@ const Markers = [
     },
     title: 'CB',
     description: 'CB Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'CB',
   },
   {
@@ -127,7 +129,7 @@ const Markers = [
     },
     title: 'GS',
     description: 'GS Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'GS',
   },
   {
@@ -137,7 +139,7 @@ const Markers = [
     },
     title: 'MU',
     description: 'MU Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'MU',
   },
   {
@@ -147,7 +149,7 @@ const Markers = [
     },
     title: 'B',
     description: 'B Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'B',
   },
   {
@@ -157,7 +159,7 @@ const Markers = [
     },
     title: 'D',
     description: 'D Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'D',
   },
   {
@@ -167,7 +169,7 @@ const Markers = [
     },
     title: 'MI',
     description: 'MI Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'MI',
   },
   {
@@ -177,7 +179,7 @@ const Markers = [
     },
     title: 'CI',
     description: 'CI Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'CI',
   },
   {
@@ -187,7 +189,7 @@ const Markers = [
     },
     title: 'S',
     description: 'S Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'S',
   },
   {
@@ -197,7 +199,7 @@ const Markers = [
     },
     title: 'M',
     description: 'M Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'M',
   },
   {
@@ -207,7 +209,7 @@ const Markers = [
     },
     title: 'V',
     description: 'V Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'V',
   },
   {
@@ -217,7 +219,7 @@ const Markers = [
     },
     title: 'PR',
     description: 'PR Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'PR',
   },
   {
@@ -227,7 +229,7 @@ const Markers = [
     },
     title: 'Z',
     description: 'Z Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'Z',
   },
   {
@@ -237,7 +239,7 @@ const Markers = [
     },
     title: 'X',
     description: 'X Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'X',
   },
   {
@@ -257,7 +259,7 @@ const Markers = [
     },
     title: 'FA',
     description: 'FA Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'FA',
   },
   {
@@ -267,7 +269,7 @@ const Markers = [
     },
     title: 'R',
     description: 'R Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'R',
   },
   {
@@ -277,7 +279,7 @@ const Markers = [
     },
     title: 'RR',
     description: 'RR Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'RR',
   },
   {
@@ -287,7 +289,7 @@ const Markers = [
     },
     title: 'T',
     description: 'T Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'T',
   },
   {
@@ -297,7 +299,7 @@ const Markers = [
     },
     title: 'P',
     description: 'P Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'P',
   },
   {
@@ -307,7 +309,7 @@ const Markers = [
     },
     title: 'Q',
     description: 'Q Annex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'Q',
   },
   // LOYOLA (none exhaustive list)
@@ -318,7 +320,7 @@ const Markers = [
     },
     title: 'Recreational and Athletics',
     description: 'Rcreational and Athletics Center',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'RA',
   },
   {
@@ -328,7 +330,7 @@ const Markers = [
     },
     title: 'PC',
     description: 'PERFORM Center',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'PC',
   },
   {
@@ -338,7 +340,7 @@ const Markers = [
     },
     title: 'Physical Service',
     description: 'Physical Service Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'PS',
   },
   {
@@ -348,7 +350,7 @@ const Markers = [
     },
     title: 'SC',
     description: 'Student Center',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'SC',
   },
   {
@@ -358,7 +360,7 @@ const Markers = [
     },
     title: 'Concert Hall',
     description: 'Oscar Peterson Concert Hall',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'PT',
   },
   {
@@ -368,7 +370,7 @@ const Markers = [
     },
     title: 'Vanier Library',
     description: 'Vanier Library Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'VL',
   },
   {
@@ -378,7 +380,7 @@ const Markers = [
     },
     title: 'PY',
     description: 'Psychology Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'PY',
   },
   {
@@ -388,7 +390,7 @@ const Markers = [
     },
     title: 'FC',
     description: 'F. C. Smith Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'FC',
   },
   {
@@ -398,7 +400,7 @@ const Markers = [
     },
     title: 'RF',
     description: 'Loyola Jesuit Hall and Conference Center',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'RF',
   },
   {
@@ -408,7 +410,7 @@ const Markers = [
     },
     title: 'CC',
     description: 'Central Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'CC',
   },
   {
@@ -418,7 +420,7 @@ const Markers = [
     },
     title: 'AD',
     description: 'Administration Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'AD',
   },
   {
@@ -428,7 +430,7 @@ const Markers = [
     },
     title: 'SP',
     description: 'Richard J. Renaud Science Complex',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'SP',
   },
   {
@@ -438,7 +440,7 @@ const Markers = [
     },
     title: 'CJ',
     description: 'Communication Studies and Journalism Building',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'CJ',
   },
   {
@@ -448,7 +450,7 @@ const Markers = [
     },
     title: 'GE',
     description: 'Centre for Structural and Funtional Genomics',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'GE',
   },
   {
@@ -458,7 +460,7 @@ const Markers = [
     },
     title: 'Hall A',
     description: 'Hingston Hall, Wing HA',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'HA',
   },
   {
@@ -468,7 +470,7 @@ const Markers = [
     },
     title: 'Hall B',
     description: 'Hingston Hall, Wing HB',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'HB',
   },
   {
@@ -478,7 +480,7 @@ const Markers = [
     },
     title: 'HC',
     description: 'Hingston Hall, Wing HC',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'HC',
   },
   {
@@ -488,7 +490,7 @@ const Markers = [
     },
     title: 'JR',
     description: 'Jesuit Residence',
-    pinColor: 'rgb(163, 9, 9)',
+    pinColor: Colors.markersPinColor,
     label: 'JR',
   },
 ];

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Marker, Polygon } from 'react-native-maps';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
+import ShuttleBusMarkers from '../constants/CampusShuttleBusStop';
+
+const busIcon = require('./../assets/shuttle_bus_icon.png');
 
 const styles = StyleSheet.create({
   circle: {
@@ -17,6 +20,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
   },
+  icon: {
+    height: 40,
+    width: 40,
+  },
 });
 
 type markersAndPolygonsProps = {
@@ -31,11 +38,12 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, any> {
     this.state = {
       markers,
       polygons,
+      shuttleBusMarkers: ShuttleBusMarkers.slice(0),
     };
   }
 
   render() {
-    const { markers, polygons } = this.state;
+    const { markers, polygons, shuttleBusMarkers } = this.state;
     return (
       <>
         {polygons.map(polygon => (
@@ -59,6 +67,16 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, any> {
             <View style={styles.circle}>
               <Text style={styles.pinText}>{marker.label}</Text>
             </View>
+          </Marker>
+        ))}
+        {shuttleBusMarkers.map(marker => (
+          <Marker
+            key={marker.title}
+            coordinate={marker.coordinate}
+            title={marker.title}
+            description={marker.description}
+          >
+            <Image source={busIcon} style={styles.icon} />
           </Marker>
         ))}
       </>
