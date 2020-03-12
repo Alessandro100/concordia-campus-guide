@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { shallow, mount, render } from 'enzyme';
 import CampusToggleButton from '../components/CampusToggleButton';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableHighlight, Text } from 'react-native';
 import Campus from '../classes/campus';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import Colors from '../constants/Colors';
@@ -16,7 +16,7 @@ describe('Sample Test Suite', () => {
     test('Button Elements Loaded', done => {
       const wrapperRender = render(<CampusToggleButton />);
       const wrapperMount = mount(<CampusToggleButton />);
-      expect(wrapperMount.find(TouchableOpacity)).toHaveLength(2);
+      expect(wrapperMount.find(TouchableHighlight)).toHaveLength(2);
       expect(wrapperRender.find('[testID="toggle-sgw"]').text()).toEqual('SGW');
       expect(wrapperRender.find('[testID="toggle-loyola"]').text()).toEqual(
         'Loyola'
