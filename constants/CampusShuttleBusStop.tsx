@@ -1,3 +1,5 @@
+import Colors from './Colors';
+
 const ShuttleBusMarkers = [
   {
     coordinate: {
@@ -6,7 +8,7 @@ const ShuttleBusMarkers = [
     },
     title: 'BUS STOP SGW',
     description: 'Shuttle Bus Stop Location for SGW campus',
-    pinColor: 'rgb(42,65,75)',
+    pinColor: Colors.shuttleBusMarkerPinColor,
     label: 'BUS STOP SGW',
   },
   {
@@ -16,7 +18,7 @@ const ShuttleBusMarkers = [
     },
     title: 'BUS STOP LOYOLA',
     description: 'Shuttle Bus Stop Location for LOYOLA campus',
-    pinColor: 'rgb(42,65,75)',
+    pinColor: Colors.shuttleBusMarkerPinColor,
     label: 'BUS STOP LOYOLA',
   },
 ];
