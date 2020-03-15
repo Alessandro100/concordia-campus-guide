@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableHighlight } from 'react-native';
 import Colors from '../constants/Colors';
 import CampusLocations from '../constants/CampusLocations';
 import Location from '../classes/location';
@@ -65,15 +65,15 @@ class CampusToggleButton extends Component<
   render() {
     return (
       <View style={styles.campusToggle}>
-        <TouchableOpacity
+        <TouchableHighlight
           style={this.buttonStyling(CampusLocations.SGW.getIdentifier())}
           onPress={() => this.toggleCampusView(CampusLocations.SGW.getIdentifier())}
         >
           <Text testID="toggle-sgw" style={styles.buttonText}>
             SGW
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableHighlight>
+        <TouchableHighlight
           testID="toggle-loyola-button"
           style={this.buttonStyling(CampusLocations.Loyola.getIdentifier())}
           onPress={() => this.toggleCampusView(CampusLocations.Loyola.getIdentifier())}
@@ -81,7 +81,7 @@ class CampusToggleButton extends Component<
           <Text testID="toggle-loyola" style={styles.buttonText}>
             Loyola
           </Text>
-        </TouchableOpacity>
+        </TouchableHighlight>
       </View>
     );
   }

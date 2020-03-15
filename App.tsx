@@ -11,6 +11,7 @@ import Colors from './constants/Colors';
 import OutdoorPOI from './classes/outdoorPOI';
 import { Svg, Line } from 'react-native-svg';
 import IndoorFloor from './classes/indoorFloor';
+import PolygonsAndMarkers from './components/PolygonsAndMarkers';
 
 const styles = StyleSheet.create({
   container: {
@@ -35,19 +36,6 @@ const styles = StyleSheet.create({
   mapStyle: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-  },
-  circle: {
-    width: 30,
-    height: 30,
-    borderRadius: 30 / 2,
-    backgroundColor: Colors.mapMarkerColor,
-  },
-  pinText: {
-    color: Colors.white,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: 20,
-    marginBottom: 10,
   },
 });
 
@@ -133,7 +121,7 @@ class App extends Component<{}, appState> {
   }
 
   render() {
-    const { region, polygons, markers } = this.state;
+    const { region, markers, polygons } = this.state;
 
     const arrayWidth = 30;
     const arrayHeight = 30;
@@ -190,29 +178,7 @@ class App extends Component<{}, appState> {
         {/* <View style={styles.search} />
         <CampusToggleButton setMapLocation={this.setMapLocation} />
         <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
-          {polygons.map(polygon => (
-            <View key={`${String(polygon.latitude)}-${String(polygon.longitude)}`}>
-              <Polygon
-                coordinates={polygon}
-                strokeColor={Colors.polygonStroke}
-                strokeWidth={1}
-                fillColor={Colors.polygonFill}
-              />
-            </View>
-          ))}
-          {markers.map(marker => (
-            <Marker
-              key={marker.title}
-              coordinate={marker.coordinate}
-              title={marker.title}
-              description={marker.description}
-              pinColor={marker.pinColor}
-            >
-              <View style={styles.circle}>
-                <Text style={styles.pinText}>{marker.label}</Text>
-              </View>
-            </Marker>
-          ))}
+          <PolygonsAndMarkers markers={markers} polygons={polygons} />
           <ShowDirection
             startLocation={new OutdoorPOI(new Location(45.458488, -73.639862), 'test-start')}
             endLocation={new OutdoorPOI(new Location(45.50349, -73.572182), 'test-end')}
@@ -223,5 +189,4 @@ class App extends Component<{}, appState> {
     );
   }
 }
-
 export default App;
