@@ -1,7 +1,7 @@
 class PointOfInterest {
-  identifier: String;
+  identifier: string;
 
-  constructor(identifier: String) {
+  constructor(identifier: string) {
     this.identifier = identifier;
   }
 
@@ -9,7 +9,7 @@ class PointOfInterest {
     return this.identifier;
   }
 
-  setLongitude(newIdentifier: String) {
+  setLongitude(newIdentifier: string) {
     this.identifier = newIdentifier;
   }
 }

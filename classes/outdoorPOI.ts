@@ -1,10 +1,10 @@
 import Location from './location';
 import PointOfInterest from './pointOfInterest';
 
-class outdoorPOI extends PointOfInterest {
+class OutdoorPOI extends PointOfInterest {
   location: Location;
 
-  constructor(location: Location, identifier: String) {
+  constructor(location: Location, identifier: string) {
     super(identifier);
 
     this.location = location;
@@ -18,4 +18,4 @@ class outdoorPOI extends PointOfInterest {
     this.location = newLocation;
   }
 }
-export default outdoorPOI;
+export default OutdoorPOI;
