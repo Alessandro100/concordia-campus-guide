@@ -1,26 +1,41 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
+import { View, Image } from 'react-native';
 import { Svg, Line } from 'react-native-svg';
+import { Graph } from '@dagrejs/graphlib';
+import IndoorFloorFactory from './indoorFloorFactory';
+import Coordinate from './coordinate';
+import IndoorFloorData from './indoorFloorData'
+import Building from './building';
+
+const sampleStartPoint: Coordinate = {x: 8, y: 29}; 
+const sampleEndPoint: Coordinate = {x: 24, y: 20};
 
 class IndoorFloor {
-    imageUrl: number; //must be passed as require
+    graphWidth = 30;
+    graphHeight = 30;
     imageWidth: number;
     imageHeight: number;
-    initialHeightPosition: number;
-    initialWidthPosition: number
-    floorNumber: number;
-    arrayWidth = 30;
-    arrayHeight = 30;
-    //building: Building
+    initialHeightPosition: number = 0;
+    initialWidthPosition: number = 0;
 
-    constructor(imgUrl, imageWidth, imageHeight, floorNumber, initialHeightPosition = 0, initialWidthPosition = 0) {
-        this.imageUrl = imgUrl;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
-        this.floorNumber = floorNumber;
-        this.initialHeightPosition = initialHeightPosition;
-        this.initialWidthPosition = initialWidthPosition;
+    graph: Graph;
+    building: Building;
+    floorData: IndoorFloorData;
+    indoorFloorFactory: IndoorFloorFactory;
+    isBuildingEntrance: boolean;
+
+    constructor(building:Building, floorData: IndoorFloorData) {
+        this.building = building;
+        this.floorData = floorData;
+
+        //display properties
+        this.setImageWidth(floorData.imageWidthPX);
+        
+        this.indoorFloorFactory = new IndoorFloorFactory(this.graphWidth, this.graphHeight, this.floorData);
+        this.graph = this.indoorFloorFactory.generateGraph();
     }
+
+    
 
     setInitialWidthPosition(newInitialWidthPosition) {
         this.initialWidthPosition = newInitialWidthPosition;
@@ -30,27 +45,61 @@ class IndoorFloor {
         this.initialHeightPosition = newInitialHeightPosition;
     }
 
+    setImageWidth(newImageWidth: number){
+        this.imageWidth = newImageWidth;
+        const ratio = this.floorData.imageWidthPX / this.floorData.imageHeightPX;
+        this.imageHeight = newImageWidth*ratio;
+    }
+
     showFloorImage(){
         return(
             <Image
                 resizeMode={'cover'}
                 style={{width: this.imageWidth, height: this.imageHeight, position: "absolute", top: this.initialHeightPosition, left: this.initialWidthPosition, zIndex: 4}}
-                source={this.imageUrl}
+                source={this.floorData.floorImage}
             />
         )
     }
 
+    getWalkwayTileColor(xIndex, yIndex) {
+        let color = 'red';
+        this.floorData.walkways.forEach(obj =>{
+            if(xIndex >= obj.topLeft.x && xIndex <= obj.bottomRight.x && yIndex >= obj.topLeft.y && yIndex <= obj.bottomRight.y) {
+                color = 'blue';
+            }
+        })
+        if(xIndex === sampleStartPoint.x && yIndex === sampleStartPoint.y) {
+            color = 'white'
+        }
+        if(xIndex === sampleEndPoint.x && yIndex === sampleEndPoint.y) {
+            color = 'black'
+        }
+        return color;
+    }
+
     showIndoorTile() {
         let array = [];
-        const widthPerTile = this.imageWidth / this.arrayWidth;
-        const heightPerTile = this.imageHeight / this.arrayHeight;
+        const widthPerTile = this.imageWidth / this.graphHeight;
+        const heightPerTile = this.imageHeight / this.graphHeight;
 
-        for (let i = 0; i < this.arrayHeight; i++) {
+        for (let i = 0; i < this.graphHeight; i = i + 1) {
             let yPosition = (i * heightPerTile) + this.initialHeightPosition;
-            for (let z = 0; z < this.arrayWidth; z++) {
+            for (let z = 0; z < this.graphWidth; z = z + 1) {
                 let xPosition = z * widthPerTile + this.initialWidthPosition;
                 array.push(
-                    <View key={i + " " + z} style={{ zIndex: 5, position: 'absolute', top: yPosition, left: xPosition, borderRadius: 2, backgroundColor: 'red', width: widthPerTile, height: heightPerTile, opacity: 0.5 }}>
+                    <View 
+                        key={i + " " + z} 
+                        style={{ 
+                            zIndex: 5, 
+                            position: 'absolute', 
+                            top: yPosition, 
+                            left: xPosition, 
+                            borderRadius: 2, 
+                            backgroundColor: this.getWalkwayTileColor(z, i), 
+                            width: widthPerTile, 
+                            height: heightPerTile, 
+                            opacity: 0.5 
+                    }}>
                     </View>
                 )
             }
@@ -58,10 +107,17 @@ class IndoorFloor {
         return array;
     }
 
-    drawLines(imageHeight, path: [{ x: number, y: number }], widthPerTile, heightPerTile, initialHeight, imageWidth) {
-        let lines = []
+    drawPath(startingNode, endingNode) {
+        const coordinates = this.getPath(startingNode, endingNode);
+        return this.drawLines(coordinates);
+    }
 
-        for (let pathIndex = 0; pathIndex < path.length - 1; pathIndex++) {
+    drawLines(path: Coordinate[]) {
+        let lines = []
+        const widthPerTile = this.imageWidth / this.graphWidth;
+        const heightPerTile = this.imageHeight / this.graphHeight;
+
+        for (let pathIndex = 0; pathIndex < path.length - 1; pathIndex = pathIndex + 1) {
             const xPosition = path[pathIndex].x * widthPerTile;
             const yPosition = path[pathIndex].y * heightPerTile;
 
@@ -74,12 +130,27 @@ class IndoorFloor {
                 ypx: path[pathIndex + 1].y * heightPerTile + (0.5 * heightPerTile)
             }
             lines.push(
-                <Svg height={imageHeight} width={imageWidth} style={{ zIndex: 6, top: initialHeight, position: 'absolute' }} origin="0, 0" >
+                <Svg height={this.imageHeight} width={this.imageWidth} style={{ zIndex: 6, top: this.initialHeightPosition, position: 'absolute' }} origin="0, 0" >
                     <Line x1={startingLocation.xpx} y1={startingLocation.ypx} x2={endingLocation.xpx} y2={endingLocation.ypx} stroke="blue" strokeWidth="2" />
                 </Svg>
             )
         }
         return lines;
+    }
+
+    //returns the data on how to get from one tile to another
+    getPath(startingNode: Coordinate, endingNode: Coordinate): Coordinate[] {
+        // Implement breadth first search @Nadia -- graph is initialized
+        //Structure of the Node-> key = xIndex-yIndex
+        //library used for graph: @dagrejs/graphlib
+        //beware of graph cycles 
+        //At the end of your algorithm, it should return something like this:
+        const fakePath = [
+            {x: 5, y: 27},
+            {x: 10, y: 27},
+            {x: 10, y: 25}
+        ]
+        return fakePath;
     }
 }
 
