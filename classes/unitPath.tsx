@@ -27,7 +27,7 @@ class UnitPath implements Path {
     this.transportType = transportType;
     this.origin = origin;
     this.destination = destination;
-    this.pathGraphic = pathGraphic;
+    this.pathGraphic = pathGraphic; // exclusive to outdoor
     this.pathColor = pathColor;
   }
 
