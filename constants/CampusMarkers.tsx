@@ -104,8 +104,8 @@ const Markers = [
   },
   {
     coordinate: {
-      latitude: 45.495677,
-      longitude: -73.57383,
+      latitude: 45.49567,
+      longitude: -73.5736,
     },
     title: 'VA',
     description: 'Visual Arts Building',

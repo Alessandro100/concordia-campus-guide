@@ -4,14 +4,14 @@ import Campus from './campus';
 import Location from './location';
 
 class building extends OutdoorPOI {
-  description: String;
+  description: string;
 
   events: CampusEvent[];
 
   campus: Campus;
 
   constructor(
-    description: String,
+    description: string,
     events: CampusEvent[],
     campus: Campus,
     location: Location,
@@ -32,7 +32,7 @@ class building extends OutdoorPOI {
     return this.campus;
   }
 
-  setDescription(description: String) {
+  setDescription(description: string) {
     this.description = description;
   }
 
@@ -42,6 +42,10 @@ class building extends OutdoorPOI {
 
   setCampus(campus: Campus) {
     this.campus = campus;
+  }
+
+  setIdentifier(identifier: string) {
+    this.identifier = identifier;
   }
 }
 export default building;
