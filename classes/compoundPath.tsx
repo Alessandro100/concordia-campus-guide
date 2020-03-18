@@ -1,5 +1,5 @@
 import React from 'react';
-import UnitPath from './unitPath';
+import UnitPath from '../interfaces/unitPath';
 import Path from '../interfaces/path';
 
 class CompoundPath implements Path {
@@ -28,8 +28,13 @@ class CompoundPath implements Path {
     return this.paths;
   }
 
-  displayPath() {
-    return <>{this.paths.map(path => path.displayPath())}</>;
+  mergeCompoundPath(pathsToAdd: CompoundPath) {
+    this.paths = this.paths.concat(pathsToAdd.getAllPaths());
+  }
+
+  // based on the parameters specified, it will return the html to display the path
+  displayPath(isInside, buildingName = null, floorNumber = null) {
+    return <>{this.paths.map(path => path.displayPath(isInside, buildingName, floorNumber))}</>;
   }
 }
 
