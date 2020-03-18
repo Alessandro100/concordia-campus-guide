@@ -14,7 +14,7 @@ describe('Get Directions Suite', () => {
       .create(<ShowDirection />)
       .toJSON();
     expect(tree).toMatchSnapshot();
-  }),
+  });
   test('Map Elements Loaded', async (done) => {
     const wrapper = mount(
       <ShowDirection
