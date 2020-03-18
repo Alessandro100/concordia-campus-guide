@@ -25,7 +25,7 @@ describe('Get Directions Suite', () => {
     );
     const instance = wrapper.instance();
     try {
-      await instance.loadRoute()
+      await instance.loadRoute();
       expect(wrapper.find(Marker)).toHaveLength(2);
       expect(wrapper.getElements(<MapView.Polyline />).length > 0).toEqual(true);
     } catch (e) {
@@ -43,8 +43,8 @@ describe('Get Directions Suite', () => {
       />
     );
     const instance = wrapper.instance();
-    const startingLocation = new Location(45.458488, -73.6398621)
-    const startingPOI = new OutdoorPOI(startingLocation, 'startingLocation')
+    const startingLocation = new Location(45.458488, -73.6398621);
+    const startingPOI = new OutdoorPOI(startingLocation, 'startingLocation');
     expect(instance.getPinLocation(startingPOI.getLocation())).toEqual({ latitude: 45.458488, longitude: -73.6398621 });
     expect(instance.getPinLocation(null)).toEqual({ latitude: 0, longitude: 0 });
     done();
