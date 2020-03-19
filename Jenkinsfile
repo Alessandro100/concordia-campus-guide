@@ -14,7 +14,7 @@ pipeline{
         stage('Deploy'){
             when{ branch 'master' }
             steps{
-                sh 'expo build:android --no-wait --generate-keystore'
+                sh 'bash /home/walter/deploy-command'
             }
         }
     }
