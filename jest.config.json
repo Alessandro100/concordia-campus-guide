@@ -5,5 +5,5 @@
   "setupFilesAfterEnv": [
     "<rootDir>/jest.setup.js"
   ],
-  "coverageReporters": ["json","html-spa"]
+  "coverageReporters": ["json","html-spa","lcov"]
 }
