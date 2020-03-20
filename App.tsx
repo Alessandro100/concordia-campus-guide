@@ -6,12 +6,12 @@ import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
 import Location from './classes/location';
 import CampusPolygons from './constants/CampusPolygons';
-import CampusMarkers from './constants/CampusMarkers';
 import Colors from './constants/Colors';
 import OutdoorPOI from './classes/outdoorPOI';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
+import { obtainBuildings } from './services/BuildingService';
 
 const styles = StyleSheet.create({
   container: {
@@ -37,6 +37,7 @@ type appState = {
   markers: any[];
   displayInfo: boolean;
   building: Building;
+  buildings: Building[];
 };
 
 class App extends Component<{}, appState> {
@@ -52,7 +53,7 @@ class App extends Component<{}, appState> {
         longitudeDelta: 0.01,
       },
       polygons: CampusPolygons.slice(0),
-      markers: CampusMarkers.slice(0),
+      buildings: obtainBuildings(),
       displayInfo: false,
     };
   }
@@ -75,15 +76,14 @@ class App extends Component<{}, appState> {
   };
 
   render() {
-    const { region, markers, polygons, displayInfo, building } = this.state;
-
+    const { region, buildings, polygons, displayInfo, building } = this.state;
     return (
       <View style={styles.container}>
         <View />
         <CampusToggleButton setMapLocation={this.setMapLocation} />
         <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
           <PolygonsAndMarkers
-            markers={markers}
+            buildings={buildings}
             polygons={polygons}
             displaybuilding={this.displayBuildingInfo}
           />
@@ -93,7 +93,11 @@ class App extends Component<{}, appState> {
             transportType={transportMode.transit}
           />
         </MapView>
-        <BottomDrawerBuilding displayInfo={displayInfo} building={building} />
+        <BottomDrawerBuilding
+          displayInfo={displayInfo}
+          building={building}
+          displayBuildingInfo={this.displayBuildingInfo}
+        />
       </View>
     );
   }

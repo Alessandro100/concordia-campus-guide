@@ -19,32 +19,39 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: Colors.primaryColor,
     textAlign: 'left',
+    paddingRight: 2,
+    paddingLeft: 4,
   },
   location: {
     color: Colors.grey,
     textAlign: 'left',
     fontStyle: 'italic',
+    paddingRight: 4,
+    paddingLeft: 4,
   },
   description: {
     fontSize: 17,
     color: Colors.black,
     textAlign: 'left',
+    paddingRight: 4,
+    paddingLeft: 4,
   },
 });
 
-type displayInfoProps = {
+type BottomDrawerBuildingProps = {
   building: Building;
   displayInfo: boolean;
+  displayBuildingInfo(building: Building, displayInfo: boolean): void;
 };
 
-type displayInfoState = {
+type BottomDrawerBuildingState = {
   building: Building;
   displayInfo: boolean;
 };
 
 const TAB_BAR_HEIGHT = 0;
 
-class BottomDrawerBuilding extends Component<displayInfoProps, displayInfoState> {
+class BottomDrawerBuilding extends Component<BottomDrawerBuildingProps, BottomDrawerBuildingState> {
   constructor(props) {
     super(props);
     const { building, displayInfo } = this.props;
@@ -71,25 +78,20 @@ class BottomDrawerBuilding extends Component<displayInfoProps, displayInfoState>
   renderContent = (building: Building) => {
     return (
       <View style={styles.contentContainer}>
-        <Text style={styles.titleBuilding}>{building.getDescription()}</Text>
+        <Text style={styles.titleBuilding}>{building.getName()}</Text>
         <Text style={styles.location}>
           Location: [{building.getLocation().getLatitude()}, {building.getLocation().getLongitude()}
           ]
         </Text>
-        <Text style={styles.description}>
-          insert description here: lorem sepsum blabalbaaddshfsdfsdfs sg dfg dfg hfgf ghgh dfgsdg 56
-          dfg dtyr6u ghgdfg d{' '}
-        </Text>
-        <Text style={styles.description}>
-          IT IS POSSIBLE TO ADD SCORLLVIEW IN THIS COMPONONET, REFER TO THIS:
-          https://github.com/jacklein/rn-bottom-drawer
-        </Text>
+        <Text style={styles.description}>{building.getDescription()}</Text>
+        <Text style={styles.description}>Extra description here . . .</Text>
       </View>
     );
   };
 
   render() {
     const { building, displayInfo } = this.state;
+    const { displayBuildingInfo } = this.props;
     if (displayInfo === true) {
       return (
         <BottomDrawer
@@ -98,8 +100,9 @@ class BottomDrawerBuilding extends Component<displayInfoProps, displayInfoState>
           offset={TAB_BAR_HEIGHT}
           downDisplay={500}
           startUp={false}
-          shadow
-          roundedEdges
+          onCollapsed={() => {
+            displayBuildingInfo(building, false);
+          }}
         >
           {this.renderContent(building)}
         </BottomDrawer>

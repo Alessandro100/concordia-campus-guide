@@ -3,8 +3,9 @@ import { Marker, Polygon } from 'react-native-maps';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 import ShuttleBusMarkers from '../constants/CampusShuttleBusStop';
-import Location from '../classes/location';
 import Building from '../classes/building';
+import { obtainCoordinateFromBuilding } from '../services/BuildingService';
+import Location from '../classes/location';
 import Campus from '../classes/campus';
 
 const busIcon = require('./../assets/shuttle_bus_icon.png');
@@ -30,39 +31,39 @@ const styles = StyleSheet.create({
 });
 
 type markersAndPolygonsProps = {
-  markers: Marker[];
-  polygons: Marker[];
+  buildings: Building[];
+  polygons: Polygon[];
   displaybuilding(building: Building, displayInfo: boolean): void;
 };
 
 type markersAndPolygonsState = {
-  markers: Marker[];
   polygons: Polygon[];
   shuttleBusMarkers: Marker[];
   building: Building;
+  buildings: Building[];
 };
 
 class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPolygonsState> {
   constructor(props) {
     super(props);
-    const { markers, polygons } = this.props;
+    const { buildings, polygons } = this.props;
     this.state = {
-      markers,
+      buildings,
       polygons,
-      shuttleBusMarkers: ShuttleBusMarkers.slice(0),
-      building: new Building('', [], null, null, ''),
+      building: new Building('', '', [], null, null, ''),
       location: new Location(0, 0),
       campus: new Campus(null, '', ''),
+      shuttleBusMarkers: ShuttleBusMarkers.slice(0),
     };
   }
 
-  displayBuildingInfo = (building: Building) => {
+  displayBuildingInfo = (building: Building, displayInfo: boolean) => {
     const { displaybuilding } = this.props;
-    displaybuilding(building, true);
+    displaybuilding(building, displayInfo);
   };
 
   render() {
-    const { markers, polygons, shuttleBusMarkers, building, location, campus } = this.state;
+    const { buildings, polygons, shuttleBusMarkers, location, campus, building } = this.state;
     return (
       <View>
         {polygons.map(polygon => (
@@ -75,27 +76,28 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
             />
           </View>
         ))}
-        {markers.map(marker => (
+        {buildings.map(buildingMarker => (
           <Marker
-            key={marker.title}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            description={marker.description}
-            pinColor={marker.pinColor}
+            key={buildingMarker.getIdentifier()}
+            coordinate={obtainCoordinateFromBuilding(buildingMarker)}
+            title={buildingMarker.getIdentifier()}
+            description={buildingMarker.getName()}
+            pinColor={Colors.markersPinColor}
             onPress={() => {
-              location.setLatitude(marker.coordinate.latitude);
-              location.setLongitude(marker.coordinate.longitude);
-              campus.setLocation(location);
-              building.setDescription(marker.description);
-              building.setEvents([]);
-              building.setCampus(campus, '', 'Concordia');
+              location.setLatitude(buildingMarker.getLocation().getLatitude());
+              location.setLongitude(buildingMarker.getLocation().getLongitude());
+              campus.setLocation(buildingMarker.getLocation());
+              building.setName(buildingMarker.getName());
+              building.setDescription(buildingMarker.getDescription());
+              building.setEvents(buildingMarker.getEvents()); // TODO: change for event feature
+              building.setCampus(campus);
               building.setLocation(location);
-              building.setIdentifier(marker.label);
-              this.displayBuildingInfo(building);
+              building.setIdentifier(buildingMarker.getIdentifier());
+              this.displayBuildingInfo(building, true);
             }}
           >
             <View style={styles.circle}>
-              <Text style={styles.pinText}>{marker.label}</Text>
+              <Text style={styles.pinText}>{buildingMarker.getIdentifier()}</Text>
             </View>
           </Marker>
         ))}

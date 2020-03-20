@@ -10,7 +10,12 @@ class building extends OutdoorPOI {
 
   campus: Campus;
 
+  name: string;
+
+  location: Location;
+
   constructor(
+    name: string,
     description: string,
     events: CampusEvent[],
     campus: Campus,
@@ -18,6 +23,14 @@ class building extends OutdoorPOI {
     identifier: String
   ) {
     super(location, identifier);
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  setName(name: string) {
+    this.name = name;
   }
 
   getDescription() {
@@ -42,6 +55,18 @@ class building extends OutdoorPOI {
 
   setCampus(campus: Campus) {
     this.campus = campus;
+  }
+
+  getLocation(): Location {
+    return super.getLocation();
+  }
+
+  setLocation(newLocation: Location) {
+    super.setLocation(newLocation);
+  }
+
+  getIdentifier(): String {
+    return super.getIdentifier();
   }
 
   setIdentifier(identifier: string) {
