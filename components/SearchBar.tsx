@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import {Alert, Dimensions, StyleSheet,Text,Image, View} from "react-native";
+import {Dimensions, StyleSheet, ScrollView} from "react-native";
 import Colors from "../constants/Colors";
 import Location from '../classes/location';
 
@@ -18,6 +18,9 @@ const styles = StyleSheet.create({
     
     row:{
         backgroundColor: Colors.white,
+    },
+    textinput:{
+     height:"100%",
     },
     textInputContainer:{
         backgroundColor:Colors.white,
@@ -69,7 +72,7 @@ class SearchBar extends Component<searchBarProps, searchBarState> {
     };
    render(){
        return (
-        
+          
                <GooglePlacesAutocomplete
                    placeholder='Search'
                    minLength={2} // minimum length of text to search
@@ -85,7 +88,7 @@ class SearchBar extends Component<searchBarProps, searchBarState> {
                        this.displaySearchLocation(details.geometry.location.lat, details.geometry.location.lng);
                        console.log(data, details);
                    }}
-
+                   onBlur={() => console.log(this.refs.textInput._lastNativeText)}
                    getDefaultValue={() => ''}
 
                    query={{
@@ -98,7 +101,7 @@ class SearchBar extends Component<searchBarProps, searchBarState> {
 
                    styles={styles}
 
-                   currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+                   currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
                    currentLocationLabel="Current Location"
                    nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                    GoogleReverseGeocodingQuery={{
@@ -117,13 +120,13 @@ class SearchBar extends Component<searchBarProps, searchBarState> {
                    }}
 
                    filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                   predefinedPlaces={[homePlace, workPlace]}
+                  // predefinedPlaces={[homePlace, workPlace]}
                    clearButtonMode="always"
                    debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
                     //renderLeftButton={()  => <Image source={require('../assets/search.png')} />}
                    // renderRightButton={() => <Text>Custom text after the input</Text>} 
                />
-         
+      
        );
    }
 }
