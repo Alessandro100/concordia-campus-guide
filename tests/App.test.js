@@ -18,4 +18,9 @@ describe('Sample Test Suite', () => {
     expect(wrapper.find('[testID="toggle-sgw"]').text()).toEqual("SGW");
     expect(wrapper.find('[testID="toggle-loyola"]').text()).toEqual("Loyola");
   });
+  test('Sample Enzyme Test Current Location button', () => {
+    const wrapperMount = mount(<App/>);
+    expect(wrapperMount.find(TouchableHighlight)).toHaveLength(1);
+    expect(wrapperMount.find(Image)).toHaveLength(1);
+  })
 });
