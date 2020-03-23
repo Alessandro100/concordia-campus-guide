@@ -25,6 +25,7 @@ export function obtainBuildings(): Building[] {
     );
     building.setName(marker.description);
     building.setDescription(marker.buildingDescription);
+    building.setIdentifier(marker.label);
     buildingsSGW.push(building);
   });
   // setName() and setDescription() are needed otherwise the object is instanciated without those field. Weird behavior!
@@ -39,14 +40,19 @@ export function obtainBuildings(): Building[] {
     );
     building.setName(marker.description);
     building.setDescription(marker.buildingDescription);
+    building.setIdentifier(marker.label);
     buildingsLoyola.push(building);
   });
   return [...buildingsSGW, ...buildingsLoyola];
 }
 
-export function obtainCoordinateFromBuilding(building: Building): any {
+export function obtainCoordinateFromBuilding(building: Building): Location {
+  return new Location(building.getLocation().getLatitude(), building.getLocation().getLongitude());
+}
+
+export function parseLocationToLatLngType(location: Location) {
   return {
-    latitude: building.getLocation().getLatitude(),
-    longitude: building.getLocation().getLongitude(),
+    latitude: location.getLatitude(),
+    longitude: location.getLongitude(),
   };
 }

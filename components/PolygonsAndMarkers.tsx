@@ -4,7 +4,10 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 import ShuttleBusMarkers from '../constants/CampusShuttleBusStop';
 import Building from '../classes/building';
-import { obtainCoordinateFromBuilding } from '../services/BuildingService';
+import {
+  obtainCoordinateFromBuilding,
+  parseLocationToLatLngType,
+} from '../services/BuildingService';
 import Location from '../classes/location';
 import Campus from '../classes/campus';
 
@@ -79,7 +82,7 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
         {buildings.map(buildingMarker => (
           <Marker
             key={buildingMarker.getIdentifier()}
-            coordinate={obtainCoordinateFromBuilding(buildingMarker)}
+            coordinate={parseLocationToLatLngType(obtainCoordinateFromBuilding(buildingMarker))}
             title={buildingMarker.getIdentifier()}
             description={buildingMarker.getName()}
             pinColor={Colors.markersPinColor}
