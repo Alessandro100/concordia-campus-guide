@@ -9,6 +9,7 @@ import CampusPolygons from './constants/CampusPolygons';
 import Colors from './constants/Colors';
 import OutdoorPOI from './classes/outdoorPOI';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
+import SearchBar from './components/SearchBar';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/BuildingService';
@@ -79,9 +80,14 @@ class App extends Component<{}, appState> {
     const { region, buildings, polygons, displayInfo, building } = this.state;
     return (
       <View style={styles.container}>
-        <View />
+        <SearchBar setMapLocation={this.setMapLocation} />
         <CampusToggleButton setMapLocation={this.setMapLocation} />
-        <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.mapStyle}
+          region={region}
+          showsUserLocation
+        >
           <PolygonsAndMarkers
             buildings={buildings}
             polygons={polygons}
