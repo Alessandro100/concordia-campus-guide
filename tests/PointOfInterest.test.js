@@ -6,10 +6,9 @@ import { shallow, mount, render } from 'enzyme';
 
 describe('POI test suite', () => {
     test('Initialize Point of interes', () => {
-        
         const poi = new PointOfInterest('test-1');
         expect(poi.getIdentifier()).toEqual('test-1');
-        poi.setLongitude('test-1-1')
+        poi.setLongitude('test-1-1');
         expect(poi.getIdentifier()).toEqual('test-1-1');
     });
 

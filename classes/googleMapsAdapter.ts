@@ -1,4 +1,5 @@
 import Polyline from '@mapbox/polyline';
+import { REACT_APP_GOOGLE_DIRECTIONS_API_KEY } from 'react-native-dotenv';
 import transportMode from './transportMode';
 import Location from './location';
 import UnitPath from './unitPath';
@@ -10,7 +11,7 @@ import Path from '../interfaces/path';
 class GoogleMapsAdapter {
   baseUrl = 'https://maps.googleapis.com/maps/api/directions/json';
 
-  apiKey = 'AIzaSyDpY_ACPWoo3mVPPmiLKQe1aBhjkDYlwJI';
+  apiKey = REACT_APP_GOOGLE_DIRECTIONS_API_KEY;
 
   // this function should return an object of type path
   // This function takes adresses as input and call the google API.

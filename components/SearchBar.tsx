@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { REACT_APP_GOOGLE_PLACES_API } from 'react-native-dotenv';
 import Location from '../classes/location';
 import styles from '../constants/SearchBarStyling';
 
@@ -34,7 +35,7 @@ class SearchBar extends Component<searchBarProps, searchBarState> {
         getDefaultValue={() => ''}
         query={{
           // available options: https://developers.google.com/places/web-service/autocomplete
-          key: 'AIzaSyD2zBl0yHV6qzUTUkMZe0gBRBoSpqmlSxU',
+          key: REACT_APP_GOOGLE_PLACES_API,
           language: 'en', // language of the results
           location: '45.496628, -73.578804', // Centered around hall building
           radius: '80000',

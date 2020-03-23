@@ -6,11 +6,13 @@ import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
 import Location from './classes/location';
 import CampusPolygons from './constants/CampusPolygons';
-import CampusMarkers from './constants/CampusMarkers';
 import Colors from './constants/Colors';
 import OutdoorPOI from './classes/outdoorPOI';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
 import SearchBar from './components/SearchBar';
+import BottomDrawerBuilding from './components/BottomDrawerBuilding';
+import Building from './classes/building';
+import { obtainBuildings } from './services/BuildingService';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,6 +36,9 @@ type appState = {
   };
   polygons: any[];
   markers: any[];
+  displayInfo: boolean;
+  building: Building;
+  buildings: Building[];
 };
 
 class App extends Component<{}, appState> {
@@ -49,7 +54,8 @@ class App extends Component<{}, appState> {
         longitudeDelta: 0.01,
       },
       polygons: CampusPolygons.slice(0),
-      markers: CampusMarkers.slice(0),
+      buildings: obtainBuildings(),
+      displayInfo: false,
     };
   }
 
@@ -64,9 +70,14 @@ class App extends Component<{}, appState> {
     });
   };
 
-  render() {
-    const { region, markers, polygons } = this.state;
+  /* Needed to pass callback to child (PolygonsAndMarkers.tsx) to update parent state (App.tsx) */
+  displayBuildingInfo = (building: Building, displayInfo: boolean) => {
+    this.setState({ displayInfo });
+    this.setState({ building });
+  };
 
+  render() {
+    const { region, buildings, polygons, displayInfo, building } = this.state;
     return (
       <View style={styles.container}>
         <SearchBar setMapLocation={this.setMapLocation} />
@@ -77,13 +88,22 @@ class App extends Component<{}, appState> {
           region={region}
           showsUserLocation
         >
-          <PolygonsAndMarkers markers={markers} polygons={polygons} />
+          <PolygonsAndMarkers
+            buildings={buildings}
+            polygons={polygons}
+            displaybuilding={this.displayBuildingInfo}
+          />
           <ShowDirection
             startLocation={new OutdoorPOI(new Location(45.458488, -73.639862), 'test-start')}
             endLocation={new OutdoorPOI(new Location(45.50349, -73.572182), 'test-end')}
             transportType={transportMode.transit}
           />
         </MapView>
+        <BottomDrawerBuilding
+          displayInfo={displayInfo}
+          building={building}
+          displayBuildingInfo={this.displayBuildingInfo}
+        />
       </View>
     );
   }
