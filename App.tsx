@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, Dimensions, TextInput} from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
@@ -19,31 +19,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  search: {
-    width: Dimensions.get('window').width - 50,
-    height: 50,
-    backgroundColor: Colors.white,
-    position: 'absolute',
-    zIndex: 2,
-    top: 50,
-    borderRadius: 5,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
-  },
   mapStyle: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-  },
-  destinationInput: {
-    height: 50,
-    borderWidth: 0.5,
-    marginTop: 50,
-    marginLeft: 5,
-    marginRight:5,
-    padding: 5,
-    backgroundColor: "white"
   },
 });
 
@@ -56,8 +34,6 @@ type appState = {
   };
   polygons: any[];
   markers: any[];
-  destination: string;
-  error: string,
 };
 
 class App extends Component<{}, appState> {
@@ -74,8 +50,6 @@ class App extends Component<{}, appState> {
       },
       polygons: CampusPolygons.slice(0),
       markers: CampusMarkers.slice(0),
-      destination: "",
-      error: "",
     };
   }
 
@@ -90,24 +64,6 @@ class App extends Component<{}, appState> {
     });
   };
 
-  componentDidMount(): void {
-    //Get current location
-    navigator.geolocation.getCurrentPosition(
-        position => {
-          this.setState({
-            region: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              latitudeDelta: 0,
-              longitudeDelta: 0.01,
-            }
-          });
-        },
-        error => this.setState({error: error.message}),
-        { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000}
-    );
-  }
-
   displaySearchLocation = (lat, lng) => {
     this.setState({
       region: {
@@ -115,7 +71,7 @@ class App extends Component<{}, appState> {
         longitude: lng,
         latitudeDelta: 0.01,
         longitudeDelta: 0.02,
-      }
+      },
     });
   };
 
@@ -124,9 +80,14 @@ class App extends Component<{}, appState> {
 
     return (
       <View style={styles.container}>
-        <SearchBar setMapLocation={this.setMapLocation}/>
+        <SearchBar setMapLocation={this.setMapLocation} />
         <CampusToggleButton setMapLocation={this.setMapLocation} />
-        <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region} showsUserLocation={true}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.mapStyle}
+          region={region}
+          showsUserLocation
+        >
           <PolygonsAndMarkers markers={markers} polygons={polygons} />
           <ShowDirection
             startLocation={new OutdoorPOI(new Location(45.458488, -73.639862), 'test-start')}
