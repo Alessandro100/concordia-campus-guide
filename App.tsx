@@ -64,17 +64,6 @@ class App extends Component<{}, appState> {
     });
   };
 
-  displaySearchLocation = (lat, lng) => {
-    this.setState({
-      region: {
-        latitude: lat,
-        longitude: lng,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.02,
-      },
-    });
-  };
-
   render() {
     const { region, markers, polygons } = this.state;
 
