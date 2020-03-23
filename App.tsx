@@ -124,7 +124,7 @@ class App extends Component<{}, appState> {
 
     return (
       <View style={styles.container}>
-        <SearchBar displaySearchLocation={this.displaySearchLocation}/>
+        <SearchBar setMapLocation={this.setMapLocation}/>
         <CampusToggleButton setMapLocation={this.setMapLocation} />
         <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region} showsUserLocation={true}>
           <PolygonsAndMarkers markers={markers} polygons={polygons} />

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import {Alert, Dimensions, StyleSheet,Text,Image, View} from "react-native";
+import {Dimensions, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 import Location from '../classes/location';
 
@@ -42,11 +42,13 @@ const styles = StyleSheet.create({
         color: Colors.black, //To see where exactly the list is
         position: 'absolute',
         top:40,
+        elevation: 3,
+        zIndex: 2,
     },
 });
 
 type searchBarProps = {
-    displaySearchLocation(lat, lng): void;
+    setMapLocation(location: Location): void;
 };
 
 type searchBarState = {
@@ -63,9 +65,9 @@ class SearchBar extends Component<searchBarProps, searchBarState> {
         };
     }
 
-    displaySearchLocation = (lat, lng) => {
-        const { displaySearchLocation } = this.props;
-        displaySearchLocation(lat, lng);
+    setMapLocation = (lat, lng) => {
+        const { setMapLocation } = this.props;
+        setMapLocation(new Location(lat, lng));
     };
    render(){
        return (
@@ -74,15 +76,14 @@ class SearchBar extends Component<searchBarProps, searchBarState> {
                    placeholder='Search'
                    minLength={2} // minimum length of text to search
                    autoFocus={false}
+                   listViewDisplayed={'false'}
+                   keyboardShouldPersistTaps={'always'}
                    returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
                    keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-                   listViewDisplayed='true'    // true/false/undefined
                    fetchDetails={true}
                    renderDescription={row => row.description} // custom description render
                    onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                       // Alert.alert("data", JSON.stringify(data));
-                       // Alert.alert("details", JSON.stringify(details));
-                       this.displaySearchLocation(details.geometry.location.lat, details.geometry.location.lng);
+                       this.setMapLocation(details.geometry.location.lat, details.geometry.location.lng);
                        console.log(data, details);
                    }}
 
@@ -120,8 +121,6 @@ class SearchBar extends Component<searchBarProps, searchBarState> {
                    predefinedPlaces={[homePlace, workPlace]}
                    clearButtonMode="always"
                    debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-                    //renderLeftButton={()  => <Image source={require('../assets/search.png')} />}
-                   // renderRightButton={() => <Text>Custom text after the input</Text>} 
                />
          
        );
