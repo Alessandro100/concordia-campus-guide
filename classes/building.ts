@@ -4,20 +4,33 @@ import Campus from './campus';
 import Location from './location';
 
 class building extends OutdoorPOI {
-  description: String;
+  description: string;
 
   events: CampusEvent[];
 
   campus: Campus;
 
+  name: string;
+
+  location: Location;
+
   constructor(
-    description: String,
+    name: string,
+    description: string,
     events: CampusEvent[],
     campus: Campus,
     location: Location,
     identifier: String
   ) {
     super(location, identifier);
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  setName(name: string) {
+    this.name = name;
   }
 
   getDescription() {
@@ -32,7 +45,7 @@ class building extends OutdoorPOI {
     return this.campus;
   }
 
-  setDescription(description: String) {
+  setDescription(description: string) {
     this.description = description;
   }
 
@@ -42,6 +55,22 @@ class building extends OutdoorPOI {
 
   setCampus(campus: Campus) {
     this.campus = campus;
+  }
+
+  getLocation(): Location {
+    return super.getLocation();
+  }
+
+  setLocation(newLocation: Location) {
+    super.setLocation(newLocation);
+  }
+
+  getIdentifier(): String {
+    return super.getIdentifier();
+  }
+
+  setIdentifier(identifier: string) {
+    this.identifier = identifier;
   }
 }
 export default building;

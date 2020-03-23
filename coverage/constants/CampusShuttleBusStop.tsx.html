@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for constants/Colors.tsx</title>
+    <title>Code coverage report for constants/CampusShuttleBusStop.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">constants</a> Colors.tsx</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">constants</a> CampusShuttleBusStop.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -81,7 +81,11 @@
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
 <a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -105,30 +109,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const tintColor = '#2f95dc';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Colors from './Colors';
 &nbsp;
-export default {
-  primaryColor: '#932439',
-  grey: '#746D75',
-  tintColor,
-  white: '#fff',
-  black: 'rgba(0, 0, 0, 0.8)',
-  mapMarkerColor: 'rgba(84,24,5,0.95)',
-  mapsPolyline: '#6d99ec',
-  tabIconDefault: '#ccc',
-  tabIconSelected: tintColor,
-  tabBar: '#fefefe',
-  errorBackground: 'red',
-  errorText: '#fff',
-  warningBackground: '#EAEB5E',
-  warningText: '#666804',
-  noticeBackground: tintColor,
-  noticeText: '#fff',
-  polygonStroke: '#a30909',
-  polygonFill: 'rgba(163, 9, 9, 0.1)',
-  markersPinColor: 'rgb(163, 9, 9)',
-  shuttleBusMarkerPinColor: 'rgb(42,65,75)',
-};
+const ShuttleBusMarkers = [
+  {
+    coordinate: {
+      latitude: 45.49702,
+      longitude: -73.578519,
+    },
+    title: 'BUS STOP SGW',
+    description: 'Shuttle Bus Stop Location for SGW campus',
+    pinColor: Colors.shuttleBusMarkerPinColor,
+    label: 'BUS STOP SGW',
+  },
+  {
+    coordinate: {
+      latitude: 45.458334,
+      longitude: -73.638318,
+    },
+    title: 'BUS STOP LOYOLA',
+    description: 'Shuttle Bus Stop Location for LOYOLA campus',
+    pinColor: Colors.shuttleBusMarkerPinColor,
+    label: 'BUS STOP LOYOLA',
+  },
+];
+&nbsp;
+export default ShuttleBusMarkers;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

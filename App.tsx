@@ -6,10 +6,12 @@ import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
 import Location from './classes/location';
 import CampusPolygons from './constants/CampusPolygons';
-import CampusMarkers from './constants/CampusMarkers';
 import Colors from './constants/Colors';
 import OutdoorPOI from './classes/outdoorPOI';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
+import BottomDrawerBuilding from './components/BottomDrawerBuilding';
+import Building from './classes/building';
+import { obtainBuildings } from './services/BuildingService';
 
 const styles = StyleSheet.create({
   container: {
@@ -17,19 +19,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  search: {
-    width: Dimensions.get('window').width - 50,
-    height: 50,
-    backgroundColor: Colors.white,
-    position: 'absolute',
-    zIndex: 2,
-    top: 50,
-    borderRadius: 5,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 1,
   },
   mapStyle: {
     width: Dimensions.get('window').width,
@@ -46,6 +35,9 @@ type appState = {
   };
   polygons: any[];
   markers: any[];
+  displayInfo: boolean;
+  building: Building;
+  buildings: Building[];
 };
 
 class App extends Component<{}, appState> {
@@ -61,7 +53,8 @@ class App extends Component<{}, appState> {
         longitudeDelta: 0.01,
       },
       polygons: CampusPolygons.slice(0),
-      markers: CampusMarkers.slice(0),
+      buildings: obtainBuildings(),
+      displayInfo: false,
     };
   }
 
@@ -76,21 +69,35 @@ class App extends Component<{}, appState> {
     });
   };
 
-  render() {
-    const { region, markers, polygons } = this.state;
+  /* Needed to pass callback to child (PolygonsAndMarkers.tsx) to update parent state (App.tsx) */
+  displayBuildingInfo = (building: Building, displayInfo: boolean) => {
+    this.setState({ displayInfo });
+    this.setState({ building });
+  };
 
+  render() {
+    const { region, buildings, polygons, displayInfo, building } = this.state;
     return (
       <View style={styles.container}>
-        <View style={styles.search} />
+        <View />
         <CampusToggleButton setMapLocation={this.setMapLocation} />
         <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
-          <PolygonsAndMarkers markers={markers} polygons={polygons} />
+          <PolygonsAndMarkers
+            buildings={buildings}
+            polygons={polygons}
+            displaybuilding={this.displayBuildingInfo}
+          />
           <ShowDirection
             startLocation={new OutdoorPOI(new Location(45.458488, -73.639862), 'test-start')}
             endLocation={new OutdoorPOI(new Location(45.50349, -73.572182), 'test-end')}
             transportType={transportMode.transit}
           />
         </MapView>
+        <BottomDrawerBuilding
+          displayInfo={displayInfo}
+          building={building}
+          displayBuildingInfo={this.displayBuildingInfo}
+        />
       </View>
     );
   }

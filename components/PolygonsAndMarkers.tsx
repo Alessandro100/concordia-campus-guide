@@ -3,6 +3,13 @@ import { Marker, Polygon } from 'react-native-maps';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 import ShuttleBusMarkers from '../constants/CampusShuttleBusStop';
+import Building from '../classes/building';
+import {
+  obtainCoordinateFromBuilding,
+  parseLocationToLatLngType,
+} from '../services/BuildingService';
+import Location from '../classes/location';
+import Campus from '../classes/campus';
 
 const busIcon = require('./../assets/shuttle_bus_icon.png');
 
@@ -27,25 +34,41 @@ const styles = StyleSheet.create({
 });
 
 type markersAndPolygonsProps = {
-  markers: any[];
-  polygons: any[];
+  buildings: Building[];
+  polygons: Polygon[];
+  displaybuilding(building: Building, displayInfo: boolean): void;
 };
 
-class PolygonsAndMarkers extends Component<markersAndPolygonsProps, any> {
+type markersAndPolygonsState = {
+  polygons: Polygon[];
+  shuttleBusMarkers: Marker[];
+  building: Building;
+  buildings: Building[];
+};
+
+class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPolygonsState> {
   constructor(props) {
     super(props);
-    const { markers, polygons } = this.props;
+    const { buildings, polygons } = this.props;
     this.state = {
-      markers,
+      buildings,
       polygons,
+      building: new Building('', '', [], null, null, ''),
+      location: new Location(0, 0),
+      campus: new Campus(null, '', ''),
       shuttleBusMarkers: ShuttleBusMarkers.slice(0),
     };
   }
 
+  displayBuildingInfo = (building: Building, displayInfo: boolean) => {
+    const { displaybuilding } = this.props;
+    displaybuilding(building, displayInfo);
+  };
+
   render() {
-    const { markers, polygons, shuttleBusMarkers } = this.state;
+    const { buildings, polygons, shuttleBusMarkers, location, campus, building } = this.state;
     return (
-      <>
+      <View>
         {polygons.map(polygon => (
           <View key={`${String(polygon.latitude)}-${String(polygon.longitude)}`}>
             <Polygon
@@ -56,16 +79,28 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, any> {
             />
           </View>
         ))}
-        {markers.map(marker => (
+        {buildings.map(buildingMarker => (
           <Marker
-            key={marker.title}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            description={marker.description}
-            pinColor={marker.pinColor}
+            key={buildingMarker.getIdentifier()}
+            coordinate={parseLocationToLatLngType(obtainCoordinateFromBuilding(buildingMarker))}
+            title={buildingMarker.getIdentifier()}
+            description={buildingMarker.getName()}
+            pinColor={Colors.markersPinColor}
+            onPress={() => {
+              location.setLatitude(buildingMarker.getLocation().getLatitude());
+              location.setLongitude(buildingMarker.getLocation().getLongitude());
+              campus.setLocation(buildingMarker.getLocation());
+              building.setName(buildingMarker.getName());
+              building.setDescription(buildingMarker.getDescription());
+              building.setEvents(buildingMarker.getEvents()); // TODO: change for event feature
+              building.setCampus(campus);
+              building.setLocation(location);
+              building.setIdentifier(buildingMarker.getIdentifier());
+              this.displayBuildingInfo(building, true);
+            }}
           >
             <View style={styles.circle}>
-              <Text style={styles.pinText}>{marker.label}</Text>
+              <Text style={styles.pinText}>{buildingMarker.getIdentifier()}</Text>
             </View>
           </Marker>
         ))}
@@ -79,7 +114,7 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, any> {
             <Image source={busIcon} style={styles.icon} />
           </Marker>
         ))}
-      </>
+      </View>
     );
   }
 }

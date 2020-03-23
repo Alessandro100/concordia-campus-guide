@@ -4,7 +4,6 @@ import { shallow, mount, render } from 'enzyme';
 import CampusToggleButton from '../components/CampusToggleButton';
 import { TouchableHighlight, Text } from 'react-native';
 import Campus from '../classes/campus';
-import MapView, { Marker, Polyline } from 'react-native-maps';
 import Colors from '../constants/Colors';
 import Location from '../classes/location';
 
