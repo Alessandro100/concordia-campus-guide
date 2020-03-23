@@ -1,51 +1,60 @@
 import PointOfInterest from './pointOfInterest';
 
 class campusEvent {
-  title: String;
+  private _title : string;
+  private _description : string;
+  private _startDate : Date;
+  private _endDate : Date;
+  private _location : PointOfInterest;
 
-  description: String;
-
-  startDateTime: Date;
-
-  location: PointOfInterest;
-
-  constructor(title: String, description: String, startDateTime: Date, location: PointOfInterest) {
-    this.title = title;
-    this.description = description;
-    this.startDateTime = startDateTime;
-    this.location = location;
+  constructor(title: string, description: string, startDate: Date, endDate: Date, location: PointOfInterest) {
+    this._title = title;
+    this._description = description;
+    this._startDate = startDate;
+    this._endDate = endDate;
+    this._location = location;
   }
 
-  getTitle() {
-    return this.title;
+  public get title() : string {
+    return this._title;
   }
 
-  getDescription() {
-    return this.description;
+  public set title(v : string) {
+    this._title = v;
+  }
+  
+  public get description() : string {
+    return this._description;
   }
 
-  getStartDateTime() {
-    return this.startDateTime;
+  public set description(v : string) {
+    this._description = v;
+  }
+  
+  public get startDate() : Date {
+    return this._startDate;
   }
 
-  getLocation() {
-    return this.location;
+  public set startDate(v : Date) {
+    this._startDate = v;
   }
 
-  setTitle(title: String) {
-    this.title = title;
+  public get endDate() : Date {
+    return this._endDate;
   }
 
-  setDescription(description: String) {
-    this.description = description;
+  public set endDate(v : Date) {
+    this._endDate = v;
   }
 
-  setStartDateTime(startTimeDate: Date) {
-    this.startDateTime = startTimeDate;
+  public get location() : PointOfInterest {
+    return this._location;
   }
 
-  setLocation(location: PointOfInterest) {
-    this.location = location;
+  public set location(v : PointOfInterest) {
+    this._location = v;
   }
+
 }
+
 export default campusEvent;
