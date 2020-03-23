@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import BottomDrawer from 'rn-bottom-drawer';
 import Building from '../classes/building';
 import Colors from '../constants/Colors';
@@ -36,12 +36,16 @@ const styles = StyleSheet.create({
     paddingRight: 4,
     paddingLeft: 4,
   },
+  indoorBtn: {
+    margin: 10,
+  },
 });
 
 type BottomDrawerBuildingProps = {
   building: Building;
   displayInfo: boolean;
   displayBuildingInfo(building: Building, displayInfo: boolean): void;
+  indoorDisplay(displayIndoor: boolean): void;
 };
 
 type BottomDrawerBuildingState = {
@@ -68,6 +72,11 @@ class BottomDrawerBuilding extends Component<BottomDrawerBuildingProps, BottomDr
     }
   }
 
+  changeToIndoorView() {
+    const { indoorDisplay } = this.props;
+    indoorDisplay(true);
+  }
+
   changeState() {
     const { displayInfo } = this.props;
     const { building } = this.props;
@@ -83,6 +92,13 @@ class BottomDrawerBuilding extends Component<BottomDrawerBuildingProps, BottomDr
           Location: [{building.getLocation().getLatitude()}, {building.getLocation().getLongitude()}
           ]
         </Text>
+        <View style={styles.indoorBtn}>
+          <Button
+            title="Indoor Navigation"
+            color={Colors.primaryColor}
+            onPress={() => this.changeToIndoorView}
+          />
+        </View>
         <Text style={styles.description}>{building.getDescription()}</Text>
         <Text style={styles.description}>Extra description here . . .</Text>
       </View>
