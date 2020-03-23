@@ -3,6 +3,8 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { REACT_APP_GOOGLE_PLACES_API } from 'react-native-dotenv';
 import Location from '../classes/location';
 import styles from '../constants/SearchBarStyling';
+import locationToGooglePlaceString from '../services/LocationService';
+import CampusLocations from '../constants/CampusLocations';
 
 const apiKey = REACT_APP_GOOGLE_PLACES_API;
 type searchBarProps = {
@@ -38,8 +40,8 @@ class SearchBar extends Component<searchBarProps, searchBarState> {
           // available options: https://developers.google.com/places/web-service/autocomplete
           key: apiKey,
           language: 'en', // language of the results
-          location: '45.496628, -73.578804', // Centered around hall building
-          radius: '80000',
+          location: locationToGooglePlaceString(CampusLocations.SGW.getLocation()), // Centered around hall building
+          radius: '400000',
         }}
         styles={styles}
         currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
