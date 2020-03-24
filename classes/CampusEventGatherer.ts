@@ -4,7 +4,7 @@ interface CampusEventGatherer {
     in the future with another class e.g. CampusEventAPICall
     while also keeping the option for webscraping.
     */
-    getEvents(): void;
+    gatherCampusEvents(): void;
 }
 
 export default CampusEventGatherer;
