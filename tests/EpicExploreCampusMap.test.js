@@ -10,6 +10,8 @@ import Colors from '../constants/Colors';
 import Location from '../classes/location';
 import MapView from '../App';
 import PolygonsAndMarkers from '../components/PolygonsAndMarkers';
+import CampusPolygons from '../constants/CampusPolygons';
+import App from '../App';
 
 function getBuildings() {
     return obtainBuildings();
@@ -23,24 +25,29 @@ function getMarkersLoyola() {
 }
 
 describe('Epic 1 System Test test suite', () => {
-
     test('US-18 - toggle button navigates through campuses', () => {
         const wrapperButton = shallow(<CampusToggleButton
             setMapLocation={function setMapLocation(lat, lon) { }}
-        />
-        );
-         wrapperButton.setState({currentCampusView: 'SGW'});
-         wrapperButton.find('[testID="toggle-loyola-button"]').props().onPress();
-         expect(wrapperButton.state().currentCampusView).toEqual('Loyola');
-        });
-    
-        // test('US-19 Clicking building gives description', () => {
-        //     const markersSGW = getMarkersSGW();
-        //     const markersLoyola = getMarkersLoyola();
-        //     const buildings = getBuildings();
-
-        //     const wrapperBuilding = shallow(<PolygonsAndMarkers/>)
-        //     wrapperBuilding.find('displayBuildingInfo()').props().onPres();
-
-        // });
+        />);
+        wrapperButton.setState({currentCampusView: 'SGW'});
+        wrapperButton.find('[testID="toggle-loyola-button"]').props().onPress();
+        expect(wrapperButton.state().currentCampusView).toEqual('Loyola');
     });
+    
+    test('US-19 Clicking building gives description', () => {
+        const buildings = obtainBuildings();
+        const polygons = CampusPolygons.slice(0);
+
+        const wrapperBuilding = shallow(
+            <PolygonsAndMarkers
+                buildings={buildings}
+                polygons={polygons}
+                displaybuilding={displayBuildingInfo = (building, displayInfo) => {
+                    expect(building.identifier).toEqual('LB')
+                    expect(displayInfo).toEqual(true)
+                }}
+            />
+        )
+        wrapperBuilding.find('[testID="LB"]').props().onPress();
+    });
+});
