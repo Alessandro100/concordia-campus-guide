@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
@@ -39,6 +39,7 @@ type appState = {
   displayInfo: boolean;
   building: Building;
   buildings: Building[];
+  displayIndoor: boolean;
 };
 
 class App extends Component<{}, appState> {
@@ -56,6 +57,7 @@ class App extends Component<{}, appState> {
       polygons: CampusPolygons.slice(0),
       buildings: obtainBuildings(),
       displayInfo: false,
+      displayIndoor: false,
     };
   }
 
@@ -70,42 +72,61 @@ class App extends Component<{}, appState> {
     });
   };
 
+  callbackInOut = (status: boolean) => {
+    this.setState({ displayIndoor: status });
+  };
+
   /* Needed to pass callback to child (PolygonsAndMarkers.tsx) to update parent state (App.tsx) */
   displayBuildingInfo = (building: Building, displayInfo: boolean) => {
     this.setState({ displayInfo });
     this.setState({ building });
   };
 
-  render() {
-    const { region, buildings, polygons, displayInfo, building } = this.state;
+  inOrOutView() {
+    const { region, buildings, polygons, displayInfo, building, displayIndoor } = this.state;
+    if (displayIndoor === false) {
+      return (
+        <View style={styles.container}>
+          <SearchBar setMapLocation={this.setMapLocation} />
+          <CampusToggleButton setMapLocation={this.setMapLocation} />
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.mapStyle}
+            region={region}
+            showsUserLocation
+          >
+            <PolygonsAndMarkers
+              buildings={buildings}
+              polygons={polygons}
+              displaybuilding={this.displayBuildingInfo}
+            />
+            <ShowDirection
+              startLocation={new OutdoorPOI(new Location(45.458488, -73.639862), 'test-start')}
+              endLocation={new OutdoorPOI(new Location(45.50349, -73.572182), 'test-end')}
+              transportType={transportMode.transit}
+            />
+          </MapView>
+          <BottomDrawerBuilding
+            displayInfo={displayInfo}
+            building={building}
+            displayBuildingInfo={this.displayBuildingInfo}
+            indoorDisplay={this.callbackInOut}
+          />
+        </View>
+      );
+    }
     return (
-      <View style={styles.container}>
-        <SearchBar setMapLocation={this.setMapLocation} />
-        <CampusToggleButton setMapLocation={this.setMapLocation} />
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.mapStyle}
-          region={region}
-          showsUserLocation
-        >
-          <PolygonsAndMarkers
-            buildings={buildings}
-            polygons={polygons}
-            displaybuilding={this.displayBuildingInfo}
-          />
-          <ShowDirection
-            startLocation={new OutdoorPOI(new Location(45.458488, -73.639862), 'test-start')}
-            endLocation={new OutdoorPOI(new Location(45.50349, -73.572182), 'test-end')}
-            transportType={transportMode.transit}
-          />
-        </MapView>
-        <BottomDrawerBuilding
-          displayInfo={displayInfo}
-          building={building}
-          displayBuildingInfo={this.displayBuildingInfo}
-        />
+      <View>
+        <Text>
+          indoor Component (should have a button somewhere that change the displayIndoor state to
+          false when user is done whit indoor)
+        </Text>
       </View>
     );
+  }
+
+  render() {
+    return this.inOrOutView();
   }
 }
 export default App;
