@@ -72,10 +72,10 @@ class BottomDrawerBuilding extends Component<BottomDrawerBuildingProps, BottomDr
     }
   }
 
-  changeToIndoorView() {
+  changeToIndoorView = (stat: boolean) => {
     const { indoorDisplay } = this.props;
-    indoorDisplay(true);
-  }
+    indoorDisplay(stat);
+  };
 
   changeState() {
     const { displayInfo } = this.props;
@@ -96,7 +96,7 @@ class BottomDrawerBuilding extends Component<BottomDrawerBuildingProps, BottomDr
           <Button
             title="Indoor Navigation"
             color={Colors.primaryColor}
-            onPress={() => this.changeToIndoorView}
+            onPress={() => this.changeToIndoorView(true)}
           />
         </View>
         <Text style={styles.description}>{building.getDescription()}</Text>
