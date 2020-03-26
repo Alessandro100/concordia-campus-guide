@@ -13,6 +13,7 @@ import SearchBar from './components/SearchBar';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/BuildingService';
+import CurrentPosition from './components/CurrentPosition';
 
 const styles = StyleSheet.create({
   container: {
@@ -106,6 +107,7 @@ class App extends Component<{}, appState> {
               transportType={transportMode.transit}
             />
           </MapView>
+          <CurrentPosition setMapLocation={this.setMapLocation} />
           <BottomDrawerBuilding
             displayInfo={displayInfo}
             building={building}
