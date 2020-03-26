@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Dimensions, Text } from 'react-native';
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polygon, PROVIDER_GOOGLE, Callout } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
 import CampusPolygons from './constants/CampusPolygons';
 import CampusMarkers from './constants/CampusMarkers';
+import OutCampusInterestMarkers from './constants/OutCampusInterestMarkers';
 import Colors from './constants/Colors';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const styles = StyleSheet.create({
   container: {
@@ -56,6 +58,7 @@ type appState = {
   };
   polygons: any[];
   markers: any[];
+  outCampusMarkers: any[];
 };
 
 class App extends Component<{}, appState> {
@@ -72,6 +75,7 @@ class App extends Component<{}, appState> {
       },
       polygons: CampusPolygons.slice(0),
       markers: CampusMarkers.slice(0),
+      outCampusMarkers: OutCampusInterestMarkers.slice(0),
     };
   }
 
@@ -87,7 +91,7 @@ class App extends Component<{}, appState> {
   };
 
   render() {
-    const { region, polygons, markers } = this.state;
+    const { region, polygons, markers,outCampusMarkers } = this.state;
 
     return (
       <View style={styles.container}>
@@ -114,6 +118,22 @@ class App extends Component<{}, appState> {
               <View style={styles.circle}>
                 <Text style={styles.pinText}>{marker.label}</Text>
               </View>
+            </Marker>
+          ))}
+          {outCampusMarkers.map(outCampusmarker => (
+            <Marker
+              coordinate={outCampusmarker.coordinate}
+            >
+              <Icon 
+              name={outCampusmarker.icon}
+              size={40}
+              color={outCampusmarker.pinColor}/>
+              <Callout>
+                <View style={{width:100}}>
+                  <Text>{outCampusmarker.type}</Text>
+                  <Text>{outCampusmarker.name}</Text>
+                </View>
+              </Callout>
             </Marker>
           ))}
           <ShowDirection
