@@ -6,6 +6,7 @@ import IndoorFloor from './indoorFloor';
 
 class Building extends OutdoorPOI {
   name: string;
+  title: string;
   description: string;
   events: CampusEvent[];
   campus: Campus;
@@ -16,6 +17,7 @@ class Building extends OutdoorPOI {
     description: string,
     events: CampusEvent[],
     campus: Campus,
+    title: string,
     location: Location,
     identifier: string
   ) {
@@ -26,6 +28,10 @@ class Building extends OutdoorPOI {
 
   addFloor(floor: IndoorFloor) {
     this.indoorFloors.push(floor);
+  }
+
+  setTitle(title: string) {
+    this.title = title;
   }
 
   getName() {

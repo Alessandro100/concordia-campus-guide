@@ -24,11 +24,12 @@ class IndoorFloorFactory {
       for (let z = 0; z < this.graphWidth; z += 1) {
         if (this.isLocationWalkable(z, i)) {
           const coordinate = new Coordinate(z, i);
-          const indoorFloor = IndoorFloorService.getFloor(
-            this.floorData.buildingName,
-            this.floorData.floorNumber
-          );
-          const tile = new IndoorPOI('walkway-node', coordinate, indoorFloor, 'walkway');
+          //this method is part of the indoor floor creation, can't get the floor its building
+          // const indoorFloor = IndoorFloorService.getFloor(
+          //   this.floorData.buildingName,
+          //   this.floorData.floorNumber
+          // );
+          const tile = new IndoorPOI('walkway-node', coordinate, null, 'walkway');
           const nodeKey = `${z}-${i}`;
           graph.setNode(nodeKey, tile);
           const upNodeKey = `${z}-${i - 1}`;

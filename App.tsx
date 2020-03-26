@@ -15,7 +15,8 @@ import IndoorFloorService from './services/indoorFloorService';
 import SearchBar from './components/SearchBar';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
-import { obtainBuildings } from './services/BuildingService';
+import { obtainBuildings } from './services/buildingService';
+import IndoorFloorMap from './components/IndoorFloorMap';
 //import BuildingService from './services/buildingService';
 
 const styles = StyleSheet.create({
@@ -86,19 +87,15 @@ class App extends Component<{}, appState> {
   render() {
     const { region, buildings, polygons, displayInfo, building } = this.state;
     const windowWidth = Dimensions.get('window').width;
-    const imageRatio = 2823.0 / 2643.0;
-    const imageHeight = windowWidth * imageRatio;
-    //let floor = new IndoorFloor(require('./assets/indoor-floor-plans/Hall-1.png'), windowWidth, imageHeight, 1, 100, 0);
-
     let floor = IndoorFloorService.getFloor('Hall', 1);
     floor.setImageWidth(windowWidth);
     floor.setInitialHeightPosition(100);
 
     return (
-      <View style={styles.container}>        
-        {floor.showFloorImage()}
-        {floor.showIndoorTile()}
-        {floor.drawPath('fake', 'nothing')}
+      <View style={styles.container}>    
+
+        <IndoorFloorMap indoorFloor={floor} route={null}/>    
+
         
         {/* <SearchBar setMapLocation={this.setMapLocation} />
         <CampusToggleButton setMapLocation={this.setMapLocation} />

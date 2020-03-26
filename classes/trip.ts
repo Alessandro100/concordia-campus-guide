@@ -4,11 +4,8 @@ import Path from '../interfaces/path';
 
 class Trip {
   origin: PointOfInterest;
-
   destination: PointOfInterest;
-
   route: Path;
-
   routeCalculator: RouteCalculator;
 
   constructor(

@@ -62,7 +62,9 @@ class ShowDirection extends Component<directionProps, directionState> {
       <>
         {trip.getRoute() != null && (
           <>
-            <Marker
+            {/* Get ending location is an issue as this takes the location of the entire trip. The beginning and 
+            ending might be indoors with and outdoor component in the middle. This currently does not support that */}
+            {/* <Marker
               coordinate={this.getPinLocation(trip.getRoute().getEndingLocation())}
               title="Ending Point"
               description="Ending point of the trip"
@@ -74,8 +76,8 @@ class ShowDirection extends Component<directionProps, directionState> {
               opacity={0.7}
             >
               <Image source={require('../assets/starting_icon.png')} style={styles.imageSize} />
-            </Marker>
-            {trip.getRoute().displayPath()}
+            </Marker> */}
+            {trip.getRoute().displayPath(false)}
           </>
         )}
       </>

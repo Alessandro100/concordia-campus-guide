@@ -2,11 +2,11 @@ import Polyline from '@mapbox/polyline';
 import { REACT_APP_GOOGLE_DIRECTIONS_API_KEY } from 'react-native-dotenv';
 import transportMode from './transportMode';
 import Location from './location';
-import UnitPath from './unitPath';
 import OutdoorPOI from './outdoorPOI';
 import CompoundPath from './compoundPath';
 import Colors from '../constants/Colors';
 import Path from '../interfaces/path';
+import OutdoorUnitPath from './outdoorUnitPath';
 
 class GoogleMapsAdapter {
   baseUrl = 'https://maps.googleapis.com/maps/api/directions/json';
@@ -26,7 +26,7 @@ class GoogleMapsAdapter {
         resp => {
           resp.json().then(
             respJson => {
-              const formattedSteps = this.formatSteps(respJson.routes[0].legs[0].steps);
+              const formattedSteps = this.formatOutdoorSteps(respJson.routes[0].legs[0].steps);
               resolve(formattedSteps);
             },
             err => {
@@ -58,10 +58,10 @@ class GoogleMapsAdapter {
     return Colors.mapsPolyline;
   };
 
-  formatSteps(steps: any[]) {
+  formatOutdoorSteps(steps: any[]) {
     const formattedSteps = new CompoundPath();
     steps.forEach(step => {
-      const formattedStep = new UnitPath(
+      const formattedStep = new OutdoorUnitPath(
         step.travel_mode,
         new OutdoorPOI(
           new Location(step.start_location.lat, step.start_location.lng),

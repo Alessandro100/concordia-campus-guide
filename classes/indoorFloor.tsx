@@ -30,12 +30,9 @@ class IndoorFloor {
 
         //display properties
         this.setImageWidth(floorData.imageWidthPX);
-        
         this.indoorFloorFactory = new IndoorFloorFactory(this.graphWidth, this.graphHeight, this.floorData);
         this.graph = this.indoorFloorFactory.generateGraph();
     }
-
-    
 
     setInitialWidthPosition(newInitialWidthPosition) {
         this.initialWidthPosition = newInitialWidthPosition;
@@ -107,8 +104,8 @@ class IndoorFloor {
         return array;
     }
 
-    drawPath(startingNode, endingNode) {
-        const coordinates = this.getPath(startingNode, endingNode);
+    drawPath(startingCoordinate, endingCoordinate) {
+        const coordinates = this.getPath(startingCoordinate, endingCoordinate);
         return this.drawLines(coordinates);
     }
 
@@ -140,7 +137,7 @@ class IndoorFloor {
 
     //returns the data on how to get from one tile to another
     getPath(startingNode: Coordinate, endingNode: Coordinate): Coordinate[] {
-        // Implement breadth first search @Nadia -- graph is initialized
+        //Implement breadth first search @Nadia -- graph is initialized
         //Structure of the Node-> key = xIndex-yIndex
         //library used for graph: @dagrejs/graphlib
         //beware of graph cycles 
@@ -149,7 +146,7 @@ class IndoorFloor {
             {x: 5, y: 27},
             {x: 10, y: 27},
             {x: 10, y: 25}
-        ]
+        ];
         return fakePath;
     }
 }
