@@ -10,14 +10,12 @@ import Colors from './constants/Colors';
 import OutdoorPOI from './classes/outdoorPOI';
 import IndoorFloor from './classes/indoorFloor';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
-//services
 import IndoorFloorService from './services/indoorFloorService';
 import SearchBar from './components/SearchBar';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/buildingService';
 import IndoorFloorMap from './components/IndoorFloorMap';
-//import BuildingService from './services/buildingService';
 
 const styles = StyleSheet.create({
   container: {
@@ -61,6 +59,8 @@ class App extends Component<{}, appState> {
         latitudeDelta: 0,
         longitudeDelta: 0.01,
       },
+      building: null,
+      markers: [],
       polygons: CampusPolygons.slice(0),
       buildings: obtainBuildings(),
       displayInfo: false,
@@ -86,10 +86,7 @@ class App extends Component<{}, appState> {
 
   render() {
     const { region, buildings, polygons, displayInfo, building } = this.state;
-    const windowWidth = Dimensions.get('window').width;
     let floor = IndoorFloorService.getFloor('Hall', 1);
-    floor.setImageWidth(windowWidth);
-    floor.setInitialHeightPosition(100);
 
     return (
       <View style={styles.container}>    
