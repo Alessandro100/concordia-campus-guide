@@ -42,6 +42,7 @@ export function obtainBuildings(): Building[] {
       marker.label
     );
     building.setName(marker.description);
+    building.setTitle(marker.title);
     building.setDescription(marker.buildingDescription);
     building.setIdentifier(marker.label);
     buildingsLoyola.push(building);
