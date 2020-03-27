@@ -96,7 +96,7 @@ class App extends Component<{}, appState> {
   
     const { region, buildings, polygons, displayInfo, building, displayIndoor,userPosition } = this.state;
    
-    if (displayIndoor === true) {
+    if (displayIndoor === false) {
      
       return (
         <View style={styles.container}>
@@ -134,7 +134,7 @@ class App extends Component<{}, appState> {
     }
     return (
      // <Text>inddor component </Text>
-     <InputBtn position={userPosition}/>
+    
     );
   }
 
