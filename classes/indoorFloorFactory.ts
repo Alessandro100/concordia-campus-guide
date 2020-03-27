@@ -5,23 +5,23 @@ import IndoorPOI from './indoorPOI';
 import IndoorFloorService from '../services/indoorFloorService';
 
 class IndoorFloorFactory {
-  graphWidth: number;
+  width: number;
 
-  graphHeight: number;
+  height: number;
 
   floorData: IndoorFloorData;
 
-  constructor(graphWidth, graphHeight, floorData) {
-    this.graphWidth = graphWidth;
-    this.graphHeight = graphHeight;
+  constructor(inputWidth, inputHeight, floorData) {
+    this.width = inputWidth;
+    this.height = inputHeight;
     this.floorData = floorData;
   }
 
   // generates a graph based on walkable path
   generateGraph() {
     const graph = new Graph({ directed: false });
-    for (let i = 0; i < this.graphHeight; i += 1) {
-      for (let z = 0; z < this.graphWidth; z += 1) {
+    for (let i = 0; i < this.height; i += 1) {
+      for (let z = 0; z < this.width; z += 1) {
         if (this.isLocationWalkable(z, i)) {
           const coordinate = new Coordinate(z, i);
           //this method is part of the indoor floor creation, can't get the floor its building
@@ -53,6 +53,7 @@ class IndoorFloorFactory {
     }
     return graph;
   }
+
 
   // determines if the location at the given index is walkable based on the walking data.
   isLocationWalkable(xIndex, yIndex) {

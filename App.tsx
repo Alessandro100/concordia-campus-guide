@@ -16,6 +16,7 @@ import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/buildingService';
 import IndoorFloorMap from './components/IndoorFloorMap';
+import Coordinate from './classes/coordinate';
 
 const styles = StyleSheet.create({
   container: {
@@ -47,6 +48,18 @@ type appState = {
 class App extends Component<{}, appState> {
   constructor(props) {
     super(props);
+
+    /**
+     * Code to Test Nadia's Additions
+     */
+
+    ////////////////////////////////////////////
+    let coordOne = new Coordinate(3,2);
+    console.log(coordOne);
+    console.log(coordOne.nodeNumberOfCoordinate(10,10));
+    coordOne.setXUsingNodeNumber(49, 10, 10);
+    coordOne.setYUsingNodeNumber(49, 10, 10);
+    console.log(coordOne);
 
     //BuildingService.init();
     IndoorFloorService.init();

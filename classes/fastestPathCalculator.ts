@@ -265,7 +265,6 @@ class FastestPathCalculator implements RouteCalculator {
     });
     return paths;
   }
-
   // floorKey = Building name + - + room number. Ex: Hall-1, JMSB-4
   decodeFloorKey = floorKey => {
     const pieces = floorKey.split('-');
