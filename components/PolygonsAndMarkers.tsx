@@ -81,6 +81,7 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
         ))}
         {buildings.map(buildingMarker => (
           <Marker
+            testID={buildingMarker.getIdentifier()}
             key={buildingMarker.getIdentifier()}
             coordinate={parseLocationToLatLngType(obtainCoordinateFromBuilding(buildingMarker))}
             title={buildingMarker.getIdentifier()}
