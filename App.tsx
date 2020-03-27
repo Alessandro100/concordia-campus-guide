@@ -14,6 +14,7 @@ import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/BuildingService';
 import CurrentPosition from './components/CurrentPosition';
+import InputBtn from './components/InputBtn';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,6 +30,7 @@ const styles = StyleSheet.create({
 });
 
 type appState = {
+  userPosition:Location;
   region: {
     latitude: number;
     longitude: number;
@@ -48,6 +50,7 @@ class App extends Component<{}, appState> {
     super(props);
 
     this.state = {
+      userPosition: new Location (45.497406,-73.577102),
       region: {
         // this is the SGW campus location
         latitude: 45.497406,
@@ -83,18 +86,30 @@ class App extends Component<{}, appState> {
     this.setState({ building });
   };
 
+  changeCurrentPosition  = (coordinate: any) => {
+    const { userPosition } = this.state;
+    userPosition.setLatitude(coordinate.latitude);
+    userPosition.setLongitude(coordinate.longitude);
+  };
+    
   inOrOutView() {
-    const { region, buildings, polygons, displayInfo, building, displayIndoor } = this.state;
-    if (displayIndoor === false) {
+  
+    const { region, buildings, polygons, displayInfo, building, displayIndoor,userPosition } = this.state;
+   
+    if (displayIndoor === true) {
+     
       return (
         <View style={styles.container}>
           <SearchBar setMapLocation={this.setMapLocation} />
           <CampusToggleButton setMapLocation={this.setMapLocation} />
+          <InputBtn position={userPosition}/>
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}
             region={region}
-            showsUserLocation
+            showsUserLocation={true}
+            onUserLocationChange={(coordinates)=>this.changeCurrentPosition(coordinates)}
+            
           >
             <PolygonsAndMarkers
               buildings={buildings}
@@ -118,12 +133,8 @@ class App extends Component<{}, appState> {
       );
     }
     return (
-      <View>
-        <Text>
-          indoor Component (should have a button somewhere that change the displayIndoor state to
-          false when user is done whit indoor)
-        </Text>
-      </View>
+     // <Text>inddor component </Text>
+     <InputBtn position={userPosition}/>
     );
   }
 
