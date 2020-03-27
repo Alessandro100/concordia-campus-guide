@@ -91,7 +91,7 @@ class App extends Component<{}, appState> {
     return (
       <View style={styles.container}>    
 
-        <IndoorFloorMap indoorFloor={floor} route={null}/>    
+        <IndoorFloorMap indoorFloor={floor}/>    
 
         
         {/* <SearchBar setMapLocation={this.setMapLocation} />

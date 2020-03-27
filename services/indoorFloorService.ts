@@ -23,9 +23,10 @@ const IndoorFloorService = {
     });
   },
 
-  getFloor(buildingName: string, floorNumber) {
+  getFloor(buildingName: string, floorNumber: number) {
     return IndoorFloorService.createdFloors.find(
-      u => u.floorData.floorNumber === floorNumber && u.building.title === buildingName
+      u =>
+        String(u.floorData.floorNumber) === String(floorNumber) && u.building.title === buildingName
     );
   },
 
