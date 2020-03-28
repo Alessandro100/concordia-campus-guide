@@ -9,30 +9,30 @@ const staircaseData = {
     y: 25
 }
 const bathroomData = [
-    {
-        b1: {
+    
+       {
             x: 14,
             y: 20
         },
-        b2: {
+         {
             x: 14,
             y: 19
         }
-    }
+    
 ]
 
-const entranceData = [
+const entranceData = 
     {
         x: 11,
         y: 29
     }
-]
+
 
 const waterFountainsData =
-{
+[{
     x: 14,
     y: 20
-}
+}]
 
 const classRoomsData = [
     {

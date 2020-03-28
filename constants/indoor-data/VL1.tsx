@@ -12,26 +12,23 @@ const staircaseData = {
 // COV-ID PREVENTS US TO CHECK THAT DATA -- example coordinates
 const bathroomData = [
   {
-    b1: {
-      x: 10,
-      y: 10
-    }
-
+    x: 10,
+    y: 10
   }
 ]
 // COV-ID PREVENTS US TO CHECK THAT DATA -- example coordinates
-const entranceData = [
-  {
-    x: 4,
-    y: 28
-  }
-]
+const entranceData =
+{
+  x: 4,
+  y: 28
+}
+
 // COV-ID PREVENTS US TO CHECK THAT DATA -- example coordinates
 const waterFountainsData =
-{
-  x: 11,
-  y: 10
-}
+  [{
+    x: 11,
+    y: 10
+  }]
 // COV-ID PREVENTS US TO CHECK THAT DATA -- example coordinates
 const classRoomsData = [
   {

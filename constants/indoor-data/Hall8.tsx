@@ -13,23 +13,23 @@ const staircaseData = {
   y: 18
 }
 const bathroomData = [
-  {
-    b1: {
+  
+    {
       x: 12,
       y: 7
     },
-    b2: {
+    {
       x: 18,
       y: 7
     }
-  }
+  
 ]
 
 const waterFountainsData =
-{
+[{
   x: 19,
   y: 7
-}
+}]
 
 const classRoomsData = [
   {
