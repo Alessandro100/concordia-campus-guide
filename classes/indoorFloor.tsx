@@ -173,7 +173,7 @@ class IndoorFloor {
         let minimalNodePath = possiblePaths[locationOfMinDistance][3]
         let path = [];        
         for(let i = 0; i < minimalNodePath.length; i){
-            minimalNodePath.push(this.nodeNumberToCoordinate(minimalNodePath[i]));
+            path.push(this.nodeNumberToCoordinate(minimalNodePath[i]));
         }
         return path;
     }
