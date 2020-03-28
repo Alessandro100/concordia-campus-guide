@@ -6,9 +6,7 @@ import IndoorFloorService from '../services/indoorFloorService';
 
 class IndoorFloorFactory {
   width: number;
-
   height: number;
-
   floorData: IndoorFloorData;
 
   constructor(inputWidth, inputHeight, floorData) {
@@ -19,7 +17,11 @@ class IndoorFloorFactory {
 
   // generates a graph based on walkable path
   generateGraph() {
-    const graph = new Graph({ directed: false });
+      
+  }
+
+
+/*     const graph = new Graph({ directed: false });
     for (let i = 0; i < this.height; i += 1) {
       for (let z = 0; z < this.width; z += 1) {
         if (this.isLocationWalkable(z, i)) {
@@ -52,7 +54,7 @@ class IndoorFloorFactory {
       }
     }
     return graph;
-  }
+  }*/
 
 
   // determines if the location at the given index is walkable based on the walking data.
