@@ -15,7 +15,7 @@ const IndoorFloorService = {
     IndoorFloorService.createdFloors = [];
     IndoorFloorService.allFloorData.forEach(floorData => {
       const building = obtainBuildings().find(b => b.title === floorData.buildingName);
-      const floor = new IndoorFloor(building, floorData);
+      const floor = new IndoorFloor(building,  floorData);
       const windowWidth = Dimensions.get('window').width;
       floor.setImageWidth(windowWidth);
       floor.setInitialHeightPosition(100);

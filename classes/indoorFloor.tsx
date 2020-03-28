@@ -27,7 +27,7 @@ class IndoorFloor {
     indoorFloorFactory: IndoorFloorFactory;
     isBuildingEntrance: boolean;
 
-    constructor(building:Building, floorData: IndoorFloorData) {
+    constructor(building:Building,floorData: IndoorFloorData) {
         this.building = building;
         this.floorData = floorData;
 
@@ -143,8 +143,19 @@ class IndoorFloor {
     }
 
     //returns the data on how to get from one tile to another
-    getPath(startingNode: Coordinate, endingNode: Coordinate): Coordinate[] {
-        let nearestWalkableNodesToStartNode = this.getNearestWalkableCoordinate(startingNode);
+    getPath(startCoordinate: Coordinate, endCoordinate: Coordinate): Coordinate[] {
+        let startNode = this.coordinateToNodeNumber(startCoordinate);
+        let endNode = this.coordinateToNodeNumber(endCoordinate);
+        let nodePath = this.bfs(startNode, endNode);
+        let coordinatePath = [];
+
+        for(let i = 0; i < nodePath.length; i++){
+            coordinatePath.push(this.nodeNumberToCoordinate(nodePath[i]));
+        }
+
+        return coordinatePath;
+
+/*         let nearestWalkableNodesToStartNode = this.getNearestWalkableCoordinate(startingNode);
         let nearestWalkableNodesToEndNode  = this.getNearestWalkableCoordinate(endingNode);
         let possiblePaths = new Array();
         for(let i = 0; i < nearestWalkableNodesToStartNode.length; i++){
@@ -168,14 +179,9 @@ class IndoorFloor {
                 minDistance = possiblePaths[i][4];
                 locationOfMinDistance = i;
             }
-        } 
+        }  */
 
-        let minimalNodePath = possiblePaths[locationOfMinDistance][3]
-        let path = [];        
-        for(let i = 0; i < minimalNodePath.length; i){
-            path.push(this.nodeNumberToCoordinate(minimalNodePath[i]));
-        }
-        return path;
+    
     }
 
     nodeNumberToCoordinate(inputNodeNumber: number){
@@ -212,16 +218,7 @@ class IndoorFloor {
           inputCoordinate.getY() < this.graphHeight;
       }
 
-        addToCoordinateQueueNearestWalkableCooordinate(nodeQueue, node, distanceArray){
-            if (this.isNodeValid(node) && (this.isNodeWalkable(node))){
-                distanceArray[node] = distanceArray[node] + 1;
-            }
-            else if(this.isNodeValid(node) && !(this.isNodeWalkable(node))){
-                nodeQueue.push(node);
-            }
-        }
-
-        generateAdjacentNodes(inputNode: number){
+    generateAdjacentNodes(inputNode: number){
             let adjacentNodes = new Array();
             adjacentNodes.push(inputNode + 1);
             adjacentNodes.push(inputNode - 1);
@@ -315,10 +312,10 @@ class IndoorFloor {
             console.log("My Final Direction array" + directionArray);
         }
         
-        return [directionArray[endNode], distanceArray[endNode]];
+        return directionArray[endNode];
     } 
 
-    getNearestWalkableCoordinate(inputCoordinate: Coordinate){
+  /*   getNearestWalkableCoordinate(inputCoordinate: Coordinate){
         let inputNode = this.coordinateToNodeNumber(inputCoordinate);
         let distanceArray = new Array();
         let nodeQueue = new Array();
@@ -371,7 +368,7 @@ class IndoorFloor {
             }
         }
         return walkableNodes;
-    }
+    } */
       
      
 

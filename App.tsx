@@ -17,6 +17,8 @@ import Building from './classes/building';
 import { obtainBuildings } from './services/buildingService';
 import IndoorFloorMap from './components/IndoorFloorMap';
 import Coordinate from './classes/coordinate';
+import ToyData from './constants/indoor-data/toy-data'
+import Campus from './classes/campus';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,6 +32,12 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height,
   },
 });
+
+
+
+
+
+
 
 type appState = {
   region: {
@@ -54,12 +62,7 @@ class App extends Component<{}, appState> {
      */
 
     ////////////////////////////////////////////
-    let coordOne = new Coordinate(3,2);
-    console.log(coordOne);
-    console.log(coordOne.nodeNumberOfCoordinate(10,10));
-    coordOne.setXUsingNodeNumber(49, 10, 10);
-    coordOne.setYUsingNodeNumber(49, 10, 10);
-    console.log(coordOne);
+
 
     //BuildingService.init();
     IndoorFloorService.init();
