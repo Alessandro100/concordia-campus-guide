@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Dimensions, Text } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polygon, PROVIDER_GOOGLE, Callout } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
-import Location from './classes/location';
 import CampusPolygons from './constants/CampusPolygons';
+import CampusMarkers from './constants/CampusMarkers';
+import OutCampusInterestMarkers from './constants/OutCampusInterestMarkers';
 import Colors from './constants/Colors';
-import OutdoorPOI from './classes/outdoorPOI';
-import PolygonsAndMarkers from './components/PolygonsAndMarkers';
-import SearchBar from './components/SearchBar';
-import BottomDrawerBuilding from './components/BottomDrawerBuilding';
-import Building from './classes/building';
-import { obtainBuildings } from './services/BuildingService';
-import CurrentPosition from './components/CurrentPosition';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,9 +17,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  search: {
+    width: Dimensions.get('window').width - 50,
+    height: 50,
+    backgroundColor: Colors.white,
+    position: 'absolute',
+    zIndex: 2,
+    top: 50,
+    borderRadius: 5,
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 1,
+  },
   mapStyle: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
+  },
+  circle: {
+    width: 30,
+    height: 30,
+    borderRadius: 30 / 2,
+    backgroundColor: Colors.mapMarkerColor,
+  },
+  pinText: {
+    color: Colors.white,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20,
+    marginBottom: 10,
   },
 });
 
@@ -37,10 +58,7 @@ type appState = {
   };
   polygons: any[];
   markers: any[];
-  displayInfo: boolean;
-  building: Building;
-  buildings: Building[];
-  displayIndoor: boolean;
+  outCampusMarkers: any[];
 };
 
 class App extends Component<{}, appState> {
@@ -56,79 +74,79 @@ class App extends Component<{}, appState> {
         longitudeDelta: 0.01,
       },
       polygons: CampusPolygons.slice(0),
-      buildings: obtainBuildings(),
-      displayInfo: false,
-      displayIndoor: false,
+      markers: CampusMarkers.slice(0),
+      outCampusMarkers: OutCampusInterestMarkers.slice(0),
     };
   }
 
-  setMapLocation = (location: Location) => {
+  setMapLocation = (latitude, longitude) => {
     this.setState({
       region: {
-        latitude: location.getLatitude(),
-        longitude: location.getLongitude(),
+        latitude,
+        longitude,
         latitudeDelta: 0,
         longitudeDelta: 0.01,
       },
     });
   };
 
-  callbackInOut = (status: boolean) => {
-    this.setState({ displayIndoor: status });
-  };
+  render() {
+    const { region, polygons, markers,outCampusMarkers } = this.state;
 
-  /* Needed to pass callback to child (PolygonsAndMarkers.tsx) to update parent state (App.tsx) */
-  displayBuildingInfo = (building: Building, displayInfo: boolean) => {
-    this.setState({ displayInfo });
-    this.setState({ building });
-  };
-
-  inOrOutView() {
-    const { region, buildings, polygons, displayInfo, building, displayIndoor } = this.state;
-    if (displayIndoor === false) {
-      return (
-        <View style={styles.container}>
-          <SearchBar setMapLocation={this.setMapLocation} />
-          <CampusToggleButton setMapLocation={this.setMapLocation} />
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            style={styles.mapStyle}
-            region={region}
-            showsUserLocation
-          >
-            <PolygonsAndMarkers
-              buildings={buildings}
-              polygons={polygons}
-              displaybuilding={this.displayBuildingInfo}
-            />
-            <ShowDirection
-              startLocation={new OutdoorPOI(new Location(45.458488, -73.639862), 'test-start')}
-              endLocation={new OutdoorPOI(new Location(45.50349, -73.572182), 'test-end')}
-              transportType={transportMode.transit}
-            />
-          </MapView>
-          <CurrentPosition setMapLocation={this.setMapLocation} />
-          <BottomDrawerBuilding
-            displayInfo={displayInfo}
-            building={building}
-            displayBuildingInfo={this.displayBuildingInfo}
-            indoorDisplay={this.callbackInOut}
-          />
-        </View>
-      );
-    }
     return (
-      <View>
-        <Text>
-          indoor Component (should have a button somewhere that change the displayIndoor state to
-          false when user is done whit indoor)
-        </Text>
+      <View style={styles.container}>
+        <View style={styles.search} />
+        <CampusToggleButton setMapLocation={this.setMapLocation} />
+        <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
+          {polygons.map(polygon => (
+            <View key={`${String(polygon.latitude)}-${String(polygon.longitude)}`}>
+              <Polygon
+                coordinates={polygon}
+                strokeColor={Colors.polygonStroke}
+                strokeWidth={1}
+                fillColor={Colors.polygonFill}
+              />
+            </View>
+          ))}
+          {markers.map(marker => (
+            <Marker
+              coordinate={marker.coordinate}
+              title={marker.title}
+              description={marker.description}
+              pinColor={marker.pinColor}
+            >
+              <View style={styles.circle}>
+                <Text style={styles.pinText}>{marker.label}</Text>
+              </View>
+            </Marker>
+          ))}
+          {outCampusMarkers.map(outCampusmarker => (
+            <Marker
+              coordinate={outCampusmarker.coordinate}
+            >
+              <Icon 
+              name={outCampusmarker.icon}
+              size={40}
+              color={outCampusmarker.pinColor}/>
+              <Callout>
+                <View style={{width:100}}>
+                  <Text>{outCampusmarker.type}</Text>
+                  <Text>{outCampusmarker.name}</Text>
+                </View>
+              </Callout>
+            </Marker>
+          ))}
+          <ShowDirection
+            startLat={45.458488}
+            startLon={-73.639862}
+            endLat={45.50349}
+            endLon={-73.572182}
+            transportType={transportMode.transit}
+          />
+        </MapView>
       </View>
     );
   }
-
-  render() {
-    return this.inOrOutView();
-  }
 }
+
 export default App;
