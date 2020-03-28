@@ -7,9 +7,6 @@ import Coordinate from './coordinate';
 import IndoorFloorData from './indoorFloorData'
 import Building from './building';
 
-const sampleStartPoint: Coordinate = {x: 8, y: 29}; 
-const sampleEndPoint: Coordinate = {x: 24, y: 20};
-
 class IndoorFloor {
     graphWidth = 30;
     graphHeight = 30;
@@ -65,11 +62,32 @@ class IndoorFloor {
                 color = 'blue';
             }
         })
-        if(xIndex === sampleStartPoint.x && yIndex === sampleStartPoint.y) {
+        if(this.floorData.entrance && xIndex === this.floorData.entrance.x && yIndex === this.floorData.entrance.y) {
             color = 'white'
         }
-        if(xIndex === sampleEndPoint.x && yIndex === sampleEndPoint.y) {
+        if(this.floorData.elevator && xIndex === this.floorData.elevator.x && yIndex === this.floorData.elevator.y) {
             color = 'black'
+        }
+        if(this.floorData.bathrooms) {
+            this.floorData.bathrooms.forEach(bathroom =>{
+                if(xIndex === bathroom.x && yIndex === bathroom.y) {
+                    color = 'yellow'
+                }
+            })
+        }
+        if(this.floorData.waterFountains) {
+            this.floorData.waterFountains.forEach(waterFountain =>{
+                if(xIndex === waterFountain.x && yIndex === waterFountain.y) {
+                    color = 'purple'
+                }
+            })
+        }
+        if(this.floorData.classRooms) {
+            this.floorData.classRooms.forEach(classRoom =>{
+                if(xIndex === classRoom.location.x && yIndex === classRoom.location.y) {
+                    color = 'orange'
+                }
+            })
         }
         return color;
     }
@@ -115,9 +133,6 @@ class IndoorFloor {
         const heightPerTile = this.imageHeight / this.graphHeight;
 
         for (let pathIndex = 0; pathIndex < path.length - 1; pathIndex = pathIndex + 1) {
-            const xPosition = path[pathIndex].x * widthPerTile;
-            const yPosition = path[pathIndex].y * heightPerTile;
-
             const startingLocation = {
                 xpx: path[pathIndex].x * widthPerTile + (0.5 * widthPerTile),
                 ypx: path[pathIndex].y * heightPerTile + (0.5 * heightPerTile)
