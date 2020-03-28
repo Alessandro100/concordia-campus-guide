@@ -1,4 +1,4 @@
-import Coordinate from './Coordinate';
+import Coordinate from './coordinate';
 
 class IndoorFloorData {
     floorImage: any;
@@ -11,7 +11,7 @@ class IndoorFloorData {
     bathrooms: Coordinate[];
     entrance: Coordinate;
     waterFountains: Coordinate[];
-    classRooms: {classRoom: string, location: Coordinate};
+    classRooms: {classRoom: string, location: Coordinate}[];
     
     constructor(floorImage, floorNumber, buildingName, imageWidthPX, imageHeightPX, walkwayData) {
         this.floorImage = floorImage;
