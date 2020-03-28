@@ -20,7 +20,7 @@ class IndoorFloor {
 
     //graph: Graph;
     //Added by NS
-    adjacencyMatrix: number[][];
+    //adjacencyMatrix: number[][];
     /////////////////
     building: Building;
     floorData: IndoorFloorData;
@@ -35,9 +35,6 @@ class IndoorFloor {
         this.setImageWidth(floorData.imageWidthPX);
         this.indoorFloorFactory = new IndoorFloorFactory(this.graphWidth, this.graphHeight, this.floorData);
         //Added by NS
-        this.initializeAdjacencyMatrix();
-        this.fillInAdjacencyMatrix();
-
         //this.graph = this.indoorFloorFactory.generateGraph();
     }
 
@@ -147,11 +144,12 @@ class IndoorFloor {
         let startNode = this.coordinateToNodeNumber(startCoordinate);
         let endNode = this.coordinateToNodeNumber(endCoordinate);
         let nodePath = this.bfs(startNode, endNode);
+        console.log("My Node Path is:" + nodePath);
         let coordinatePath = [];
 
-        for(let i = 0; i < nodePath.length; i++){
+       for(let i = 0; i < nodePath.length; i++){
             coordinatePath.push(this.nodeNumberToCoordinate(nodePath[i]));
-        }
+        } 
 
         return coordinatePath;
 
@@ -191,7 +189,7 @@ class IndoorFloor {
       }
     
     coordinateToNodeNumber(inputCoordinate: Coordinate){
-        return this.graphWidth * inputCoordinate.getY() + inputCoordinate.getX();
+        return this.graphWidth * inputCoordinate.y + inputCoordinate.x;
     }
 
     isNodeWalkable(inputNode: number) {
@@ -199,10 +197,10 @@ class IndoorFloor {
         let isWalkable = false;
         this.floorData.walkways.forEach(obj => {
           if (
-            inputCoordinate.getX >= obj.topLeft.x &&
-            inputCoordinate.getX <= obj.bottomRight.x &&
-            inputCoordinate.getY >= obj.topLeft.y &&
-            inputCoordinate.getY <= obj.bottomRight.y
+            inputCoordinate.x >= obj.topLeft.x &&
+            inputCoordinate.x <= obj.bottomRight.x &&
+            inputCoordinate.y >= obj.topLeft.y &&
+            inputCoordinate.y <= obj.bottomRight.y
           ) {
             isWalkable = true;
           }
@@ -212,10 +210,10 @@ class IndoorFloor {
 
       isNodeValid(inputNode: number){
           let inputCoordinate = this.nodeNumberToCoordinate(inputNode);
-          return inputCoordinate.getX() >= 0 &&
-          inputCoordinate.getX() < this.graphWidth &&
-          inputCoordinate.getY() >= 0 &&
-          inputCoordinate.getY() < this.graphHeight;
+          return inputCoordinate.x >= 0 &&
+          inputCoordinate.x < this.graphWidth &&
+          inputCoordinate.y >= 0 &&
+          inputCoordinate.y < this.graphHeight;
       }
 
     generateAdjacentNodes(inputNode: number){
@@ -229,7 +227,7 @@ class IndoorFloor {
       }
 
 
-    initializeAdjacencyMatrix() {
+/*     initializeAdjacencyMatrix() {
             this.adjacencyMatrix = [];
             for (let i = 0; i < this.graphHeight * this.graphWidth; i++) {
               this.adjacencyMatrix.push(new Array(this.graphHeight * this.graphWidth));
@@ -237,9 +235,9 @@ class IndoorFloor {
                 this.adjacencyMatrix[i][j] = 0;
               }
             }
-        }         
+        }    */      
 
-    fillInAdjacencyMatrix() { 
+/*     fillInAdjacencyMatrix() { 
             for (let i = 0; i < this.adjacencyMatrix.length; i++){ 
               if(this.isNodeWalkable(i)){
                   let adjacentNodes = this.generateAdjacentNodes(i);
@@ -250,20 +248,21 @@ class IndoorFloor {
                   }
               }
             }
-          } 
+          }  */
         
     bfs(startNode:number, endNode: number) { 
         console.log("My start node is: " + startNode);
-            
+        console.log("My end node is: " + endNode);
+        
         let distanceArray = [];
-        for (let i = 0; i < this.adjacencyMatrix.length; i++) { 
+        for (let i = 0; i < this.graphHeight * this.graphWidth; i++) { 
             distanceArray.push(-1);
         }
         distanceArray[startNode] = 0;
         console.log("My Starting Distance Array is:" + distanceArray);
-            
+          
         let directionArray: number [][] = [];
-        for (let i = 0; i < this.adjacencyMatrix.length; i++) { 
+        for (let i = 0; i < this.graphHeight * this.graphWidth; i++) { 
               directionArray[i] = [];
         }
         directionArray[startNode].push(startNode);
@@ -272,47 +271,49 @@ class IndoorFloor {
         let queueOfNodesToVisit = new Array();
         queueOfNodesToVisit.push(startNode);
         console.log("My queue of Nodes to visit is: " + queueOfNodesToVisit);
-        
+    
         while (queueOfNodesToVisit.length > 0) {
-            //Next node to examine
-            let distance = 1;
-            let currentNode = queueOfNodesToVisit[0];
-            queueOfNodesToVisit.pop();
+            let currentNode = queueOfNodesToVisit.pop();
             console.log("The node I am checking for adjacent nodes:" + currentNode);
+            console.log("After popping of the queue, my queue of current nodes is:" + queueOfNodesToVisit);
+
             let neighbouringNodes = [];
         
-            if (this.adjacencyMatrix[currentNode][currentNode - 1] == 1) {
+            if (this.isNodeWalkable(currentNode - 1) && this.isNodeValid(currentNode -1)) {
                 neighbouringNodes.push(currentNode - 1);
             }
-            if (this.adjacencyMatrix[currentNode][currentNode + 1] == 1) { 
+            if (this.isNodeWalkable(currentNode + 1) && this.isNodeValid(currentNode +1)) {
                 neighbouringNodes.push(currentNode + 1);
             }
-            if (this.adjacencyMatrix[currentNode][currentNode - this.graphWidth]) { 
+            if (this.isNodeWalkable(currentNode - this.graphWidth) && this.isNodeValid(currentNode - this.graphWidth)) {
                 neighbouringNodes.push(currentNode - this.graphWidth);
             }
-            if (this.adjacencyMatrix[currentNode][currentNode + this.graphWidth]) { 
+            if (this.isNodeWalkable(currentNode + this.graphWidth) && this.isNodeValid(currentNode + this.graphWidth)) {
                 neighbouringNodes.push(currentNode + this.graphWidth);
-            }
+            }            
+
             console.log("Neighbouring Nodes" + neighbouringNodes);
+            
             for (let i = 0; i < neighbouringNodes.length; i++) { 
               if (distanceArray[neighbouringNodes[i]] ==-1) {
                 let nodeOfInterest = neighbouringNodes[i];
-                console.log("The neighbouring Node is" + nodeOfInterest);
+                console.log("The neighbouring Node is " + nodeOfInterest);
                 distanceArray[nodeOfInterest] = distanceArray[currentNode] + 1;
+                console.log("The updated distance for this node is: " + distanceArray[nodeOfInterest])
                 let currentDirectionArray = Array.from(directionArray[currentNode]);
-                console.log("Pre-array" + currentDirectionArray);
+                console.log("The previous direction for this node is:" + currentDirectionArray[nodeOfInterest]);
                 currentDirectionArray.push(nodeOfInterest);
-                console.log("Post-array" + currentDirectionArray);
                 directionArray[nodeOfInterest] = currentDirectionArray;
-                queueOfNodesToVisit.push(neighbouringNodes[i]);
+                console.log("The updated direction for this node is:" + directionArray[nodeOfInterest]); 
+                queueOfNodesToVisit.push(nodeOfInterest);
               }
             }
+            console.log("The length of the queue is:" + queueOfNodesToVisit.length);
             console.log("My Queue" + queueOfNodesToVisit);
             console.log("My Final Distance array is:" + distanceArray);
             console.log("My Final Direction array" + directionArray);
-        }
-        
-        return directionArray[endNode];
+        }   
+        return directionArray[endNode]; 
     } 
 
   /*   getNearestWalkableCoordinate(inputCoordinate: Coordinate){

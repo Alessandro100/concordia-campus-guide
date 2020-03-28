@@ -56,14 +56,6 @@ type appState = {
 class App extends Component<{}, appState> {
   constructor(props) {
     super(props);
-
-    /**
-     * Code to Test Nadia's Additions
-     */
-
-    ////////////////////////////////////////////
-
-
     //BuildingService.init();
     IndoorFloorService.init();
 
@@ -81,6 +73,7 @@ class App extends Component<{}, appState> {
       buildings: obtainBuildings(),
       displayInfo: false,
     };
+    console.log("Hello World");
   }
 
   setMapLocation = (location: Location) => {
@@ -99,6 +92,7 @@ class App extends Component<{}, appState> {
     this.setState({ displayInfo });
     this.setState({ building });
   };
+
 
   render() {
     const { region, buildings, polygons, displayInfo, building } = this.state;
