@@ -101,7 +101,6 @@ class BottomDrawerBuilding extends Component<BottomDrawerBuildingProps, BottomDr
           />
         </View>
         <Text style={styles.description}>{building.getDescription()}</Text>
-        <Text style={styles.description}>Extra description here . . .</Text>
         <Text>{'\n'}Today's Events:</Text>
         <CampusEventContainer buildingId={this.state.building.identifier}/>
       </View>
