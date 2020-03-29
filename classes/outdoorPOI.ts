@@ -4,7 +4,7 @@ import PointOfInterest from './pointOfInterest';
 class outdoorPOI extends PointOfInterest {
   location: Location;
 
-  constructor(location: Location, identifier: String) {
+  constructor(location: Location, identifier: string) {
     super(identifier);
 
     this.location = location;

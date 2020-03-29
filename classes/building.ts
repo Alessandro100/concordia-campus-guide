@@ -1,5 +1,5 @@
 import OutdoorPOI from './outdoorPOI';
-import CampusEvent from './campusEvent';
+import CampusEvent from './CampusEvent';
 import Campus from './campus';
 import Location from './location';
 
@@ -20,7 +20,7 @@ class building extends OutdoorPOI {
     events: CampusEvent[],
     campus: Campus,
     location: Location,
-    identifier: String
+    identifier: string
   ) {
     super(location, identifier);
   }
