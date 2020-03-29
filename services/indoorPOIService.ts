@@ -11,9 +11,13 @@ const IndoorPOIService = {
     IndoorPOIService.indoorPOIs.push(indoorPOI);
   },
 
-  getIndoorPOIs() {
+  getIndoorPOIs(): IndoorPOI[] {
     return IndoorPOIService.indoorPOIs;
   },
+
+  getIndoorPOIbyIdentifier(identifier: string) {
+    return IndoorPOIService.getIndoorPOIs().find(poi => poi.getIdentifier() === identifier);
+  }
 };
 
 export default IndoorPOIService;

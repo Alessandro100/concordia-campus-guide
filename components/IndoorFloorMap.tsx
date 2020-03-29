@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, TouchableHighlight, TextStyle } from 'react-native';
 import IndoorFloor from '../classes/indoorFloor';
 import IndoorPOI from '../classes/indoorPOI';
-import FastestPathCalculator from '../classes/pathCalculator';
+import PathCalculator from '../classes/pathCalculator';
 import transportMode from '../classes/transportMode';
 import Trip from '../classes/trip';
 import Colors from '../constants/Colors';
 import IndoorFloorService from '../services/indoorFloorService';
+import IndoorPOIService from '../services/indoorPOIService';
+import OutdoorPOI from '../classes/outdoorPOI';
+import Location from '../classes/location';
 
 const styles = StyleSheet.create({
   indoorMapHeader: {
@@ -71,10 +74,11 @@ class IndoorFloorMap extends Component<
     super(props);
     const { indoorFloor } = this.props;
 
-    const startLocation = new IndoorPOI('test-1', { x: 5, y: 27 }, indoorFloor, 'test-type-1');
-    // const endLocation = new OutdoorPOI(new Location(45.50349, -73.572182), 'test-end');
-    const endLocation = new IndoorPOI('test-2', { x: 8, y: 26 }, indoorFloor, 'test-type-2');
-    const routeCalculator = new FastestPathCalculator(
+    ///QUESTION: WHERE SHOULD I PUT THIS
+    ///IndoorPOIService.getIndoorPOIbyIdentifier('Hall-1-entrance')
+    const startLocation = new OutdoorPOI(new Location(45.459058, -73.638458), 'test');
+    const endLocation =  IndoorPOIService.getIndoorPOIbyIdentifier('Hall-8-classRooms-H-857')
+    const routeCalculator = new PathCalculator(
       startLocation,
       endLocation,
       transportMode.walking
@@ -120,6 +124,9 @@ class IndoorFloorMap extends Component<
 
   async loadRoute() {
     const { trip } = this.state;
+
+    // trip.setOrigin(origin);
+    // trip.setDestination(destination);
 
     trip.loadRoute().then(path => {
       trip.setRoute(path);

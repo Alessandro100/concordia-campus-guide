@@ -15,6 +15,7 @@ const IndoorFloorService = {
   init() {
     // Builds the floor objects based off of the floordata files
     IndoorFloorService.createdFloors = [];
+    IndoorPOIService.clearIndoorPOIs();
     IndoorFloorService.allFloorData.forEach(floorData => {
       const building = obtainBuildings().find(b => b.title === floorData.buildingName);
       const floor = new IndoorFloor(building, floorData);
@@ -47,16 +48,15 @@ const IndoorFloorService = {
     classRooms: {classRoom: string, location: Coordinate};
    */
   setIndoorPOI(indoorFloor: IndoorFloor) {
-    IndoorPOIService.clearIndoorPOIs();
     Object.keys(indoorFloor.floorData).forEach(attribute => {
-      let identifier = `${indoorFloor.floorData.buildingName}-${indoorFloor.floorData.floorNumber}`; // ex: hall-8
+      const identifier = `${indoorFloor.floorData.buildingName}-${indoorFloor.floorData.floorNumber}`; // ex: Hall-8
       if (
         (attribute === 'elevator' || attribute === 'entrance') &&
         indoorFloor.floorData[attribute]
       ) {
-        identifier += `-${attribute}`; // ex: hall-8-elevator
+        const ident = identifier + `-${attribute}`; // ex: Hall-8-elevator
         const indoorPOI = new IndoorPOI(
-          identifier,
+          ident,
           indoorFloor.floorData[attribute],
           indoorFloor,
           attribute
@@ -68,20 +68,22 @@ const IndoorFloorService = {
         indoorFloor.floorData[attribute]
       ) {
         indoorFloor.floorData[attribute].forEach((object, i) => {
-          identifier += `-${attribute}-${i}`; // ex: hall-8-bathrooms-1
-          const indoorPOI = new IndoorPOI(identifier, object, indoorFloor, attribute);
+          const ident = identifier + `-${attribute}-${i}`; // ex: Hall-8-bathrooms-1
+          const indoorPOI = new IndoorPOI(ident, object, indoorFloor, attribute);
           IndoorPOIService.addIndoorPOI(indoorPOI);
         });
       }
       if (attribute === 'classRooms' && indoorFloor.floorData[attribute]) {
-        identifier += `-${attribute}-${indoorFloor.floorData.classRooms.classRoom}`; // ex: hall-8-classRooms-H681
-        const indoorPOI = new IndoorPOI(
-          identifier,
-          indoorFloor.floorData[attribute].location,
-          indoorFloor,
-          attribute
-        );
-        IndoorPOIService.addIndoorPOI(indoorPOI);
+        indoorFloor.floorData.classRooms.forEach(classRoom =>{
+          const ident = identifier +  `-${attribute}-${classRoom.classRoom}`; // ex: Hall-8-classRooms-H681
+          const indoorPOI = new IndoorPOI(
+            ident,
+            classRoom.location,
+            indoorFloor,
+            attribute
+          );
+          IndoorPOIService.addIndoorPOI(indoorPOI);
+        })
       }
     });
   },

@@ -154,8 +154,8 @@ class IndoorFloor {
     getPath(startingNode: Coordinate, endingNode: Coordinate): Coordinate[] {
         const startKey = startingNode.x +'-' + startingNode.y;
         const endKey = endingNode.x + '-' + endingNode.y;
-        let pathArray = this.shortestPath('11-29', '19-23');
-        //const pathArray = this.shortestPath(startKey, endKey);
+        const pathArray = this.shortestPath(startKey, endKey);
+        //const pathArray = this.shortestPath('5-27', '8-26'); A way to test
 
         let coordPath = []
         pathArray.forEach(key =>{

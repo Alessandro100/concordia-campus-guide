@@ -50,8 +50,8 @@ class PathCalculator implements RouteCalculator {
         this.getDirectionsOutdoorToIndoor(this.startingPOI, this.endingPOI).then(
           directions => {
             // structure of directions [indoorPaths] and [outdoorPaths]
-            const paths = this.formatIndoorDirections(directions.indoorPaths);
-            paths.mergeCompoundPath(directions.outdoorPaths);
+            const paths = this.formatIndoorDirections(directions['indoorPaths']);
+            paths.mergeCompoundPath(directions['outdoorPaths']);
             resolve(paths);
           },
           err => {
@@ -62,8 +62,8 @@ class PathCalculator implements RouteCalculator {
       } else if (this.startingPOI instanceof IndoorPOI && this.endingPOI instanceof OutdoorPOI) {
         this.getDirectionsIndoorToOutdoor(this.startingPOI, this.endingPOI).then(
           directions => {
-            const paths = this.formatIndoorDirections(directions.indoorPaths);
-            paths.mergeCompoundPath(directions.outdoorPaths);
+            const paths = this.formatIndoorDirections(directions['indoorPaths']);
+            paths.mergeCompoundPath(directions['outdoorPaths']);
             resolve(paths);
           },
           err => {
@@ -116,6 +116,9 @@ class PathCalculator implements RouteCalculator {
     const directions = {};
     if (this.isIndoorPOIonSameFloor(startingIndoorPOI, endingIndoorPOI)) {
       // starting and ending location are on the same floor -> no need for elevator or type of transport
+      console.log("GET INDOOR DIRECTIONS SAME FLOOR");
+      console.log(startingIndoorPOI.identifier);
+      console.log(endingIndoorPOI.identifier);
       directions[this.getDirectionKey(startingIndoorPOI)] = this.getIndoorDirectionsSameFloor(
         startingIndoorPOI.coordinates,
         endingIndoorPOI.coordinates,
@@ -148,8 +151,8 @@ class PathCalculator implements RouteCalculator {
 
   isIndoorPOIsameBuilding = (startingIndoorPOI: IndoorPOI, endingIndoorPOI: IndoorPOI) => {
     return (
-      startingIndoorPOI.indoorFloor.building.identifier ===
-      endingIndoorPOI.indoorFloor.building.identifier
+      startingIndoorPOI.indoorFloor.building.title ===
+      endingIndoorPOI.indoorFloor.building.title
     );
   };
 
@@ -172,20 +175,22 @@ class PathCalculator implements RouteCalculator {
   getDirectionsOutdoorToIndoor(startingPOI: OutdoorPOI, endingPOI: IndoorPOI) {
     return new Promise((resolve, reject) => {
       const directions = {};
-      const { building } = endingPOI.indoorFloor;
+      const building = endingPOI.indoorFloor.building;
       this.externalRouterAdapter
         .getDirectionsSteps(startingPOI.getLocation(), building.getLocation(), this.transportType)
         .then(
           paths => {
-            directions.outdoorPaths = paths;
-            const startingFloor = IndoorFloorService.getFloor(building.getIdentifier(), 1); // TODO: Find a way to get starting floor: default = 1
+            directions['outdoorPaths'] = paths;
+            console.log('hihihihihi');
+            console.log(building.title);
+            const startingFloor = IndoorFloorService.getFloor(building.title, 1); // TODO: Find a way to get starting floor: default = 1
             const startingIndoorPOI = new IndoorPOI(
               'building-entrance',
               startingFloor.floorData.entrance, // NOT DEFINED
               startingFloor,
               'entrance'
             );
-            directions.indoorPaths = this.getIndoorDirectionsSameBuilding(
+            directions['indoorPaths'] = this.getIndoorDirectionsSameBuilding(
               startingIndoorPOI,
               endingPOI
             );
@@ -203,19 +208,19 @@ class PathCalculator implements RouteCalculator {
     return new Promise((resolve, reject) => {
       const directions = {};
       const { building } = startingPOI.indoorFloor;
-      const startingFloor = IndoorFloorService.getFloor(building.getIdentifier(), 1); // TODO: Find a way to get starting floor: default = 1
+      const startingFloor = IndoorFloorService.getFloor(building.title, 1); // TODO: Find a way to get starting floor: default = 1
       const exitPOI = new IndoorPOI(
         'building-entrance',
         startingFloor.floorData.entrance, // NOT DEFINED
         startingFloor,
         'entrance'
       );
-      directions.indoorPaths = this.getIndoorDirectionsSameBuilding(startingPOI, exitPOI);
+      directions['indoorPaths'] = this.getIndoorDirectionsSameBuilding(startingPOI, exitPOI);
       this.externalRouterAdapter
         .getDirectionsSteps(building.getLocation(), endingPOI.getLocation(), this.transportType)
         .then(
           paths => {
-            directions.outdoorPaths = paths;
+            directions['outdoorPaths'] = paths;
             resolve(directions);
           },
           err => {
