@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Text} from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
@@ -9,12 +9,12 @@ import CampusPolygons from './constants/CampusPolygons';
 import Colors from './constants/Colors';
 import OutdoorPOI from './classes/outdoorPOI';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
-import SearchBar from './components/SearchBar';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/BuildingService';
 import CurrentPosition from './components/CurrentPosition';
 import InputBtn from './components/InputBtn';
+import Autocomplete from './components/AutoCompleteInput';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +22,43 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  search: {
+    width: Dimensions.get('window').width - 50,
+    flex:1,
+    height: 40,
+    backgroundColor: Colors.white,
+    position: 'absolute',
+    zIndex: 4,
+    top: 50,
+    borderColor: Colors.black,
+    left:-155,
+    borderWidth: 0.5,
+    padding: 10,
+  },
+
+  searchSugg:{
+    width: Dimensions.get('window').width - 50,
+    position:"relative",
+    left:25,
+    top:62,
+    zIndex:10,
+    height: 45,
+    borderColor: Colors.black,
+    backgroundColor: Colors.white,
+    borderWidth: 0.5,
+    padding: 5,
+  },
+  searchInput:{
+    width: Dimensions.get('window').width - 50,
+    position:"absolute",
+    left:25,
+    top:26,
+    height: 40,
+    borderColor: Colors.black,
+    backgroundColor: Colors.white,
+    borderWidth: 0.5,
+    padding: 10,
   },
   mapStyle: {
     width: Dimensions.get('window').width,
@@ -94,15 +131,16 @@ class App extends Component<{}, appState> {
     
   inOrOutView() {
   
-    const { region, buildings, polygons, displayInfo, building, displayIndoor,userPosition } = this.state;
-   
+    const { region, buildings, polygons, displayInfo, building, displayIndoor, userPosition } = this.state;
+
     if (displayIndoor === false) {
-     
       return (
         <View style={styles.container}>
-          <SearchBar setMapLocation={this.setMapLocation} />
+          {/* <SearchBar setMapLocation={this.setMapLocation} /> */}
+          <Autocomplete btnStyle ={styles.search} styleSugg={styles.searchSugg} styleInput={styles.searchInput} type="Search" lat={userPosition.getLatitude()} lng={userPosition.getLongitude()}/>
           <CampusToggleButton setMapLocation={this.setMapLocation} />
-          <InputBtn position={userPosition}/>
+          <InputBtn lat={userPosition.getLatitude()} lng={userPosition.getLongitude()}/>
+          
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}
@@ -133,7 +171,7 @@ class App extends Component<{}, appState> {
       );
     }
     return (
-     // <Text>inddor component </Text>
+     <Text>indoor component </Text>
     
     );
   }
