@@ -1,0 +1,241 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`change color mode snapshot 1`] = `
+<View>
+  <Text
+    style={
+      Object {
+        "fontSize": 23,
+        "position": "absolute",
+        "top": -75,
+      }
+    }
+  >
+    Accessibility
+  </Text>
+  <Text>
+    Normal Mode
+  </Text>
+  <View
+    accessibilityRole="button"
+    accessibilityStates={Array []}
+    accessible={true}
+    focusable={true}
+    isTVSelectable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "overflow": "hidden",
+        },
+        Object {
+          "borderRadius": 18,
+          "padding": 6,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "opacity": 0,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        allowFontScaling={false}
+        importantForAccessibility="no-hide-descendants"
+        pointerEvents="none"
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+            },
+            Object {
+              "color": "#03dac4",
+              "fontSize": 24,
+            },
+          ]
+        }
+      >
+        □
+      </Text>
+    </View>
+  </View>
+  <Text>
+    Protanomaly Mode
+  </Text>
+  <View
+    accessibilityRole="button"
+    accessibilityStates={Array []}
+    accessible={true}
+    focusable={true}
+    isTVSelectable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "overflow": "hidden",
+        },
+        Object {
+          "borderRadius": 18,
+          "padding": 6,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "opacity": 0,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        allowFontScaling={false}
+        importantForAccessibility="no-hide-descendants"
+        pointerEvents="none"
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+            },
+            Object {
+              "color": "#03dac4",
+              "fontSize": 24,
+            },
+          ]
+        }
+      >
+        □
+      </Text>
+    </View>
+  </View>
+  <Text>
+    Deuteranomaly Mode
+  </Text>
+  <View
+    accessibilityRole="button"
+    accessibilityStates={Array []}
+    accessible={true}
+    focusable={true}
+    isTVSelectable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "overflow": "hidden",
+        },
+        Object {
+          "borderRadius": 18,
+          "padding": 6,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "opacity": 0,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        allowFontScaling={false}
+        importantForAccessibility="no-hide-descendants"
+        pointerEvents="none"
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+            },
+            Object {
+              "color": "#03dac4",
+              "fontSize": 24,
+            },
+          ]
+        }
+      >
+        □
+      </Text>
+    </View>
+  </View>
+  <Text>
+    Tritanomaly Mode
+  </Text>
+  <View
+    accessibilityRole="button"
+    accessibilityStates={Array []}
+    accessible={true}
+    focusable={true}
+    isTVSelectable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "overflow": "hidden",
+        },
+        Object {
+          "borderRadius": 18,
+          "padding": 6,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        Object {
+          "opacity": 0,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        allowFontScaling={false}
+        importantForAccessibility="no-hide-descendants"
+        pointerEvents="none"
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+            },
+            Object {
+              "color": "#03dac4",
+              "fontSize": 24,
+            },
+          ]
+        }
+      >
+        □
+      </Text>
+    </View>
+  </View>
+</View>
+`;

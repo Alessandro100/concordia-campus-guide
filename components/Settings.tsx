@@ -3,19 +3,26 @@ import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import colorBlindMode from '../classes/colorBlindMode';
 
-export default class Settings extends Component<{setColorBlindMode}> {
+export default class Settings extends Component<{}> {
   constructor(props) {
     super(props);
     this.state = {
-      setColorBlindMode: this.props.setColorBlindMode,
-      currentColorBlindMode: this.props.currentColorBlindMode || colorBlindMode.normal
+      setColorBlindMode: props.setColorBlindMode,
+      currentColorBlindMode: props.colorBlindMode
     }
   }
   render() {
     const { setColorBlindMode, currentColorBlindMode } = this.state;
-
+    const styles = StyleSheet.create({
+      title: {
+        fontSize: 23,
+        position: 'absolute',
+        top: -75
+      }
+    })
     return (
       <View>
+      <Text style={styles.title}>Accessibility</Text>
       <Text>Normal Mode</Text>
       <RadioButton
           value={colorBlindMode.normal}

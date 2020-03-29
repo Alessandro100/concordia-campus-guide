@@ -7,8 +7,7 @@ import transportMode from './classes/transportMode';
 import colorBlindMode from './classes/colorBlindMode';
 import CampusPolygons from './constants/CampusPolygons';
 import CampusMarkers from './constants/CampusMarkers';
-import Colors from './constants/Colors';
-import { ColorPicker } from './constants/Colors';
+import Colors, { ColorPicker } from './constants/Colors';
 import Settings from './components/Settings';
 
 type appState = {
@@ -117,25 +116,26 @@ class App extends Component<{}, appState> {
     });
     return (
       <View style={styles.container}>
-        {this.state.settings.showSettingsScreen === false ? (<View style={styles.settingsButtonContainer}>
+        {settings.showSettingsScreen === false ? (<View style={styles.settingsButtonContainer}>
           <Button
               title="Settings"
               color={colors.primaryColor}
               onPress={() => {
                 this.setState({
                   settings: {
+                   colorBlindMode: settings.colorBlindMode,
                    showSettingsScreen: true
                   }
                 })
               }} />
         </View>) :null }
       <View style={styles.settingsScreen}>
-        {this.state.settings.showSettingsScreen ? <Settings currentColorBlindMode={settings.colorBlindMode} setColorBlindMode={this.setColorBlindMode.bind(this)} /> : null}
+        {settings.showSettingsScreen ? <Settings colorBlindMode={settings.colorBlindMode} setColorBlindMode={this.setColorBlindMode.bind(this)} /> : null}
       </View>
         <View style={styles.search} />
         {this.state.settings.showSettingsScreen === false ?  (
           <View>
-          <CampusToggleButton setMapLocation={this.setMapLocation} />
+          <CampusToggleButton setMapLocation={this.setMapLocation} currentColorBlindMode={settings.colorBlindMode}/>
             <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
               {polygons.map(polygon => (
                 <View key={`${String(polygon.latitude)}-${String(polygon.longitude)}`}>

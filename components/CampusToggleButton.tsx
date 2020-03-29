@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, View, StyleSheet, Text } from 'react-native';
-import Colors from '../constants/Colors';
+import Colors, { ColorPicker } from '../constants/Colors';
+import colorBlindMode from '../classes/colorBlindMode';
 
 const styles = StyleSheet.create({
   campusToggle: {
@@ -22,20 +23,21 @@ const styles = StyleSheet.create({
 
 class CampusToggleButton extends Component<
   { setMapLocation(latitude: number, longitude: number): void },
-  { currentCampusView: String }
+  { currentCampusView: String}
 > {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentCampusView: 'SGW',
+      colors: ColorPicker(props.currentColorBlindMode),
+      currentCampusView: 'SGW'
     };
   }
 
   buttonStyling(campusSelected) {
-    const { currentCampusView } = this.state;
+    const { currentCampusView, colors } = this.state;
     return {
-      backgroundColor: campusSelected === currentCampusView ? Colors.primaryColor : Colors.grey,
+      backgroundColor: campusSelected === currentCampusView ? colors.primaryColor : colors.grey,
       opacity: campusSelected === currentCampusView ? 1 : 0.7,
       padding: 7,
       width: 100,
