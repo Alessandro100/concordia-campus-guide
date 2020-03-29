@@ -6,6 +6,7 @@ import colorBlindMode from '../classes/colorBlindMode';
 export default class Settings extends Component<{}> {
   constructor(props) {
     super(props);
+    console.log("props: ", props)
     this.state = {
       setColorBlindMode: props.setColorBlindMode,
       currentColorBlindMode: props.colorBlindMode
