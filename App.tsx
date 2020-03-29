@@ -16,6 +16,10 @@ import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/buildingService';
 import IndoorFloorMap from './components/IndoorFloorMap';
+import CurrentPosition from "./components/CurrentPosition";
+import InputBtn from "./components/DirectionInput";
+import Autocomplete from "./components/AutoCompleteInput";
+import Navbtn from "./components/NavBtn";
 
 const styles = StyleSheet.create({
   container: {
@@ -31,6 +35,7 @@ const styles = StyleSheet.create({
 });
 
 type appState = {
+  userPosition: Location;
   region: {
     latitude: number;
     longitude: number;
@@ -42,6 +47,13 @@ type appState = {
   displayInfo: boolean;
   building: Building;
   buildings: Building[];
+  displayIndoor: boolean;
+  start_x: number;
+  start_y: number;
+  end_x: number;
+  end_y: number;
+  start_identifier: string;
+  end_identifier: string;
 };
 
 class App extends Component<{}, appState> {
@@ -52,20 +64,50 @@ class App extends Component<{}, appState> {
     IndoorFloorService.init();
 
     this.state = {
+      userPosition: new Location(45.497406, -73.577102),
       region: {
         // this is the SGW campus location
         latitude: 45.497406,
         longitude: -73.577102,
         latitudeDelta: 0,
-        longitudeDelta: 0.01,
+        longitudeDelta: 0.01
       },
       building: null,
       markers: [],
       polygons: CampusPolygons.slice(0),
       buildings: obtainBuildings(),
       displayInfo: false,
+      displayIndoor: false,
+      start_x: -1,
+      start_y: -1,
+      end_x: -1,
+      end_y: -1,
+      start_identifier: "",
+      end_identifier: ""
     };
   }
+  // gives the info of start and destination (indoor and outdoor)
+  callbackAllInfo = (
+    x: number,
+    y: number,
+    type: string,
+    id: string,
+    inOrOut: boolean
+  ) => {
+    if (type === "Start") {
+      this.setState({ start_x: x });
+      this.setState({ start_y: y });
+      if (inOrOut === true) {
+        this.setState({ start_identifier: id });
+      }
+    } else {
+      this.setState({ end_x: x });
+      this.setState({ end_y: y });
+      if (inOrOut === true) {
+        this.setState({ end_identifier: id });
+      }
+    }
+  };
 
   setMapLocation = (location: Location) => {
     this.setState({
@@ -73,9 +115,13 @@ class App extends Component<{}, appState> {
         latitude: location.getLatitude(),
         longitude: location.getLongitude(),
         latitudeDelta: 0,
-        longitudeDelta: 0.01,
-      },
+        longitudeDelta: 0.01
+      }
     });
+  };
+
+  callbackInOut = (status: boolean) => {
+    this.setState({ displayIndoor: status });
   };
 
   /* Needed to pass callback to child (PolygonsAndMarkers.tsx) to update parent state (App.tsx) */
@@ -84,42 +130,101 @@ class App extends Component<{}, appState> {
     this.setState({ building });
   };
 
+  changeCurrentPosition = (coordinate: any) => {
+    const { userPosition } = this.state;
+    userPosition.setLatitude(coordinate.latitude);
+    userPosition.setLongitude(coordinate.longitude);
+  };
+
+  inOrOutView() {
+    const {
+      region,
+      buildings,
+      polygons,
+      displayInfo,
+      building,
+      displayIndoor,
+      userPosition,
+      start_x,
+      start_y,
+      end_x,
+      end_y,
+      start_identifier,
+      end_identifier
+    } = this.state;
+
+    if (displayIndoor === false) {
+      return (
+        <View style={styles.container}>
+          {/* <SearchBar setMapLocation={this.setMapLocation} /> */}
+          {/* <Autocomplete
+            getNavInfo={this.callbackAllInfo}
+            setMapLocation={this.setMapLocation}
+            btnStyle={styles.search}
+            styleSugg={styles.searchSugg}
+            styleInput={styles.searchInput}
+            type="Search"
+            lat={userPosition.getLatitude()}
+            lng={userPosition.getLongitude()}
+          /> */}
+          <CampusToggleButton setMapLocation={this.setMapLocation} />
+          <InputBtn
+            getNavInfo={this.callbackAllInfo}
+            setMapLocation={this.setMapLocation}
+            lat={userPosition.getLatitude()}
+            lng={userPosition.getLongitude()}
+          />
+          <Navbtn
+            getNavInfo={this.callbackAllInfo}
+            start_x={start_x}
+            start_y={start_y}
+            end_x={end_x}
+            end_y={end_y}
+            sid={start_identifier}
+            eid={end_identifier}
+          />
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.mapStyle}
+            region={region}
+            showsUserLocation={true}
+            onUserLocationChange={coordinates =>
+              this.changeCurrentPosition(coordinates)
+            }
+          >
+            <PolygonsAndMarkers
+              buildings={buildings}
+              polygons={polygons}
+              displaybuilding={this.displayBuildingInfo}
+            />
+            <ShowDirection
+              startLocation={
+                new OutdoorPOI(
+                  new Location(45.458488, -73.639862),
+                  "test-start"
+                )
+              }
+              endLocation={
+                new OutdoorPOI(new Location(45.50349, -73.572182), "test-end")
+              }
+              transportType={transportMode.transit}
+            />
+          </MapView>
+          <CurrentPosition setMapLocation={this.setMapLocation} />
+          <BottomDrawerBuilding
+            displayInfo={displayInfo}
+            building={building}
+            displayBuildingInfo={this.displayBuildingInfo}
+            indoorDisplay={this.callbackInOut}
+          />
+        </View>
+      );
+    }
+    return <Text>indoor component </Text>;
+  }
+
   render() {
-    const { region, buildings, polygons, displayInfo, building } = this.state;
-    let floor = IndoorFloorService.getFloor('Hall', 1);
-
-    return (
-      <View style={styles.container}>    
-
-        <IndoorFloorMap indoorFloor={floor}/>    
-
-        
-        {/* <SearchBar setMapLocation={this.setMapLocation} />
-        <CampusToggleButton setMapLocation={this.setMapLocation} />
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.mapStyle}
-          region={region}
-          showsUserLocation
-        >
-          <PolygonsAndMarkers
-            buildings={buildings}
-            polygons={polygons}
-            displaybuilding={this.displayBuildingInfo}
-          />
-          <ShowDirection
-            startLocation={new OutdoorPOI(new Location(45.458488, -73.639862), 'test-start')}
-            endLocation={new OutdoorPOI(new Location(45.50349, -73.572182), 'test-end')}
-            transportType={transportMode.transit}
-          />
-        </MapView> 
-        <BottomDrawerBuilding
-          displayInfo={displayInfo}
-          building={building}
-          displayBuildingInfo={this.displayBuildingInfo}
-        /> */}
-      </View>
-    );
+    return this.inOrOutView();
   }
 }
 export default App;

@@ -1,5 +1,5 @@
 import OutdoorPOI from './outdoorPOI';
-import CampusEvent from './campusEvent';
+import CampusEvent from './CampusEvent';
 import Campus from './campus';
 import Location from './location';
 import IndoorFloor from './indoorFloor';
