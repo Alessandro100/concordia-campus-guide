@@ -134,7 +134,7 @@ class App extends Component<{}, appState> {
       </View>
         <View style={styles.search} />
         {this.state.settings.showSettingsScreen === false ?  (
-          <View>
+          <>
           <CampusToggleButton setMapLocation={this.setMapLocation} currentColorBlindMode={settings.colorBlindMode}/>
             <MapView provider={PROVIDER_GOOGLE} style={styles.mapStyle} region={region}>
               {polygons.map(polygon => (
@@ -167,7 +167,7 @@ class App extends Component<{}, appState> {
                 transportType={transportMode.transit}
               />
             </MapView>
-        </View>) : null}
+        </>) : null}
       </View>
     );
   }
