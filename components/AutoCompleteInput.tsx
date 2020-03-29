@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TextInput, Modal, TouchableOpacity} from 'react
 import Colors from '../constants/Colors';
 import indoorMap from '../constants/indoorTry';
 import { REACT_APP_GOOGLE_PLACES_API } from 'react-native-dotenv';
+import Location from '../classes/location';
 
 const styles = StyleSheet.create({
 container:{
@@ -20,18 +21,18 @@ type autoStates={
     indoorResults:any;
     lat:number;
     long:number;
-    indoorX: number;
-    indoorY:number;
-    indoorID:string;
     modalVisible:boolean;
+    position:Location;
 };
-type autoProps ={
+type autoProps = {
   lat:number;
   lng:number;
   type:string;
   styleInput:any;
   styleSugg:any;
   btnStyle:any;
+  setMapLocation(location: Location): void;
+  getNavInfo(x:number,y:number,type:string,id:string,inOrOut:boolean):void;
 };
 
 class Autocomplete extends Component<autoProps,autoStates> {
@@ -46,9 +47,7 @@ class Autocomplete extends Component<autoProps,autoStates> {
      indoorResults:[],
      lat:lat,
      long:lng,
-     indoorX: 0,
-     indoorY:0,
-     indoorID:"", 
+     position:new Location(0,0),
   }
 };
   async onChangeQuery(query:string){
@@ -68,19 +67,22 @@ class Autocomplete extends Component<autoProps,autoStates> {
               this.setState({indoorResults:filteredData});}
             };
 
-getIndoorInfo(sugg:any){
+  setMapLocation = (lat, lng) => {
+    const { setMapLocation } = this.props;
+       setMapLocation(new Location(lat,lng));
+    };
 
-    this.setState({modalVisible:false});
-    this.setState({query:sugg.identifier})
-    this.setState({indoorX:sugg.coordinates.x});
-    this.setState({indoorY:sugg.coordinates.y});
-    this.setState({indoorID:sugg.coordinates.y});
-    
+  getIndoorInfo(sugg:any){
+    const {getNavInfo,type}=this.props;
+      this.setState({modalVisible:false});
+      this.setState({query:sugg.identifier})
+    //indoor is true
+    getNavInfo(sugg.coordinates.x,sugg.coordinates.y,type,sugg.identifier,true);
 };
 
  async getOutdoorInfo (sugg:any) {
-    
-      
+  const { setMapLocation,getNavInfo,type } = this.props;
+  const {position}=this.state;
       this.setState({modalVisible:false});
       this.setState({query:sugg.description})
       let id = sugg.place_id;
@@ -90,6 +92,11 @@ getIndoorInfo(sugg:any){
         const json = await results.json();  
         this.setState({lat:json.result.geometry.location.lat});
         this.setState({long:json.result.geometry.location.lng});
+        position.setLatitude(Number(json.result.geometry.location.lat));
+        position.setLongitude(Number(json.result.geometry.location.lng));
+        setMapLocation(position);
+        //outdoor is false
+        getNavInfo(position.getLatitude(),position.getLongitude(),type,"",false);
 };
 
   modalVisible(){

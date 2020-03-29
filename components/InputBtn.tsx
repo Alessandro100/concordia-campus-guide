@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { TouchableOpacity, View, StyleSheet, Text, Image } from 'react-native';
 import Colors from '../constants/Colors';
 import Autocomplete from './AutoCompleteInput';
+import Location from '../classes/location'
 
 const autocompleteStyle = StyleSheet.create({
   btnStyling:{
@@ -181,14 +182,23 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
+
 type inputState = {
   inputModal: boolean;
   startInput: string;
   endInput: string;
   lat: number;
   long:number;
+  position:Location;
 };
-class InputBtn extends Component<{lat:number,lng:number}, inputState> {
+type inputProps = {
+  lat:number;
+  lng:number;
+  setMapLocation(position:Location):void;
+  getNavInfo(x:number,y:number,type:string,id:string,inOrOut:boolean):void;
+};
+class InputBtn extends Component<inputProps, inputState> {
   constructor(props) {
     super(props);
 const {lat,lng} = this.props;
@@ -199,6 +209,7 @@ const {lat,lng} = this.props;
       endInput: '',
       lat:lat,
       long:lng,
+      position:new Location(0,0),
     };
   }
 
@@ -231,7 +242,9 @@ const {lat,lng} = this.props;
   }
 
   displayInputs() {
-    const { inputModal, lat, long  } = this.state;
+    const { inputModal, lat, long,position} = this.state;
+    position.setLatitude(Number(lat));
+    position.setLongitude(Number(long));
     if (inputModal === false) {
      
       // if the inputModal is false, then show nav button
@@ -263,8 +276,8 @@ const {lat,lng} = this.props;
           </View>
 
           <View style={styles.sizeColumn3}>
-           <Autocomplete btnStyle ={autocompleteStyle.btnStyling} styleSugg={autocompleteStyle.startSuggestions} styleInput={autocompleteStyle.startInput} type="Start" lat={lat} lng={long}/>
-           <Autocomplete btnStyle ={autocompleteStyle.btnStyling} styleSugg={autocompleteStyle.destSuggestions} styleInput={autocompleteStyle.destInput} type="Destination" lat={lat} lng={long}/>
+           <Autocomplete getNavInfo={this.props.getNavInfo} setMapLocation={this.props.setMapLocation} btnStyle ={autocompleteStyle.btnStyling} styleSugg={autocompleteStyle.startSuggestions} styleInput={autocompleteStyle.startInput} type="Start" lat={lat} lng={long}/>
+           <Autocomplete getNavInfo={this.props.getNavInfo} setMapLocation={this.props.setMapLocation} btnStyle ={autocompleteStyle.btnStyling} styleSugg={autocompleteStyle.destSuggestions} styleInput={autocompleteStyle.destInput} type="Destination" lat={lat} lng={long}/>
           </View>
           <View style={styles.sizeColumn4}>
             <TouchableOpacity>

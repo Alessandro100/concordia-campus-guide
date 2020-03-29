@@ -15,6 +15,7 @@ import { obtainBuildings } from './services/BuildingService';
 import CurrentPosition from './components/CurrentPosition';
 import InputBtn from './components/InputBtn';
 import Autocomplete from './components/AutoCompleteInput';
+import Navbtn from './components/NavBtn';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,23 +25,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   search: {
-    width: Dimensions.get('window').width - 50,
-    flex:1,
+    width: 320,
     height: 40,
     backgroundColor: Colors.white,
     position: 'absolute',
     zIndex: 4,
+    alignSelf:"center",
     top: 50,
     borderColor: Colors.black,
-    left:-155,
     borderWidth: 0.5,
     padding: 10,
   },
 
   searchSugg:{
-    width: Dimensions.get('window').width - 50,
+    width: 320,
     position:"relative",
-    left:25,
     top:62,
     zIndex:10,
     height: 45,
@@ -48,11 +47,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderWidth: 0.5,
     padding: 5,
+    alignSelf:"center",
   },
   searchInput:{
-    width: Dimensions.get('window').width - 50,
+    width: 320,
     position:"absolute",
-    left:25,
+    alignSelf:"center",
     top:26,
     height: 40,
     borderColor: Colors.black,
@@ -80,6 +80,12 @@ type appState = {
   building: Building;
   buildings: Building[];
   displayIndoor: boolean;
+  start_x:number;
+  start_y:number
+  end_x:number;
+  end_y:number;
+  start_identifier:string;
+  end_identifier:string;
 };
 
 class App extends Component<{}, appState> {
@@ -99,8 +105,27 @@ class App extends Component<{}, appState> {
       buildings: obtainBuildings(),
       displayInfo: false,
       displayIndoor: false,
+      start_x:-1,
+      start_y:-1,
+      end_x:-1,
+      end_y:-1,
+      start_identifier:"",
+      end_identifier:""
     };
   }
+// gives the info of start and destination (indoor and outdoor)
+  callbackAllInfo = ( x:number,y:number,type:string,id:string,inOrOut:boolean) => {  
+    if (type==="Start") {  
+    this.setState({start_x: x});
+        this.setState({start_y: y});
+        if (inOrOut===true){ this.setState({start_identifier:id});}
+      }
+      else {
+        this.setState({end_x: x});
+        this.setState({end_y: y});
+        if (inOrOut===true){ this.setState({end_identifier:id});}
+      }
+    };
 
   setMapLocation = (location: Location) => {
     this.setState({
@@ -131,16 +156,16 @@ class App extends Component<{}, appState> {
     
   inOrOutView() {
   
-    const { region, buildings, polygons, displayInfo, building, displayIndoor, userPosition } = this.state;
+    const { region, buildings, polygons, displayInfo, building, displayIndoor, userPosition,start_x,start_y,end_x,end_y,start_identifier,end_identifier } = this.state;
 
     if (displayIndoor === false) {
       return (
         <View style={styles.container}>
           {/* <SearchBar setMapLocation={this.setMapLocation} /> */}
-          <Autocomplete btnStyle ={styles.search} styleSugg={styles.searchSugg} styleInput={styles.searchInput} type="Search" lat={userPosition.getLatitude()} lng={userPosition.getLongitude()}/>
+          <Autocomplete getNavInfo = {this.callbackAllInfo} setMapLocation={this.setMapLocation} btnStyle ={styles.search} styleSugg={styles.searchSugg} styleInput={styles.searchInput} type="Search" lat={userPosition.getLatitude()} lng={userPosition.getLongitude()}/>
           <CampusToggleButton setMapLocation={this.setMapLocation} />
-          <InputBtn lat={userPosition.getLatitude()} lng={userPosition.getLongitude()}/>
-          
+          <InputBtn  getNavInfo = {this.callbackAllInfo} setMapLocation={this.setMapLocation} lat={userPosition.getLatitude()} lng={userPosition.getLongitude()}/>
+          <Navbtn  getNavInfo = {this.callbackAllInfo} start_x={start_x} start_y={start_y} end_x={end_x} end_y={end_y} sid={start_identifier} eid={end_identifier} />
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}
