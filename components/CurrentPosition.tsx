@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 });
 
 class CurrentPosition extends Component<
-  { setMapLocation(location: Location): void },
+  { setMapLocation(location: Location): void},
   { position: Location }
 > {
   constructor(props) {
@@ -41,12 +41,6 @@ class CurrentPosition extends Component<
       position: new Location(0, 0),
     };
   }
-
-  updateLocation = (coordinate: Location) => {
-    const { position } = this.state;
-    position.setLatitude(coordinate.latitude);
-    position.setLongitude(coordinate.longitude);
-  };
 
   success = (location: any) => {
     const { setMapLocation } = this.props;
