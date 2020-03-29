@@ -1,16 +1,16 @@
 import CampusEventGatherer from './CampusEventGatherer';
 import CampusEvent from './CampusEvent';
 import Cheerio from 'cheerio';
-import PointOfInterest from './pointOfInterest';
 
 //singleton class with lazy instantiation
 class CampusEventWebScraper implements CampusEventGatherer {
     private static _instance: CampusEventWebScraper;
-    private readonly _url : string;
-    private readonly _events : CampusEvent[];
-
+    private _events : CampusEvent[];
+    private _ready: boolean;
+    
     private constructor() {
-        this._url = "https://www.concordia.ca/events.html";
+        this._events = []
+        this._ready = false;
     }
 
     public static get instance() : CampusEventWebScraper {
@@ -20,35 +20,19 @@ class CampusEventWebScraper implements CampusEventGatherer {
         return CampusEventWebScraper._instance;
     }
 
-    public get url() : string {
-        return this._url;
+    public get ready(): boolean {
+        return this._ready;
     }
 
-    public get events() : CampusEvent[] {
-        return this._events;
+    getCampusEvents(buildingId: string): CampusEvent[] {
+        return this._events.filter(element => element.buildingId == buildingId);
+
+        
     }
     
-    gatherCampusEvents() {
-        let request = new XMLHttpRequest();
-        request.open("GET", this._url);
-        request.onreadystatechange = (e) => {
-            if (request.readyState !== 4) {
-              return;
-            }
-          
-            if (request.status === 200) {
-                this.extractEventsFromHTML(request.response);
-            } else {
-              console.warn('error');
-            }
-          };
-        request.responseType = "text";
-        request.send();
-    }
-
-    extractEventsFromHTML(html: string) {
+    fillCampusEvents(html: string): void {
         const $ = Cheerio.load(html);
-        let todayEvents = [];
+        let todayEvents: CampusEvent[] = [];
         //events are contained in a <div> with class item which are contained in a <div> with class c-accordion.
         //the code loops over every items and extract the event informations.
         $('.c-accordion')
@@ -64,12 +48,21 @@ class CampusEventWebScraper implements CampusEventGatherer {
                 const dates: [Date, Date] = CampusEventWebScraper.instance.extractDates(whenString);
                 const startDate: Date = dates[0];
                 const endDate: Date = dates[1];
-                /*const location: PointOfInterest = 
-                todayEvents.push(new CampusEvent(title, description, startDate, endDate, location));*/
+                const location: string = $(element).find('.lbl:contains("Where")').siblings('.rte').remove('a').text().trim();
+                let buildingId: string = 'none';
+                try {
+                    buildingId = $(element).find('.lbl:contains("Where")').siblings('.rte').find('a').attr('href').match(/building=(.+)/)[1];
+                }
+                catch (e) {
+                }
+                todayEvents.push(new CampusEvent(title, description, startDate, endDate, location, buildingId));
         });
+        //add all at once for sync issues.
+        this._events = todayEvents;
+        this._ready = true;
     }
 
-    extractDates(whenString: string) {
+    extractDates(whenString: string): [Date, Date] {
         //the code in this function is intentionally verbose to make it easy to understand what's happening.
 
         //adding date portion

@@ -20,7 +20,7 @@ class building extends OutdoorPOI {
     events: CampusEvent[],
     campus: Campus,
     location: Location,
-    identifier: String
+    identifier: string
   ) {
     super(location, identifier);
   }

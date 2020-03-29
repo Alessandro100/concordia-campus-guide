@@ -5,14 +5,16 @@ class campusEvent {
   private _description : string;
   private _startDate : Date;
   private _endDate : Date;
-  private _location : PointOfInterest;
+  private _location : string;
+  private _buildingId : string;
 
-  constructor(title: string, description: string, startDate: Date, endDate: Date, location: PointOfInterest) {
+  constructor(title: string, description: string, startDate: Date, endDate: Date, location: string, buildingId: string) {
     this._title = title;
     this._description = description;
     this._startDate = startDate;
     this._endDate = endDate;
     this._location = location;
+    this._buildingId = buildingId;
   }
 
   public get title() : string {
@@ -47,12 +49,19 @@ class campusEvent {
     this._endDate = v;
   }
 
-  public get location() : PointOfInterest {
+  public get location() : string {
     return this._location;
   }
 
-  public set location(v : PointOfInterest) {
+  public set location(v : string) {
     this._location = v;
+  }
+
+  public get buildingId() : string {
+    return this._buildingId;
+  }
+  public set buildingId(v : string) {
+    this._buildingId = v;
   }
 
 }

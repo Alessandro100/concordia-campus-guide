@@ -3,12 +3,13 @@ import { Text, View } from 'react-native';
 import CampusEvent from '../classes/CampusEvent';
 
 type CampusEventComponentProps = {
-   
+   campusEvent: CampusEvent;
 };
 
 type CampusEventComponentState = {
-   campusEvent: CampusEvent;
 };
+
+
 
 class CampusEventComponent extends Component<CampusEventComponentProps, CampusEventComponentState> {
    
@@ -19,11 +20,12 @@ class CampusEventComponent extends Component<CampusEventComponentProps, CampusEv
    render() {
       return (
          <View>
-            <Text>Title: {this.state.campusEvent.title}</Text>
-            <Text>Description: {this.state.campusEvent.description}</Text>
-            <Text>Start: {this.state.campusEvent.startDate}</Text>
-            <Text>End: {this.state.campusEvent.endDate}</Text>
-            <Text>Location: {this.state.campusEvent.location}</Text>
+            <Text>Title: {this.props.campusEvent.title}</Text>
+            <Text>Description: {this.props.campusEvent.description}</Text>
+            <Text>Start: {this.props.campusEvent.startDate.toString()}</Text>
+            <Text>End: {this.props.campusEvent.endDate.toString()}</Text>
+      <Text>Location: {this.props.campusEvent.location}</Text>
+            <Text>{"\n"}</Text>
          </View>
       );
    }
