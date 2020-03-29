@@ -293,27 +293,33 @@ class IndoorFloor {
             }            
 
             console.log("Neighbouring Nodes" + neighbouringNodes);
-            
-            for (let i = 0; i < neighbouringNodes.length; i++) { 
-              if (distanceArray[neighbouringNodes[i]] ==-1) {
-                let nodeOfInterest = neighbouringNodes[i];
-                console.log("The neighbouring Node is " + nodeOfInterest);
-                distanceArray[nodeOfInterest] = distanceArray[currentNode] + 1;
-                console.log("The updated distance for this node is: " + distanceArray[nodeOfInterest])
+            if(neighbouringNodes.indexOf(endNode) != -1){
                 let currentDirectionArray = Array.from(directionArray[currentNode]);
-                console.log("The previous direction for this node is:" + currentDirectionArray[nodeOfInterest]);
-                currentDirectionArray.push(nodeOfInterest);
-                directionArray[nodeOfInterest] = currentDirectionArray;
-                console.log("The updated direction for this node is:" + directionArray[nodeOfInterest]); 
-                queueOfNodesToVisit.push(nodeOfInterest);
-              }
+                currentDirectionArray.push(endNode);
+                return currentDirectionArray;
+            }else{
+            
+                for (let i = 0; i < neighbouringNodes.length; i++) { 
+                    if (distanceArray[neighbouringNodes[i]] ==-1) {
+                        let nodeOfInterest = neighbouringNodes[i];
+                        console.log("The neighbouring Node is " + nodeOfInterest);
+                        distanceArray[nodeOfInterest] = distanceArray[currentNode] + 1;
+                        console.log("The updated distance for this node is: " + distanceArray[nodeOfInterest])
+                        let currentDirectionArray = Array.from(directionArray[currentNode]);
+                        console.log("The previous direction for this node is:" + currentDirectionArray[nodeOfInterest]);
+                        currentDirectionArray.push(nodeOfInterest);
+                        directionArray[nodeOfInterest] = currentDirectionArray;
+                        console.log("The updated direction for this node is:" + directionArray[nodeOfInterest]); 
+                        queueOfNodesToVisit.push(nodeOfInterest);
+                    }
+                }
+                console.log("The length of the queue is:" + queueOfNodesToVisit.length);
+                console.log("My Queue" + queueOfNodesToVisit);
+                console.log("My Final Distance array is:" + distanceArray);
+                console.log("My Final Direction array" + directionArray);
             }
-            console.log("The length of the queue is:" + queueOfNodesToVisit.length);
-            console.log("My Queue" + queueOfNodesToVisit);
-            console.log("My Final Distance array is:" + distanceArray);
-            console.log("My Final Direction array" + directionArray);
         }   
-        return directionArray[endNode]; 
+        return []; 
     } 
 
   /*   getNearestWalkableCoordinate(inputCoordinate: Coordinate){
