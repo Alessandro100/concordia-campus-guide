@@ -143,7 +143,7 @@ class IndoorFloor {
             }
             lines.push(
                 <Svg height={this.imageHeight} width={this.imageWidth} style={{ zIndex: 6, top: this.initialHeightPosition, position: 'absolute' }} origin="0, 0" >
-                    <Line x1={startingLocation.xpx} y1={startingLocation.ypx} x2={endingLocation.xpx} y2={endingLocation.ypx} stroke="blue" strokeWidth="2" />
+                    <Line x1={startingLocation.xpx} y1={startingLocation.ypx} x2={endingLocation.xpx} y2={endingLocation.ypx} stroke="red" strokeWidth="2" />
                 </Svg>
             )
         }
@@ -152,18 +152,87 @@ class IndoorFloor {
 
     //returns the data on how to get from one tile to another
     getPath(startingNode: Coordinate, endingNode: Coordinate): Coordinate[] {
-        //Implement breadth first search @Nadia -- graph is initialized
-        //Structure of the Node-> key = xIndex-yIndex
-        //library used for graph: @dagrejs/graphlib
-        //beware of graph cycles 
-        //At the end of your algorithm, it should return something like this:
-        const fakePath = [
-            {x: 5, y: 27},
-            {x: 10, y: 27},
-            {x: 10, y: 25}
-        ];
-        return fakePath;
+        const startKey = startingNode.x +'-' + startingNode.y;
+        const endKey = endingNode.x + '-' + endingNode.y;
+        let pathArray = this.shortestPath('11-29', '19-23');
+        //const pathArray = this.shortestPath(startKey, endKey);
+
+        let coordPath = []
+        pathArray.forEach(key =>{
+            const value = key.split('-');
+            coordPath.push({x: value[0], y: value[1]})
+        });
+
+        return coordPath;
     }
+    
+    bfs(start) {
+        if (!this.graph.neighbors(start) || !this.graph.neighbors(start).length) {
+          return [start]
+        }
+    
+        var results = {"nodes": []},
+            queue = this.graph.neighbors(start),
+            count = 1
+    
+        while(queue.length) {
+          var node = queue.shift()
+          if (!results[node] || !results[node].visited) {
+            results[node] = {visited: true, steps: count}
+            results["nodes"].push(node)
+            if (this.graph.neighbors[node]) {
+              if (this.graph.neighbors[node].length) {
+                count++
+                queue.push(...this.graph.neighbors[node])
+              } else {
+                continue
+              }
+            }
+          }
+        }
+        return results
+    }
+    
+      shortestPath(start, end) {
+        if (start == end) {
+          return [start, end]
+        }
+    
+        var queue = [start],
+            visited = {},
+            predecessor = {},
+            tail = 0,
+            path
+    
+        while(tail < queue.length) {
+          var u = queue[tail++]
+          if (!this.graph.neighbors(u)) {
+            continue
+          }
+    
+          var neighbors = this.graph.neighbors(u)
+          for(var i = 0; i < neighbors.length; ++i) {
+            var v = neighbors[i]
+            if (visited[v]) {
+              continue
+            }
+            visited[v] = true
+            if (v === end) {   // Check if the path is complete.
+              path = [ v ]   // If so, backtrack through the path.
+              while (u !== start) {
+                path.push(u)
+                u = predecessor[u]
+              }
+              path.push(u)
+              path.reverse()
+              return path
+            }
+            predecessor[v] = u
+            queue.push(v)
+          }
+        }
+        return path
+      }
 }
 
 export default IndoorFloor;
