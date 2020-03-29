@@ -10,6 +10,7 @@ import Coordinate from './coordinate';
 import IndoorFloorService from '../services/indoorFloorService';
 import CompoundPath from './compoundPath';
 import IndoorUnitPath from './indoorUnitPath';
+import IndoorPOIService from '../services/indoorPOIService';
 
 // NOTES: This is general directions, has no impact on speed of directions and does not take into account route parameters
 class PathCalculator implements RouteCalculator {
@@ -43,7 +44,20 @@ class PathCalculator implements RouteCalculator {
           );
           resolve(this.formatIndoorDirections(indoorDirections));
         } else {
-          // MOST COMPLEX CASE: INDOOR -> OUTDOOR -> INDOOR -- not done; TODO
+          // MOST COMPLEX CASE: INDOOR -> OUTDOOR -> INDOOR
+          const endingBuilding = this.endingPOI.indoorFloor.building;
+          const endOutdoorPOI = new OutdoorPOI(endingBuilding.getLocation(), '');
+          const identifier = endingBuilding.title + '-1-entrance' 
+          const indoorEntrancePOI = IndoorPOIService.getIndoorPOIbyIdentifier(identifier);
+          const endingIndoorPaths = this.getIndoorDirectionsSameBuilding(indoorEntrancePOI, this.endingPOI)
+          this.getDirectionsIndoorToOutdoor(this.startingPOI, endOutdoorPOI).then(directions =>{
+            const paths = this.formatIndoorDirections(directions['indoorPaths']);
+            paths.mergeCompoundPath(this.formatIndoorDirections(endingIndoorPaths))
+            paths.mergeCompoundPath(directions['outdoorPaths']);
+            resolve(paths);
+          }, err =>{
+            reject(err);
+          })
         }
         // Outdoor -> Indoor
       } else if (this.startingPOI instanceof OutdoorPOI && this.endingPOI instanceof IndoorPOI) {
