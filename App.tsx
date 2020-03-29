@@ -13,58 +13,10 @@ import BottomDrawerBuilding from "./components/BottomDrawerBuilding";
 import Building from "./classes/building";
 import { obtainBuildings } from "./services/BuildingService";
 import CurrentPosition from "./components/CurrentPosition";
-import InputBtn from "./components/InputBtn";
+import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
 import Navbtn from "./components/NavBtn";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  search: {
-    width: 320,
-    height: 40,
-    backgroundColor: Colors.white,
-    position: "absolute",
-    zIndex: 4,
-    alignSelf: "center",
-    top: 50,
-    borderColor: Colors.black,
-    borderWidth: 0.5,
-    padding: 10
-  },
-
-  searchSugg: {
-    width: 320,
-    position: "relative",
-    top: 62,
-    zIndex: 10,
-    height: 45,
-    borderColor: Colors.black,
-    backgroundColor: Colors.white,
-    borderWidth: 0.5,
-    padding: 5,
-    alignSelf: "center"
-  },
-  searchInput: {
-    width: 320,
-    position: "absolute",
-    alignSelf: "center",
-    top: 26,
-    height: 40,
-    borderColor: Colors.black,
-    backgroundColor: Colors.white,
-    borderWidth: 0.5,
-    padding: 10
-  },
-  mapStyle: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
-  }
-});
+import styles from "./constants/AppStyling";
 
 type appState = {
   userPosition: Location;
