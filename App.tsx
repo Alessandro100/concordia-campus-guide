@@ -21,6 +21,7 @@ import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
 import Navbtn from "./components/NavBtn";
 import styles from "./constants/AppStyling";
+import PointOfInterest from './classes/pointOfInterest';
 
 
 type appState = {
@@ -38,10 +39,8 @@ type appState = {
   buildings: Building[];
   displayIndoor: boolean;
   indoorFloor: IndoorFloor;
-  start_x: number;
-  start_y: number;
-  end_x: number;
-  end_y: number;
+  startDirection: PointOfInterest;
+  endDirection: PointOfInterest;
   start_identifier: string;
   end_identifier: string;
 };
@@ -68,34 +67,28 @@ class App extends Component<{}, appState> {
       buildings: obtainBuildings(),
       displayInfo: false,
       displayIndoor: false,
-      start_x: -1,
-      start_y: -1,
-      end_x: -1,
-      end_y: -1,
+      startDirection: null,
+      endDirection: null,
       indoorFloor: null,
       start_identifier: "",
       end_identifier: ""
     };
   }
-  // gives the info of start and destination (indoor and outdoor)
+
   callbackAllInfo = (
-    x: number,
-    y: number,
     type: string,
-    id: string,
+    poi: PointOfInterest,
     inOrOut: boolean
   ) => {
     if (type === "Start") {
-      this.setState({ start_x: x });
-      this.setState({ start_y: y });
+      this.setState({startDirection: poi})
       if (inOrOut === true) {
-        this.setState({ start_identifier: id });
+        //this.setState({ start_identifier: id });
       }
     } else {
-      this.setState({ end_x: x });
-      this.setState({ end_y: y });
+      this.setState({endDirection: poi})
       if (inOrOut === true) {
-        this.setState({ end_identifier: id });
+        //this.setState({ end_identifier: id });
       }
     }
   };
@@ -142,10 +135,8 @@ class App extends Component<{}, appState> {
       building,
       displayIndoor,
       userPosition,
-      start_x,
-      start_y,
-      end_x,
-      end_y,
+      startDirection,
+      endDirection,
       start_identifier,
       indoorFloor,
       end_identifier
@@ -174,12 +165,12 @@ class App extends Component<{}, appState> {
           />
           <Navbtn
             getNavInfo={this.callbackAllInfo}
-            start_x={start_x}
-            start_y={start_y}
-            end_x={end_x}
-            end_y={end_y}
-            sid={start_identifier}
-            eid={end_identifier}
+            // start_x={start_x}
+            // start_y={start_y}
+            // end_x={end_x}
+            // end_y={end_y}
+            // sid={start_identifier}
+            // eid={end_identifier}
           />
           <MapView
             provider={PROVIDER_GOOGLE}
@@ -195,18 +186,13 @@ class App extends Component<{}, appState> {
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}
             />
-            <ShowDirection
-              startLocation={
-                new OutdoorPOI(
-                  new Location(45.458488, -73.639862),
-                  "test-start"
-                )
-              }
-              endLocation={
-                new OutdoorPOI(new Location(45.50349, -73.572182), "test-end")
-              }
-              transportType={transportMode.transit}
-            />
+            {(startDirection && endDirection) && (
+              <ShowDirection
+                startLocation={startDirection}
+                endLocation={endDirection}
+                transportType={transportMode.transit}
+              /> 
+            )}
           </MapView>
           <CurrentPosition setMapLocation={this.setMapLocation} />
           <BottomDrawerBuilding
@@ -218,7 +204,14 @@ class App extends Component<{}, appState> {
         </View>
       );
     } else {
-      return(<IndoorFloorMap indoorFloor={indoorFloor} indoorDisplay={this.callbackInOut}/>  )
+      return(
+        <IndoorFloorMap 
+          indoorFloor={indoorFloor} 
+          indoorDisplay={this.callbackInOut}
+          startLocation={startDirection}
+          endLocation={endDirection}
+        />  
+      )
     }
   }
 

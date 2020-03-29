@@ -10,6 +10,7 @@ import IndoorFloorService from '../services/indoorFloorService';
 import IndoorPOIService from '../services/indoorPOIService';
 import OutdoorPOI from '../classes/outdoorPOI';
 import Location from '../classes/location';
+import PointOfInterest from '../classes/pointOfInterest';
 
 const styles = StyleSheet.create({
   indoorMapHeader: {
@@ -67,25 +68,25 @@ const styles = StyleSheet.create({
 });
 
 class IndoorFloorMap extends Component<
-  { indoorFloor: IndoorFloor, indoorDisplay },
+  { indoorFloor: IndoorFloor, indoorDisplay, startLocation: PointOfInterest, endLocation: PointOfInterest },
   { trip: Trip; availableFloors: IndoorFloor[]; currentIndoorFloor: IndoorFloor }
 > {
   constructor(props) {
     super(props);
-    const { indoorFloor } = this.props;
+    const { indoorFloor, startLocation, endLocation } = this.props;
 
-    ///QUESTION: WHERE SHOULD I PUT THIS
-    ///IndoorPOIService.getIndoorPOIbyIdentifier('Hall-1-entrance')
-    const startLocation = new OutdoorPOI(new Location(45.459058, -73.638458), 'test');
-    const endLocation =  IndoorPOIService.getIndoorPOIbyIdentifier('Hall-8-classRooms-H-857')
-    const routeCalculator = new PathCalculator(
-      startLocation,
-      endLocation,
-      transportMode.walking
-    );
+    let routeCalculator = null;
 
+    if (startLocation && endLocation) {
+      routeCalculator = new PathCalculator(
+        startLocation,
+        endLocation,
+        transportMode.walking
+      );
+    }
+ 
     this.state = {
-      trip: new Trip(startLocation, endLocation, routeCalculator),
+      trip: (routeCalculator) ? new Trip(startLocation, endLocation, routeCalculator) : null,
       availableFloors: IndoorFloorService.getAvailableIndoorFloorsForBuilding(
         indoorFloor.building.title
       ),
@@ -154,7 +155,7 @@ class IndoorFloorMap extends Component<
             }}
           >
             <>
-              <Image style={styles.navLogo} source={require('../assets/back.png')} />
+              <Image style={styles.navLogo} source={require('../assets/back-white.png')} />
               <Text style={styles.outDoorNavButtonText}>Outdoor Map</Text>
             </>
           </TouchableHighlight>
@@ -162,7 +163,7 @@ class IndoorFloorMap extends Component<
         </View>
         {currentIndoorFloor.showFloorImage()}
         {currentIndoorFloor.showIndoorTile()}
-        {trip.getRoute() != null && (
+        {trip && trip.getRoute() != null && (
           <>
             {trip
               .getRoute()

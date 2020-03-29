@@ -8,6 +8,7 @@ import {
   Alert
 } from "react-native";
 import Colors from "../constants/Colors";
+import PointOfInterest from "../classes/pointOfInterest";
 
 
 const styles = StyleSheet.create({
@@ -41,17 +42,15 @@ type navState = {
 };
 
 type navProps = {
-  start_x: number;
-  start_y: number;
-  end_x: number;
-  end_y: number;
-  sid: string;
-  eid: string;
+  // start_x: number;
+  // start_y: number;
+  // end_x: number;
+  // end_y: number;
+  // sid: string;
+  // eid: string;
   getNavInfo(
-    x: number,
-    y: number,
     type: string,
-    id: string,
+    poi: PointOfInterest,
     inOrOut: boolean
   ): void;
 };
@@ -64,7 +63,6 @@ class Navbtn extends Component<navProps, navState> {
     };
   }
   getDirections() {
-    const { start_x, start_y, end_x, end_y, sid, eid } = this.props;
 
     // resest all info after show direction
     // const { getNavInfo }=this.props;

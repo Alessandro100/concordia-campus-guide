@@ -4,6 +4,7 @@ import Autocomplete from "./AutoCompleteInput";
 import Location from "../classes/location";
 import autocompleteStyle from "../constants/AutocompleteStylingProps"
 import styles from "../constants/DirectionInputStyling"
+import PointOfInterest from "../classes/pointOfInterest";
 
 type inputState = {
   inputModal: boolean;
@@ -18,10 +19,8 @@ type inputProps = {
   lng: number;
   setMapLocation(position: Location): void;
   getNavInfo(
-    x: number,
-    y: number,
     type: string,
-    id: string,
+    poi: PointOfInterest,
     inOrOut: boolean
   ): void;
 };
