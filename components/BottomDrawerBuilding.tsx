@@ -4,6 +4,7 @@ import BottomDrawer from 'rn-bottom-drawer';
 import Building from '../classes/building';
 import Colors from '../constants/Colors';
 import CampusEventContainer from './CampusEventContainer';
+import IndoorFloorService from '../services/indoorFloorService';
 
 const styles = StyleSheet.create({
   contentContainer: {
@@ -94,11 +95,13 @@ class BottomDrawerBuilding extends Component<BottomDrawerBuildingProps, BottomDr
           ]
         </Text>
         <View style={styles.indoorBtn}>
-          <Button
-            title="Indoor Navigation"
-            color={Colors.primaryColor}
-            onPress={() => this.changeToIndoorView(true)}
-          />
+          {IndoorFloorService.getAvailableIndoorFloorsForBuilding(building.title).length > 0 && (
+            <Button
+              title="Indoor Navigation"
+              color={Colors.primaryColor}
+              onPress={() => this.changeToIndoorView(true)}
+            />
+          )}
         </View>
         <Text style={styles.description}>{building.getDescription()}</Text>
         <Text style={styles.description}>Extra description here . . .</Text>

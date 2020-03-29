@@ -20,10 +20,12 @@ export function obtainBuildings(): Building[] {
       marker.buildingDescription,
       [],
       campusSGW,
+      marker.title,
       new Location(marker.coordinate.latitude, marker.coordinate.longitude),
       marker.label
     );
     building.setName(marker.description);
+    building.setTitle(marker.title);
     building.setDescription(marker.buildingDescription);
     building.setIdentifier(marker.label);
     buildingsSGW.push(building);
@@ -35,10 +37,12 @@ export function obtainBuildings(): Building[] {
       marker.buildingDescription,
       [],
       campusLoyola,
+      marker.title,
       new Location(marker.coordinate.latitude, marker.coordinate.longitude),
       marker.label
     );
     building.setName(marker.description);
+    building.setTitle(marker.title);
     building.setDescription(marker.buildingDescription);
     building.setIdentifier(marker.label);
     buildingsLoyola.push(building);

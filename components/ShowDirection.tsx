@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image } from 'react-native';
-import { Marker } from 'react-native-maps';
 import transportMode from '../classes/transportMode';
 import Location from '../classes/location';
 import Trip from '../classes/trip';
 import PointOfInterest from '../classes/pointOfInterest';
-import FastestPathCalculator from '../classes/fastestPathCalculator';
-
-const styles = StyleSheet.create({
-  imageSize: {
-    width: 30,
-    height: 30,
-  },
-});
+import PathCalculator from '../classes/pathCalculator';
 
 type directionProps = {
   startLocation: PointOfInterest;
@@ -28,7 +19,7 @@ class ShowDirection extends Component<directionProps, directionState> {
   constructor(props) {
     super(props);
     const { startLocation, endLocation, transportType } = this.props;
-    const routeCalculator = new FastestPathCalculator(startLocation, endLocation, transportType);
+    const routeCalculator = new PathCalculator(startLocation, endLocation, transportType);
     this.state = {
       trip: new Trip(startLocation, endLocation, routeCalculator),
     };
@@ -62,7 +53,9 @@ class ShowDirection extends Component<directionProps, directionState> {
       <>
         {trip.getRoute() != null && (
           <>
-            <Marker
+            {/* Get ending location is an issue as this takes the location of the entire trip. The beginning and 
+            ending might be indoors with and outdoor component in the middle. This currently does not support that */}
+            {/* <Marker
               coordinate={this.getPinLocation(trip.getRoute().getEndingLocation())}
               title="Ending Point"
               description="Ending point of the trip"
@@ -74,8 +67,8 @@ class ShowDirection extends Component<directionProps, directionState> {
               opacity={0.7}
             >
               <Image source={require('../assets/starting_icon.png')} style={styles.imageSize} />
-            </Marker>
-            {trip.getRoute().displayPath()}
+            </Marker> */}
+            {trip.getRoute().displayPath(false)}
           </>
         )}
       </>
