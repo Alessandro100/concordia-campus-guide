@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, TouchableHighlight, TextStyle } from 'react-native';
 import IndoorFloor from '../classes/indoorFloor';
 import IndoorPOI from '../classes/indoorPOI';
-import FastestPathCalculator from '../classes/fastestPathCalculator';
+import FastestPathCalculator from '../classes/pathCalculator';
 import transportMode from '../classes/transportMode';
 import Trip from '../classes/trip';
 import Colors from '../constants/Colors';
