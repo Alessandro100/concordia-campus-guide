@@ -8,9 +8,12 @@ import {
   TouchableOpacity
 } from "react-native";
 import Colors from "../constants/Colors";
-import indoorMap from "../constants/indoorTry";
+import IndoorPOIService from '../services/indoorPOIService';
 import { REACT_APP_GOOGLE_PLACES_API } from "react-native-dotenv";
 import Location from "../classes/location";
+import IndoorPOI from "../classes/indoorPOI";
+import OutdoorPOI from "../classes/outdoorPOI";
+import PointOfInterest from "../classes/pointOfInterest";
 
 const styles = StyleSheet.create({
   container: {
@@ -39,10 +42,8 @@ type autoProps = {
   btnStyle: any;
   setMapLocation(location: Location): void;
   getNavInfo(
-    x: number,
-    y: number,
     type: string,
-    id: string,
+    poi: PointOfInterest,
     inOrOut: boolean
   ): void;
 };
@@ -55,7 +56,7 @@ class Autocomplete extends Component<autoProps, autoStates> {
       modalVisible: false,
       query: "",
       places: [],
-      indoor: indoorMap.slice(0),
+      indoor: IndoorPOIService.getIndoorPOIs(),
       indoorResults: [],
       lat: lat,
       long: lng,
@@ -85,16 +86,14 @@ class Autocomplete extends Component<autoProps, autoStates> {
     setMapLocation(new Location(lat, lng));
   };
 
-  getIndoorInfo(sugg: any) {
+  getIndoorInfo(sugg: IndoorPOI) {
     const { getNavInfo, type } = this.props;
     this.setState({ modalVisible: false });
-    this.setState({ query: sugg.identifier });
+    this.setState({ query: String(sugg.getIdentifier()) });
     //indoor is true
     getNavInfo(
-      sugg.coordinates.x,
-      sugg.coordinates.y,
       type,
-      sugg.identifier,
+      sugg,
       true
     );
   }
@@ -115,11 +114,10 @@ class Autocomplete extends Component<autoProps, autoStates> {
     position.setLongitude(Number(json.result.geometry.location.lng));
     setMapLocation(position);
     //outdoor is false
+    const outdoorPOI = new OutdoorPOI(position, '')
     getNavInfo(
-      position.getLatitude(),
-      position.getLongitude(),
       type,
-      "",
+      outdoorPOI,
       false
     );
   }

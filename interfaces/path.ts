@@ -1,9 +1,10 @@
 import Location from '../classes/location';
+import Coordinate from '../classes/coordinate';
 
 interface Path {
-  displayPath(): void;
-  getStartingLocation(): Location;
-  getEndingLocation(): Location;
+  displayPath(isIndoor: boolean, buildingName?: string, floorNumber?: string): void;
+  getStartingLocation(): Location | Coordinate;
+  getEndingLocation(): Location | Coordinate;
 }
 
 export default Path;

@@ -5,7 +5,6 @@ import ShowDirection from '../components/ShowDirection';
 import transportMode from '../classes/transportMode';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import Location from '../classes/location';
-import UnitPath from '../classes/unitPath';
 import OutdoorPOI from '../classes/outdoorPOI';
 
 describe('Get Directions Suite', () => {

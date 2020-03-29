@@ -7,7 +7,7 @@ import Building from '../classes/building';
 import {
   obtainCoordinateFromBuilding,
   parseLocationToLatLngType,
-} from '../services/BuildingService';
+} from '../services/buildingService';
 import Location from '../classes/location';
 import Campus from '../classes/campus';
 
@@ -94,6 +94,7 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
               building.setName(buildingMarker.getName());
               building.setDescription(buildingMarker.getDescription());
               building.setEvents(buildingMarker.getEvents()); // TODO: change for event feature
+              building.setTitle(buildingMarker.title);
               building.setCampus(campus);
               building.setLocation(location);
               building.setIdentifier(buildingMarker.getIdentifier());
