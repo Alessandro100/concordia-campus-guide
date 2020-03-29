@@ -47,9 +47,15 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     display: 'flex',
-    height: 300,
+    height: 100,
+  },
+  floorNavigatorText: {
+    textAlign: 'center',
+    color: Colors.black,
+    fontSize: 16,
   },
   floorNavigator: {
+    marginTop: 10,
     display: 'flex',
     flexDirection: 'row',
     backgroundColor: Colors.white,
@@ -160,6 +166,7 @@ class IndoorFloorMap extends Component<
           </>
         )}
         <View style={styles.indoorMapFooter}>
+          <Text style={styles.floorNavigatorText}>Floor Navigation</Text>
           <View style={styles.floorNavigator}>
             {availableFloors.map(floor => (
               <TouchableHighlight
