@@ -12,8 +12,6 @@ type CampusEventContainerState = {
    campusEvents: CampusEvent[];
 };
 
-
-
 class CampusEventContainer extends Component<CampusEventContainerProps, CampusEventContainerState> {
    
    constructor(props) {

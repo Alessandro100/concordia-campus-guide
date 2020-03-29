@@ -1,4 +1,4 @@
-import CampusEventGatherer from './CampusEventGatherer';
+import CampusEventGatherer from '../interfaces/CampusEventGatherer';
 import CampusEvent from './CampusEvent';
 import Cheerio from 'cheerio';
 

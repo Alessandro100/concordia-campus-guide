@@ -9,8 +9,6 @@ type CampusEventComponentProps = {
 type CampusEventComponentState = {
 };
 
-
-
 class CampusEventComponent extends Component<CampusEventComponentProps, CampusEventComponentState> {
    
    constructor(props) {
@@ -24,7 +22,7 @@ class CampusEventComponent extends Component<CampusEventComponentProps, CampusEv
             <Text>Description: {this.props.campusEvent.description}</Text>
             <Text>Start: {this.props.campusEvent.startDate.toString()}</Text>
             <Text>End: {this.props.campusEvent.endDate.toString()}</Text>
-      <Text>Location: {this.props.campusEvent.location}</Text>
+            <Text>Location: {this.props.campusEvent.location}</Text>
             <Text>{"\n"}</Text>
          </View>
       );
