@@ -273,25 +273,17 @@ class IndoorFloor {
         console.log("My queue of Nodes to visit is: " + queueOfNodesToVisit);
     
         while (queueOfNodesToVisit.length > 0) {
-            let currentNode = queueOfNodesToVisit.pop();
+            let currentNode = queueOfNodesToVisit.shift();
             console.log("The node I am checking for adjacent nodes:" + currentNode);
             console.log("After popping of the queue, my queue of current nodes is:" + queueOfNodesToVisit);
 
-            let neighbouringNodes = [];
-        
-            if (this.isNodeWalkable(currentNode - 1) && this.isNodeValid(currentNode -1)) {
-                neighbouringNodes.push(currentNode - 1);
+            let neighbouringNodes = this.generateAdjacentNodes(currentNode);
+            for(let i = 0; i < neighbouringNodes.length; i++){
+                if (this.isNodeWalkable(neighbouringNodes[i]) && this.isNodeValid(neighbouringNodes[i]) && queueOfNodesToVisit.indexOf(neighbouringNodes[i])) {
+                    neighbouringNodes.push(neighbouringNodes[i]);
+                }
             }
-            if (this.isNodeWalkable(currentNode + 1) && this.isNodeValid(currentNode +1)) {
-                neighbouringNodes.push(currentNode + 1);
-            }
-            if (this.isNodeWalkable(currentNode - this.graphWidth) && this.isNodeValid(currentNode - this.graphWidth)) {
-                neighbouringNodes.push(currentNode - this.graphWidth);
-            }
-            if (this.isNodeWalkable(currentNode + this.graphWidth) && this.isNodeValid(currentNode + this.graphWidth)) {
-                neighbouringNodes.push(currentNode + this.graphWidth);
-            }            
-
+           
             console.log("Neighbouring Nodes" + neighbouringNodes);
             if(neighbouringNodes.indexOf(endNode) != -1){
                 let currentDirectionArray = Array.from(directionArray[currentNode]);

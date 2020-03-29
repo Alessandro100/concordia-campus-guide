@@ -7,6 +7,7 @@ import transportMode from '../classes/transportMode';
 import Trip from '../classes/trip';
 import Colors from '../constants/Colors';
 import IndoorFloorService from '../services/indoorFloorService';
+import Coordinate from '../classes/coordinate';
 
 const styles = StyleSheet.create({
   indoorMapHeader: {
@@ -129,6 +130,9 @@ class IndoorFloorMap extends Component<
 
   render() {
     const { trip, availableFloors, currentIndoorFloor } = this.state;
+    const a = new Coordinate(5, 28);
+    const b = new Coordinate(7, 28);
+    console.log(currentIndoorFloor.getPath(a,b));
 
     return (
       <>
