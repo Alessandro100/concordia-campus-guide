@@ -20,19 +20,8 @@ import CurrentPosition from "./components/CurrentPosition";
 import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
 import Navbtn from "./components/NavBtn";
+import styles from "./constants/AppStyling";
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-});
 
 type appState = {
   userPosition: Location;
@@ -48,6 +37,7 @@ type appState = {
   building: Building;
   buildings: Building[];
   displayIndoor: boolean;
+  indoorFloor: IndoorFloor;
   start_x: number;
   start_y: number;
   end_x: number;
@@ -82,6 +72,7 @@ class App extends Component<{}, appState> {
       start_y: -1,
       end_x: -1,
       end_y: -1,
+      indoorFloor: null,
       start_identifier: "",
       end_identifier: ""
     };
@@ -121,7 +112,13 @@ class App extends Component<{}, appState> {
   };
 
   callbackInOut = (status: boolean) => {
-    this.setState({ displayIndoor: status });
+    const {building} = this.state;
+    if(status) {
+      let floor = IndoorFloorService.getFloor(building.title, 1);
+      this.setState({ displayIndoor: status, indoorFloor: floor });
+    }else {
+      this.setState({ displayIndoor: status, indoorFloor: null });
+    }
   };
 
   /* Needed to pass callback to child (PolygonsAndMarkers.tsx) to update parent state (App.tsx) */
@@ -150,6 +147,7 @@ class App extends Component<{}, appState> {
       end_x,
       end_y,
       start_identifier,
+      indoorFloor,
       end_identifier
     } = this.state;
 
@@ -157,7 +155,7 @@ class App extends Component<{}, appState> {
       return (
         <View style={styles.container}>
           {/* <SearchBar setMapLocation={this.setMapLocation} /> */}
-          {/* <Autocomplete
+          <Autocomplete
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
             btnStyle={styles.search}
@@ -166,7 +164,7 @@ class App extends Component<{}, appState> {
             type="Search"
             lat={userPosition.getLatitude()}
             lng={userPosition.getLongitude()}
-          /> */}
+          />
           <CampusToggleButton setMapLocation={this.setMapLocation} />
           <InputBtn
             getNavInfo={this.callbackAllInfo}
@@ -219,8 +217,9 @@ class App extends Component<{}, appState> {
           />
         </View>
       );
+    } else {
+      return(<IndoorFloorMap indoorFloor={indoorFloor} indoorDisplay={this.callbackInOut}/>  )
     }
-    return <Text>indoor component </Text>;
   }
 
   render() {

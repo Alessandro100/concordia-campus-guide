@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 });
 
 class IndoorFloorMap extends Component<
-  { indoorFloor: IndoorFloor },
+  { indoorFloor: IndoorFloor, indoorDisplay },
   { trip: Trip; availableFloors: IndoorFloor[]; currentIndoorFloor: IndoorFloor }
 > {
   constructor(props) {
@@ -95,6 +95,11 @@ class IndoorFloorMap extends Component<
     this.loadRoute();
   }
 
+  changeToOutdoorView = () => {
+    const { indoorDisplay } = this.props;
+    indoorDisplay(false);
+  };
+
   getFloorButtonStyle(floorNumber) {
     const { currentIndoorFloor } = this.state;
 
@@ -117,10 +122,6 @@ class IndoorFloorMap extends Component<
       color: currentIndoorFloor.floorData.floorNumber === floorNumber ? Colors.white : Colors.black,
     };
   }
-
-  goToOutdoorMap = () => {
-    // nav back to outdoor map when implemented
-  };
 
   async loadRoute() {
     const { trip } = this.state;
@@ -149,7 +150,7 @@ class IndoorFloorMap extends Component<
           <TouchableHighlight
             style={styles.outDoorNavButton}
             onPress={() => {
-              this.goToOutdoorMap();
+              this.changeToOutdoorView();
             }}
           >
             <>
