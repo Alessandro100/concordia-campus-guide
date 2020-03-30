@@ -62,7 +62,7 @@ class CurrentPosition extends Component<
   render() {
     return (
       <View style={styles.positionBtn}>
-        <TouchableOpacity onPress={() => this.displayCurrentLocation()}>
+        <TouchableOpacity testID='diplayCurrentLocation' onPress={() => this.displayCurrentLocation()}>
           <Image style={styles.iconSize} source={require('../assets/cp.png')} />
         </TouchableOpacity>
       </View>
