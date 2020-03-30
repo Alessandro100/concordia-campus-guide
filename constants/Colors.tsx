@@ -19,4 +19,7 @@ export default {
   noticeText: '#fff',
   polygonStroke: '#a30909',
   polygonFill: 'rgba(163, 9, 9, 0.1)',
+  markersPinColor: 'rgb(163, 9, 9)',
+  shuttleBusMarkerPinColor: 'rgb(42,65,75)',
+  searchBarPlaces: '#0041db',
 };

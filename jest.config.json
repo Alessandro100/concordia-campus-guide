@@ -1,9 +1,10 @@
 {
-  "testRegex": "((\\.|/*.)(test))\\.js?$",
+  "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.[jt]sx?$",
   "testEnvironment": "jsdom",
   "preset": "react-native",
   "setupFilesAfterEnv": [
     "<rootDir>/jest.setup.js"
   ],
-  "coverageReporters": ["json","html-spa","lcov"]
+  "collectCoverage": true,
+  "coverageReporters": ["json", "html-spa","lcov"]
 }

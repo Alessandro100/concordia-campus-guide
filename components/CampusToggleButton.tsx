@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableHighlight } from 'react-native';
 import Colors from '../constants/Colors';
+import CampusLocations from '../constants/CampusLocations';
+import Location from '../classes/location';
 
 const styles = StyleSheet.create({
   campusToggle: {
@@ -21,14 +23,14 @@ const styles = StyleSheet.create({
 });
 
 class CampusToggleButton extends Component<
-  { setMapLocation(latitude: number, longitude: number): void },
+  { setMapLocation(location: Location): void },
   { currentCampusView: String }
 > {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentCampusView: 'SGW',
+      currentCampusView: CampusLocations.SGW.getIdentifier(),
     };
   }
 
@@ -45,35 +47,41 @@ class CampusToggleButton extends Component<
   toggleCampusView(campusSelected) {
     const { setMapLocation } = this.props;
     const { currentCampusView } = this.state;
-    if (currentCampusView === 'SGW' && campusSelected !== 'SGW') {
-      this.setState({ currentCampusView: 'Loyola' });
-      setMapLocation(45.4582, -73.6405);
-    } else if (currentCampusView === 'Loyola' && campusSelected !== 'Loyola') {
-      this.setState({ currentCampusView: 'SGW' });
-      setMapLocation(45.497406, -73.577102);
+    if (
+      currentCampusView === CampusLocations.SGW.getIdentifier() &&
+      campusSelected !== CampusLocations.SGW.getIdentifier()
+    ) {
+      this.setState({ currentCampusView: CampusLocations.Loyola.getIdentifier() });
+      setMapLocation(CampusLocations.Loyola.getLocation());
+    } else if (
+      currentCampusView === CampusLocations.Loyola.getIdentifier() &&
+      campusSelected !== CampusLocations.Loyola.getIdentifier()
+    ) {
+      this.setState({ currentCampusView: CampusLocations.SGW.getIdentifier() });
+      setMapLocation(CampusLocations.SGW.getLocation());
     }
   }
 
   render() {
     return (
       <View style={styles.campusToggle}>
-        <TouchableOpacity
-          style={this.buttonStyling('SGW')}
-          onPress={() => this.toggleCampusView('SGW')}
+        <TouchableHighlight
+          style={this.buttonStyling(CampusLocations.SGW.getIdentifier())}
+          onPress={() => this.toggleCampusView(CampusLocations.SGW.getIdentifier())}
         >
           <Text testID="toggle-sgw" style={styles.buttonText}>
             SGW
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableHighlight>
+        <TouchableHighlight
           testID="toggle-loyola-button"
-          style={this.buttonStyling('Loyola')}
-          onPress={() => this.toggleCampusView('Loyola')}
+          style={this.buttonStyling(CampusLocations.Loyola.getIdentifier())}
+          onPress={() => this.toggleCampusView(CampusLocations.Loyola.getIdentifier())}
         >
           <Text testID="toggle-loyola" style={styles.buttonText}>
             Loyola
           </Text>
-        </TouchableOpacity>
+        </TouchableHighlight>
       </View>
     );
   }

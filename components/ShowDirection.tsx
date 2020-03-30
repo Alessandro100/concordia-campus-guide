@@ -1,113 +1,76 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image } from 'react-native';
-import Polyline from '@mapbox/polyline';
-import MapView, { Marker } from 'react-native-maps';
-import Colors from '../constants/Colors';
 import transportMode from '../classes/transportMode';
-
-const styles = StyleSheet.create({
-  imageSize: {
-    width: 30,
-    height: 30,
-  },
-});
+import Location from '../classes/location';
+import Trip from '../classes/trip';
+import PointOfInterest from '../classes/pointOfInterest';
+import PathCalculator from '../classes/pathCalculator';
 
 type directionProps = {
-  startLat: number;
-  startLon: number;
-  endLat: number;
-  endLon: number;
+  startLocation: PointOfInterest;
+  endLocation: PointOfInterest;
   transportType: transportMode;
 };
 
-class ShowDirection extends Component<directionProps, { steps: any[] }> {
+type directionState = {
+  trip: Trip;
+};
+
+class ShowDirection extends Component<directionProps, directionState> {
   constructor(props) {
     super(props);
-
+    const { startLocation, endLocation, transportType } = this.props;
+    const routeCalculator = new PathCalculator(startLocation, endLocation, transportType);
     this.state = {
-      steps: [],
+      trip: new Trip(startLocation, endLocation, routeCalculator),
     };
-    this.getDirectionsSteps = this.getDirectionsSteps.bind(this);
+
+    this.loadRoute();
   }
 
-  componentDidMount() {
-    this.getDirectionsSteps();
-  }
-
-  // This function takes adresses as input and call the google API.
-  // Time and distance are unused but left here for potential extra.
-  async getDirectionsSteps() {
-    const { startLat, startLon, endLat, endLon, transportType } = this.props;
-    const baseUrl = 'https://maps.googleapis.com/maps/api/directions/json';
-    const apiKey = 'AIzaSyDpY_ACPWoo3mVPPmiLKQe1aBhjkDYlwJI';
-    const url = `${baseUrl}?origin=${startLat},${startLon}&destination=${endLat},${endLon}&mode=${transportType}&key=${apiKey}`;
-    const resp = await fetch(url);
-    const respJson = await resp.json();
-    // variables will be needed for future developement
-    // const response = respJson.routes[0];
-    // const distanceTime = response.legs[0];
-    // const distance = distanceTime.distance.text;
-    // const time = distanceTime.duration.text;
-    this.setState({ steps: respJson.routes[0].legs[0].steps });
-  }
-
-  getPolylineColor = step => {
-    if (step.travel_mode === 'TRANSIT') {
-      return step.transit_details.line.color;
-    }
-    return Colors.mapsPolyline;
-  };
-
-  getPinLocation = step => {
-    if (step) {
+  getPinLocation = (location: Location) => {
+    if (location) {
       return {
-        latitude: step.end_location.lat,
-        longitude: step.end_location.lng,
+        latitude: location.getLatitude(),
+        longitude: location.getLongitude(),
       };
     }
     return { latitude: 0, longitude: 0 };
   };
 
-  decodePoints = rawPoints => {
-    const points = Polyline.decode(rawPoints);
-    return points.map(point => {
-      return {
-        latitude: point[0],
-        longitude: point[1],
-      };
+  async loadRoute() {
+    const { trip } = this.state;
+
+    trip.loadRoute().then(path => {
+      trip.setRoute(path);
+      this.setState({ trip });
     });
-  };
+  }
 
   render() {
-    const { steps } = this.state;
-    const endingPinCoords = this.getPinLocation(steps[steps.length - 1]);
-    const startingPinCoords = this.getPinLocation(steps[0]);
+    const { trip } = this.state;
 
     return (
       <>
-        <Marker
-          coordinate={endingPinCoords}
-          title="Ending Point"
-          description="Ending point of the trip"
-        />
-        <Marker
-          coordinate={startingPinCoords}
-          title="Starting Point"
-          description="Starting point of the trip"
-          opacity={0.7}
-        >
-          <Image source={require('../assets/starting_icon.png')} style={styles.imageSize} />
-        </Marker>
-
-        {steps.map(step => (
-          // @ts-ignore
-          <MapView.Polyline
-            key={`${step.end_location.lat}-${step.end_location.lng}`}
-            strokeWidth={4}
-            strokeColor={this.getPolylineColor(step)}
-            coordinates={this.decodePoints(step.polyline.points)}
-          />
-        ))}
+        {trip.getRoute() != null && (
+          <>
+            {/* Get ending location is an issue as this takes the location of the entire trip. The beginning and 
+            ending might be indoors with and outdoor component in the middle. This currently does not support that */}
+            {/* <Marker
+              coordinate={this.getPinLocation(trip.getRoute().getEndingLocation())}
+              title="Ending Point"
+              description="Ending point of the trip"
+            />
+            <Marker
+              coordinate={this.getPinLocation(trip.getRoute().getStartingLocation())}
+              title="Starting Point"
+              description="Starting point of the trip"
+              opacity={0.7}
+            >
+              <Image source={require('../assets/starting_icon.png')} style={styles.imageSize} />
+            </Marker> */}
+            {trip.getRoute().displayPath(false)}
+          </>
+        )}
       </>
     );
   }
