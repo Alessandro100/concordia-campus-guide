@@ -18,7 +18,7 @@ class CampusEventComponent extends Component<CampusEventComponentProps, CampusEv
    render() {
       return (
          <View>
-            <Text>Title: {this.props.campusEvent.title}</Text>
+            <Text testID="EventTitle">Title: {this.props.campusEvent.title}</Text>
             <Text>Description: {this.props.campusEvent.description}</Text>
             <Text>Start: {this.props.campusEvent.startDate.toString()}</Text>
             <Text>End: {this.props.campusEvent.endDate.toString()}</Text>
