@@ -18,7 +18,6 @@ import SearchBar from '../components/SearchBar'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import ShowDirection from '../components/ShowDirection'
 import MapView, { Marker, Polyline } from 'react-native-maps';
-import UnitPath from '../classes/unitPath';
 import OutdoorPOI from '../classes/outdoorPOI';
 import transportMode from '../classes/transportMode';
 import CampusEventComponent from '../components/CampusEventComponent';
