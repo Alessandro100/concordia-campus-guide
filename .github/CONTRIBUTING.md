@@ -101,3 +101,11 @@ When adding a bug to github, add:
 * Have relevant names and tag the user story it's connected to at the end
         Ex: “Added toggle button to google maps [Issue #16]”
         Where Issue #16 is the github issue
+        
+### Coding Linter
+* The purpose of a linter is to assure a consistant coding style accross the application.
+* Before you commit any code, the linter will run and check if your coding matches the expected style and if your code doesn't break the tests
+* To run the linter, stage all the files you want to commit and run
+`npm run pre-commit`
+* If you try commiting code and there is a husky error, that means that your code does not follow the standards
+* If you have any questions regarding the linter, contact Alessandro from this repo

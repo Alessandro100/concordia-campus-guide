@@ -6,10 +6,5 @@
     "<rootDir>/jest.setup.js"
   ],
   "collectCoverage": true,
-  "collectCoverageFrom": [
-    "classes/*",
-    "components/*",
-    "services/*"
-  ],
-  "coverageReporters": ["json", "html-spa", "lcov"]
+  "coverageReporters": ["json", "html-spa","lcov"]
 }
