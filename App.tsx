@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
+import { View } from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
 import Location from './classes/location';
 import CampusPolygons from './constants/CampusPolygons';
-import Colors from './constants/Colors';
-import OutdoorPOI from './classes/outdoorPOI';
 import IndoorFloor from './classes/indoorFloor';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
 import IndoorFloorService from './services/indoorFloorService';
-import SearchBar from './components/SearchBar';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/buildingService';
@@ -19,20 +16,22 @@ import IndoorFloorMap from './components/IndoorFloorMap';
 import CurrentPosition from "./components/CurrentPosition";
 import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
-import Navbtn from "./components/NavBtn";
+//import Navbtn from "./components/NavBtn";
 import styles from "./constants/AppStyling";
 import PointOfInterest from './classes/pointOfInterest';
+import PlacesOfInterestAround from './components/PlacesOfInterestAround';
 
 
 type appState = {
+  places: any[];
   userPosition: Location;
+  polygons:any[],
   region: {
     latitude: number;
     longitude: number;
     latitudeDelta: number;
     longitudeDelta: number;
   };
-  polygons: any[];
   markers: any[];
   displayInfo: boolean;
   building: Building;
@@ -61,6 +60,7 @@ class App extends Component<{}, appState> {
         latitudeDelta: 0,
         longitudeDelta: 0.01
       },
+      places:[],
       building: null,
       markers: [],
       polygons: CampusPolygons.slice(0),
@@ -74,6 +74,8 @@ class App extends Component<{}, appState> {
       end_identifier: ""
     };
   }
+  setGooglePlacesMarkers= (allpaces:any[]) => { 
+    this.setState({places: allpaces})};
 
   callbackAllInfo = (
     type: string,
@@ -119,6 +121,7 @@ class App extends Component<{}, appState> {
     this.setState({ displayInfo });
     this.setState({ building });
   };
+  
 
   changeCurrentPosition = (coordinate: any) => {
     const { userPosition } = this.state;
@@ -134,11 +137,11 @@ class App extends Component<{}, appState> {
       displayInfo,
       building,
       displayIndoor,
-      userPosition,
       startDirection,
       endDirection,
       start_identifier,
       indoorFloor,
+      places,
       end_identifier
     } = this.state;
 
@@ -153,17 +156,21 @@ class App extends Component<{}, appState> {
             styleSugg={styles.searchSugg}
             styleInput={styles.searchInput}
             type="Search"
-            lat={userPosition.getLatitude()}
-            lng={userPosition.getLongitude()}
+            lat={region.latitude}
+            lng={region.longitude}
           />
+          <PlacesOfInterestAround 
+            lat={region.latitude}
+            long={region.longitude} 
+            showPlaces={this.setGooglePlacesMarkers}/>
           <CampusToggleButton setMapLocation={this.setMapLocation} />
           <InputBtn
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
-            lat={userPosition.getLatitude()}
-            lng={userPosition.getLongitude()}
+            lat={region.latitude}
+            lng={region.longitude}
           />
-          <Navbtn
+          {/* <Navbtn
             getNavInfo={this.callbackAllInfo}
             // start_x={start_x}
             // start_y={start_y}
@@ -171,17 +178,18 @@ class App extends Component<{}, appState> {
             // end_y={end_y}
             // sid={start_identifier}
             // eid={end_identifier}
-          />
+          /> */}
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}
             region={region}
             showsUserLocation={true}
-            onUserLocationChange={coordinates =>
-              this.changeCurrentPosition(coordinates)
-            }
+             onUserLocationChange={coordinates =>
+               this.changeCurrentPosition(coordinates)
+             }
           >
             <PolygonsAndMarkers
+              places={places}
               buildings={buildings}
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}

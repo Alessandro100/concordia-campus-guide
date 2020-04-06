@@ -9,14 +9,18 @@ import Path from '../interfaces/path';
 import OutdoorUnitPath from './outdoorUnitPath';
 
 class GoogleMapsAdapter {
-  baseUrl = 'https://maps.googleapis.com/maps/api/directions/json';
+  baseUrl = "https://maps.googleapis.com/maps/api/directions/json";
 
   apiKey = REACT_APP_GOOGLE_DIRECTIONS_API_KEY;
 
   // this function should return an object of type path
   // This function takes adresses as input and call the google API.
   // Time and distance are unused but left here for potential extra.
-  getDirectionsSteps(startLocation: Location, endLocation: Location, transportType: transportMode) {
+  getDirectionsSteps(
+    startLocation: Location,
+    endLocation: Location,
+    transportType: transportMode
+  ) {
     return new Promise<Path>((resolve, reject) => {
       const startLocationString = `${startLocation.getLatitude()},${startLocation.getLongitude()}`;
       const endLocationString = `${endLocation.getLatitude()},${endLocation.getLongitude()}`;
@@ -26,7 +30,9 @@ class GoogleMapsAdapter {
         resp => {
           resp.json().then(
             respJson => {
-              const formattedSteps = this.formatOutdoorSteps(respJson.routes[0].legs[0].steps);
+              const formattedSteps = this.formatOutdoorSteps(
+                respJson.routes[0].legs[0].steps
+              );
               resolve(formattedSteps);
             },
             err => {
@@ -46,18 +52,25 @@ class GoogleMapsAdapter {
     return points.map(point => {
       return {
         latitude: point[0],
-        longitude: point[1],
+        longitude: point[1]
       };
     });
   };
+parseGoogleMapLocation= (location: any) =>{
+    const coord = {
+      latitude: location.lat,
+      longitude: location.lng
+    }
+    return coord;
+  }
 
   getPolylineColor = step => {
-    if (step.travel_mode === 'TRANSIT') {
+    if (step.travel_mode === "TRANSIT") {
       return step.transit_details.line.color;
     }
     return Colors.mapsPolyline;
   };
-
+  
   formatOutdoorSteps(steps: any[]) {
     const formattedSteps = new CompoundPath();
     steps.forEach(step => {
@@ -65,9 +78,12 @@ class GoogleMapsAdapter {
         step.travel_mode,
         new OutdoorPOI(
           new Location(step.start_location.lat, step.start_location.lng),
-          'test-start'
+          "test-start"
         ),
-        new OutdoorPOI(new Location(step.end_location.lat, step.end_location.lng), 'test-end'),
+        new OutdoorPOI(
+          new Location(step.end_location.lat, step.end_location.lng),
+          "test-end"
+        ),
         this.decodePoints(step.polyline.points),
         this.getPolylineColor(step)
       );
