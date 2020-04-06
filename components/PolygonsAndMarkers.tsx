@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import { Marker, Polygon } from 'react-native-maps';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import Colors from '../constants/Colors';
-import ShuttleBusMarkers from '../constants/CampusShuttleBusStop';
-import Building from '../classes/building';
+import React, { Component } from "react";
+import { Marker, Polygon } from "react-native-maps";
+import { Image, StyleSheet, Text, View } from "react-native";
+import Colors from "../constants/Colors";
+import ShuttleBusMarkers from "../constants/CampusShuttleBusStop";
+import Building from "../classes/building";
 import {
   obtainCoordinateFromBuilding,
   parseLocationToLatLngType,
-} from '../services/buildingService';
-import Location from '../classes/location';
-import Campus from '../classes/campus';
+} from "../services/buildingService";
+import Location from "../classes/location";
+import Campus from "../classes/campus";
 
-const busIcon = require('./../assets/shuttle_bus_icon.png');
+const busIcon = require("./../assets/shuttle_bus_icon.png");
 
 const styles = StyleSheet.create({
   circle: {
@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
   },
   pinText: {
     color: Colors.white,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     fontSize: 20,
     marginBottom: 10,
   },
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
 });
 
 type markersAndPolygonsProps = {
+  places: any[];
   buildings: Building[];
   polygons: Polygon[];
   displaybuilding(building: Building, displayInfo: boolean): void;
@@ -46,16 +47,19 @@ type markersAndPolygonsState = {
   buildings: Building[];
 };
 
-class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPolygonsState> {
+class PolygonsAndMarkers extends Component<
+  markersAndPolygonsProps,
+  markersAndPolygonsState
+> {
   constructor(props) {
     super(props);
     const { buildings, polygons } = this.props;
     this.state = {
       buildings,
       polygons,
-      building: new Building('', '', [], null, null, ''),
+      building: new Building("", "", [], null, null, ""),
       location: new Location(0, 0),
-      campus: new Campus(null, '', ''),
+      campus: new Campus(null, "", ""),
       shuttleBusMarkers: ShuttleBusMarkers.slice(0),
     };
   }
@@ -65,12 +69,30 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
     displaybuilding(building, displayInfo);
   };
 
+  parseGoogleMapLocation=(location: any) => {
+    const coord = {
+      latitude: location.lat,
+      longitude: location.lng,
+    };
+    return coord;
+  }
   render() {
-    const { buildings, polygons, shuttleBusMarkers, location, campus, building } = this.state;
+    const {
+      buildings,
+      polygons,
+      shuttleBusMarkers,
+      location,
+      campus,
+      building,
+    } = this.state;
+    const { places } = this.props;
+
     return (
       <View>
-        {polygons.map(polygon => (
-          <View key={`${String(polygon.latitude)}-${String(polygon.longitude)}`}>
+        {polygons.map((polygon) => (
+          <View
+            key={`${String(polygon.latitude)}-${String(polygon.longitude)}`}
+          >
             <Polygon
               coordinates={polygon}
               strokeColor={Colors.polygonStroke}
@@ -79,17 +101,21 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
             />
           </View>
         ))}
-        {buildings.map(buildingMarker => (
+        {buildings.map((buildingMarker) => (
           <Marker
             testID={buildingMarker.getIdentifier()}
             key={buildingMarker.getIdentifier()}
-            coordinate={parseLocationToLatLngType(obtainCoordinateFromBuilding(buildingMarker))}
+            coordinate={parseLocationToLatLngType(
+              obtainCoordinateFromBuilding(buildingMarker)
+            )}
             title={buildingMarker.getIdentifier()}
             description={buildingMarker.getName()}
             pinColor={Colors.markersPinColor}
             onPress={() => {
               location.setLatitude(buildingMarker.getLocation().getLatitude());
-              location.setLongitude(buildingMarker.getLocation().getLongitude());
+              location.setLongitude(
+                buildingMarker.getLocation().getLongitude()
+              );
               campus.setLocation(buildingMarker.getLocation());
               building.setName(buildingMarker.getName());
               building.setDescription(buildingMarker.getDescription());
@@ -102,11 +128,13 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
             }}
           >
             <View style={styles.circle}>
-              <Text style={styles.pinText}>{buildingMarker.getIdentifier()}</Text>
+              <Text style={styles.pinText}>
+                {buildingMarker.getIdentifier()}
+              </Text>
             </View>
           </Marker>
         ))}
-        {shuttleBusMarkers.map(marker => (
+        {shuttleBusMarkers.map((marker) => (
           <Marker
             key={marker.title}
             coordinate={marker.coordinate}
@@ -115,6 +143,16 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
           >
             <Image source={busIcon} style={styles.icon} />
           </Marker>
+        ))}
+
+        {places.map((marker) => (
+          <Marker
+            key={marker.id}
+            coordinate={this.parseGoogleMapLocation(marker.geometry.location)}
+            title={marker.name}
+            description={marker.formatted_address}
+            pinColor={Colors.primaryColor}
+          ></Marker>
         ))}
       </View>
     );

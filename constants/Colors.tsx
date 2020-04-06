@@ -22,4 +22,5 @@ export default {
   markersPinColor: 'rgb(163, 9, 9)',
   shuttleBusMarkerPinColor: 'rgb(42,65,75)',
   searchBarPlaces: '#0041db',
+  whiteWithOpacity:'rgba(255,255,255,0.5)',
 };

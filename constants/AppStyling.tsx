@@ -20,6 +20,31 @@ const styles = StyleSheet.create({
       borderWidth: 0.5,
       padding: 10
     },
+    iconSize: {
+      height: 20,
+      width: 20,
+    },
+    options:{
+      borderColor: Colors.grey,
+      borderWidth: 0.3,
+      paddingRight: 27,
+      paddingLeft: 27,
+      paddingBottom:10,
+      paddingTop:10,
+      borderRadius:20,
+      marginLeft:3,
+      marginRight:3,
+      backgroundColor:Colors.whiteWithOpacity,
+    },
+    optionsContainer: {
+      flexDirection:'row',
+      position: "absolute",
+      zIndex: 4,
+      alignSelf: "center",
+      top: 145,
+      margin:5,
+    
+    },
   
     searchSugg: {
       width: 320,

@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
+import { View } from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
 import Location from './classes/location';
 import CampusPolygons from './constants/CampusPolygons';
-import Colors from './constants/Colors';
-import OutdoorPOI from './classes/outdoorPOI';
 import IndoorFloor from './classes/indoorFloor';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
 import IndoorFloorService from './services/indoorFloorService';
-import SearchBar from './components/SearchBar';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/buildingService';
@@ -22,9 +19,11 @@ import Autocomplete from "./components/AutoCompleteInput";
 import Navbtn from "./components/NavBtn";
 import styles from "./constants/AppStyling";
 import PointOfInterest from './classes/pointOfInterest';
+import PlacesAround from './components/PlacesAround';
 
 
 type appState = {
+  places: any[];
   userPosition: Location;
   region: {
     latitude: number;
@@ -61,6 +60,7 @@ class App extends Component<{}, appState> {
         latitudeDelta: 0,
         longitudeDelta: 0.01
       },
+      places:[],
       building: null,
       markers: [],
       polygons: CampusPolygons.slice(0),
@@ -74,6 +74,8 @@ class App extends Component<{}, appState> {
       end_identifier: ""
     };
   }
+  callBackMarkers= (allpaces:any) => { 
+    this.setState({places: allpaces})};
 
   callbackAllInfo = (
     type: string,
@@ -139,6 +141,7 @@ class App extends Component<{}, appState> {
       endDirection,
       start_identifier,
       indoorFloor,
+      places,
       end_identifier
     } = this.state;
 
@@ -156,6 +159,10 @@ class App extends Component<{}, appState> {
             lat={userPosition.getLatitude()}
             lng={userPosition.getLongitude()}
           />
+          <PlacesAround 
+            lat={userPosition.getLatitude()}
+            long={userPosition.getLongitude()} 
+            showPlaces={this.callBackMarkers}/>
           <CampusToggleButton setMapLocation={this.setMapLocation} />
           <InputBtn
             getNavInfo={this.callbackAllInfo}
@@ -182,6 +189,7 @@ class App extends Component<{}, appState> {
             }
           >
             <PolygonsAndMarkers
+              places={places}
               buildings={buildings}
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}
