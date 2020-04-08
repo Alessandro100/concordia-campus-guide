@@ -20,6 +20,7 @@ import Navbtn from "./components/NavBtn";
 import styles from "./constants/AppStyling";
 import PointOfInterest from './classes/pointOfInterest';
 import PlacesAround from './components/PlacesAround';
+import Menu from './components/Menu';
 
 
 type appState = {
@@ -153,12 +154,13 @@ class App extends Component<{}, appState> {
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
             btnStyle={styles.search}
-            styleSugg={styles.searchSugg}
-            styleInput={styles.searchInput}
+            styleSugg={styles.searchSugg} 
+            styleInput={styles.searchInput} 
             type="Search"
             lat={userPosition.getLatitude()}
             lng={userPosition.getLongitude()}
           />
+          <Menu/>
           <PlacesAround 
             lat={userPosition.getLatitude()}
             long={userPosition.getLongitude()} 
@@ -170,15 +172,15 @@ class App extends Component<{}, appState> {
             lat={userPosition.getLatitude()}
             lng={userPosition.getLongitude()}
           />
-          <Navbtn
+          {/* <Navbtn
             getNavInfo={this.callbackAllInfo}
             // start_x={start_x}
             // start_y={start_y}
             // end_x={end_x}
             // end_y={end_y}
             // sid={start_identifier}
-            // eid={end_identifier}
-          />
+            // eid={end_identifier} 
+          /> */}
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}

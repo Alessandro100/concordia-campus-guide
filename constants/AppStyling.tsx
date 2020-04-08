@@ -3,7 +3,7 @@ import Colors from './Colors';
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
+      // flex: 1,
       backgroundColor: Colors.white,
       alignItems: "center",
       justifyContent: "center"
@@ -18,7 +18,10 @@ const styles = StyleSheet.create({
       top: 50,
       borderColor: Colors.black,
       borderWidth: 0.5,
-      padding: 10
+      paddingLeft: 50,
+      paddingRight:10,
+      paddingTop:10,
+      paddingBottom:10,
     },
     iconSize: {
       height: 20,
@@ -31,7 +34,7 @@ const styles = StyleSheet.create({
       paddingLeft: 27,
       paddingBottom:10,
       paddingTop:10,
-      borderRadius:20,
+      borderRadius:15,
       marginLeft:3,
       marginRight:3,
       backgroundColor:Colors.whiteWithOpacity,
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
       position: "absolute",
       zIndex: 4,
       alignSelf: "center",
-      top: 145,
+      top: 95,
       margin:5,
     
     },
@@ -55,8 +58,9 @@ const styles = StyleSheet.create({
       borderColor: Colors.black,
       backgroundColor: Colors.white,
       borderWidth: 0.5,
-      padding: 5,
-      alignSelf: "center"
+      padding: 5 ,
+      alignSelf: "center",
+      
     },
     searchInput: {
       width: 320,
@@ -67,7 +71,8 @@ const styles = StyleSheet.create({
       borderColor: Colors.black,
       backgroundColor: Colors.white,
       borderWidth: 0.5,
-      padding: 10
+      padding: 10,
+      zIndex:2,
     },
     mapStyle: {
       width: Dimensions.get("window").width,

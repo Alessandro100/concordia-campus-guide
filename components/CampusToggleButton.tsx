@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     position: 'absolute',
-    top: 100,
+    top: 150,
     zIndex: 2,
     borderRadius: 10,
     overflow: 'hidden',
