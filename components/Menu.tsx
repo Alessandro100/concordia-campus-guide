@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View,Image, StyleSheet, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import Colors from '../constants/Colors';
+import CampusEventContainer from './CampusEventContainer';
 
 
 const styles = StyleSheet.create({
@@ -41,9 +42,30 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
-  
+    elevation: 5  
     },
+    modalEventContainer:{
+   
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex:2,
+      top:150,
+      width:300,
+      height:400,
+      position:'absolute',
+      alignSelf:"center",
+      backgroundColor:Colors.white, 
+      padding:10,
+      shadowColor: Colors.black,
+      shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+    },
+
     modalLogo:{
       height:200,
       width: "100%",
@@ -93,28 +115,48 @@ const styles = StyleSheet.create({
 
 class Menu extends Component<
   {},
-  { showModal: boolean; }
+  { showMenu: boolean; showEvent:boolean; showSettings:boolean; }
 > {
   constructor(props) {
     super(props);
 
     this.state = {
-      showModal:false,
+      showMenu:false,
+      showEvent:false,
+      showSettings:false,
     };
   }
 
-  showZeModal(){
-    this.setState({showModal:true});
+  ShowZeMenu(){
+    this.setState({showMenu:true});
   }
-  closeZeModal(){
-    this.setState({showModal:false});
+  closeZeMenu(){
+    this.setState({showMenu:false});
   }
+  ShowZeEvents(){
+    this.setState({showEvent:true});
+  }
+  closeZeEvents(){
+    this.setState({showEvent:false});
+  }
+  ShowZeSettings(){
+    this.setState({showSettings:true});
+  }
+  closeZeSettings(){
+    this.setState({showSettings:false});
+  }
+  switchToEvent(){
+    this.setState({showMenu:false});
+    this.setState({showSettings:false});
+    this.setState({showEvent:true});
+   
+  };
 
   render() {
-    const {showModal}= this.state;
+    const {showMenu, showEvent, showSettings}= this.state;
     return (
    <View style={styles.container}>
-        <TouchableOpacity style={styles.hamburger} onPress={() => this.showZeModal()}>
+        <TouchableOpacity style={styles.hamburger} onPress={() => this.ShowZeMenu()}>
          <Image
             style={styles.iconSize}
             source={require("../assets/menu.png")}/>
@@ -122,9 +164,9 @@ class Menu extends Component<
        <Modal 
        animationType="fade"
        transparent={true}
-       visible={showModal}
+       visible={showMenu}
         >
-           <TouchableOpacity onPress={() => this.closeZeModal()} style={styles.outsideModal}></TouchableOpacity>
+           <TouchableOpacity onPress={() => this.closeZeMenu()} style={styles.outsideModal}></TouchableOpacity>
           <View style={styles.modalContainer}>
             <View style={styles.modalLogo}>
             <Image
@@ -140,7 +182,9 @@ class Menu extends Component<
             source={require("../assets/bus.png")}/>
               <Text>Shuttle Bus Schedule</Text>
               </TouchableOpacity>
-            <TouchableOpacity style={styles.menuOptions}>
+            <TouchableOpacity 
+            onPress={() => this.switchToEvent()}
+            style={styles.menuOptions}>
             <Image
             style={styles.iconMenu}
             source={require("../assets/event.png")}/>
@@ -159,6 +203,17 @@ class Menu extends Component<
           </View>
 
       </Modal>
+      
+      <Modal 
+       animationType="fade"
+       transparent={true}
+       visible={showEvent}
+        >
+          <TouchableOpacity onPress={() => this.closeZeEvents()} style={styles.outsideModal}></TouchableOpacity>
+<View style={styles.modalEventContainer}>
+  <CampusEventContainer buildingId="Loyola"/>
+</View>
+        </Modal>
       </View>
     );
   }
