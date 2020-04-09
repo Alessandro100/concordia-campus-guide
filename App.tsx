@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
@@ -17,11 +17,13 @@ import CurrentPosition from "./components/CurrentPosition";
 import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
 import Navbtn from "./components/NavBtn";
-import styles from "./constants/AppStyling";
+import {stylesWithColorBlindSupport} from "./constants/AppStyling";
 import PointOfInterest from './classes/pointOfInterest';
 import PlacesAround from './components/PlacesAround';
 import Menu from './components/Menu';
-
+import colorBlindMode from './classes/colorBlindMode';
+import Colors, { ColorPicker } from './constants/Colors';
+let styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode.normal))
 
 type appState = {
   places: any[];
@@ -32,6 +34,7 @@ type appState = {
     latitudeDelta: number;
     longitudeDelta: number;
   };
+  colorBlindMode: colorBlindMode,
   polygons: any[];
   markers: any[];
   displayInfo: boolean;
@@ -61,6 +64,7 @@ class App extends Component<{}, appState> {
         latitudeDelta: 0,
         longitudeDelta: 0.01
       },
+      colorBlindMode: colorBlindMode.normal,
       places:[],
       building: null,
       markers: [],
@@ -75,7 +79,7 @@ class App extends Component<{}, appState> {
       end_identifier: ""
     };
   }
-  callBackMarkers= (allpaces:any) => { 
+  callBackMarkers= (allpaces:any) => {
     this.setState({places: allpaces})};
 
   callbackAllInfo = (
@@ -116,7 +120,9 @@ class App extends Component<{}, appState> {
       this.setState({ displayIndoor: status, indoorFloor: null });
     }
   };
-
+  setColorBlindMode = (colorBlindMode: colorBlindMode) => {
+    this.setState({colorBlindMode: colorBlindMode});
+  }
   /* Needed to pass callback to child (PolygonsAndMarkers.tsx) to update parent state (App.tsx) */
   displayBuildingInfo = (building: Building, displayInfo: boolean) => {
     this.setState({ displayInfo });
@@ -132,6 +138,7 @@ class App extends Component<{}, appState> {
   inOrOutView() {
     const {
       region,
+      colorBlindMode,
       buildings,
       polygons,
       displayInfo,
@@ -145,7 +152,7 @@ class App extends Component<{}, appState> {
       places,
       end_identifier
     } = this.state;
-
+    styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode))
     if (displayIndoor === false) {
       return (
         <View style={styles.container}>
@@ -154,18 +161,18 @@ class App extends Component<{}, appState> {
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
             btnStyle={styles.search}
-            styleSugg={styles.searchSugg} 
-            styleInput={styles.searchInput} 
+            styleSugg={styles.searchSugg}
+            styleInput={styles.searchInput}
             type="Search"
             lat={userPosition.getLatitude()}
             lng={userPosition.getLongitude()}
           />
-          <Menu/>
-          <PlacesAround 
+          <Menu setColorBlindMode={this.setColorBlindMode.bind(this)} colorBlindMode={colorBlindMode}/>
+          <PlacesAround
             lat={userPosition.getLatitude()}
-            long={userPosition.getLongitude()} 
+            long={userPosition.getLongitude()}
             showPlaces={this.callBackMarkers}/>
-          <CampusToggleButton setMapLocation={this.setMapLocation} />
+          <CampusToggleButton setMapLocation={this.setMapLocation} colorBlindMode={colorBlindMode}/>
           <InputBtn
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
@@ -179,7 +186,7 @@ class App extends Component<{}, appState> {
             // end_x={end_x}
             // end_y={end_y}
             // sid={start_identifier}
-            // eid={end_identifier} 
+            // eid={end_identifier}
           /> */}
           <MapView
             provider={PROVIDER_GOOGLE}
@@ -201,7 +208,7 @@ class App extends Component<{}, appState> {
                 startLocation={startDirection}
                 endLocation={endDirection}
                 transportType={transportMode.transit}
-              /> 
+              />
             )}
           </MapView>
           <CurrentPosition setMapLocation={this.setMapLocation} />
@@ -215,17 +222,18 @@ class App extends Component<{}, appState> {
       );
     } else {
       return(
-        <IndoorFloorMap 
-          indoorFloor={indoorFloor} 
+        <IndoorFloorMap
+          indoorFloor={indoorFloor}
           indoorDisplay={this.callbackInOut}
           startLocation={startDirection}
           endLocation={endDirection}
-        />  
+        />
       )
     }
   }
 
   render() {
+
     return this.inOrOutView();
   }
 }

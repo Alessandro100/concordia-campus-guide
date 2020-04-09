@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View,Image, StyleSheet, Text, TouchableOpacity, Modal, Dimensions, Picker } from 'react-native';
-import Colors from '../constants/Colors';
 import CampusEventContainer from './CampusEventContainer';
 import Building from '../classes/building';
+import ColorBlindSettings from '../components/ColorBlindSettings';
+import colorBlindMode from '../classes/colorBlindMode';
+import Colors, { ColorPicker } from '../constants/Colors';
 import { obtainBuildings } from '../services/buildingService';
 
 
@@ -11,7 +13,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
 
   },
-  iconSize:{ 
+  iconSize:{
     width: 30,
     height: 30,},
 
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
       height: Dimensions.get("window").height,
       zIndex:2,
       position:'absolute',
-      backgroundColor:Colors.white, 
+      backgroundColor:Colors.white,
       padding:10,
       shadowColor: Colors.black,
       shadowOffset: {
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5  
+    elevation: 5
     },
 
     modalEventSettingsContainer:{
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
       height:350,
       position:'absolute',
       alignSelf:"center",
-      backgroundColor:Colors.white, 
+      backgroundColor:Colors.white,
       padding:10,
       shadowColor: Colors.black,
       shadowOffset: {
@@ -121,12 +123,13 @@ const styles = StyleSheet.create({
       width:250,
       height:30,
     }
-    
+
 });
 
 class Menu extends Component<
   {},
-  { showMenu: boolean; showEvent:boolean; showSettings:boolean;buildings:Building[];building:Building; }
+  { showMenu: boolean; showEvent:boolean; showSettings:boolean;buildings:Building[];building:Building;
+    colorBlindMode: colorBlindMode; setColorBlindMode:Function}
 > {
   constructor(props) {
     super(props);
@@ -137,6 +140,8 @@ class Menu extends Component<
       showSettings:false,
       buildings: obtainBuildings(),
       building: new Building('','',null,null,'',null,'H'),
+      colorBlindMode: props.colorBlindMode,
+      setColorBlindMode: props.setColorBlindMode
     };
   }
 
@@ -156,17 +161,17 @@ class Menu extends Component<
     this.setState({showMenu:false});
     this.setState({showSettings:false});
     this.setState({showEvent:true});
-   
+
   };
   switchToSettings(){
     this.setState({showMenu:false});
     this.setState({showEvent:false});
     this.setState({showSettings:true});
-   
+
   };
 
   render() {
-    const {showMenu, showEvent, showSettings, buildings,building}= this.state;
+    const {showMenu, showEvent, showSettings, buildings,building, colorBlindMode, setColorBlindMode}= this.state;
     return (
    <View style={styles.container}>
         <TouchableOpacity style={styles.hamburger} onPress={() => this.ShowZeMenu()}>
@@ -174,7 +179,7 @@ class Menu extends Component<
             style={styles.iconSize}
             source={require("../assets/menu.png")}/>
         </TouchableOpacity>
-       <Modal 
+       <Modal
        animationType="fade"
        transparent={true}
        visible={showMenu}
@@ -186,7 +191,7 @@ class Menu extends Component<
             style={styles.logoSize}
             source={require("../assets/logo.png")}/>
             <TouchableOpacity style={styles.syncBtn}>
-            <Text style={styles.syncText}> Sync. Calendar</Text> 
+            <Text style={styles.syncText}> Sync. Calendar</Text>
             </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.menuOptions}>
@@ -195,7 +200,7 @@ class Menu extends Component<
             source={require("../assets/bus.png")}/>
               <Text>Shuttle Bus Schedule</Text>
               </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
             onPress={() => this.switchToEvent()}
             style={styles.menuOptions}>
             <Image
@@ -203,7 +208,7 @@ class Menu extends Component<
             source={require("../assets/event.png")}/>
               <Text>Events</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                onPress={() => this.switchToSettings()}
               style={styles.menuOptions}>
               <Image
@@ -218,8 +223,8 @@ class Menu extends Component<
           </View>
 
       </Modal>
-      
-      <Modal 
+
+      <Modal
        animationType="fade"
        transparent={true}
        visible={showEvent}
@@ -234,13 +239,13 @@ class Menu extends Component<
                   onValueChange={(itemValue) => this.setState({building:itemValue})}
                 >
           {buildings.map((buildingItem) => (
-             <Picker.Item              
-             key={buildingItem.getIdentifier()} 
-             label={buildingItem.getName()} 
+             <Picker.Item
+             key={buildingItem.getIdentifier()}
+             label={buildingItem.getName()}
              value={buildingItem.getName()}/>
           ))}
-        
-                  
+
+
             </Picker>
            </View>
            <Text>{'\n'}Today's Events:</Text>
@@ -248,7 +253,7 @@ class Menu extends Component<
            </View>
         </Modal>
 
-        <Modal 
+        <Modal
        animationType="fade"
        transparent={true}
        visible={showSettings}
@@ -256,7 +261,7 @@ class Menu extends Component<
           <TouchableOpacity onPress={() => this.closeZeSettings()} style={styles.outsideModal}></TouchableOpacity>
             <View style={styles.modalEventSettingsContainer}>
              <Text>Settings</Text>
-             
+             <ColorBlindSettings setColorBlindMode={setColorBlindMode.bind(this)} colorBlindMode={colorBlindMode} closeZeSettings={this.closeZeSettings.bind(this)}/>
             </View>
         </Modal>
      </View>

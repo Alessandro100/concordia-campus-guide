@@ -4,7 +4,8 @@ import {
   View,
   Image,
 } from "react-native";
-import styles from '../constants/AppStyling';
+import Colors, {ColorPicker} from '../constants/Colors';
+import {stylesWithColorBlindSupport} from '../constants/AppStyling';
 import Location from '../classes/location';
 import { REACT_APP_GOOGLE_PLACES_API } from "react-native-dotenv";
 
@@ -17,6 +18,7 @@ type placeProps = {
    long:number;
    showPlaces(places:any[]):void;
 };
+const styles = stylesWithColorBlindSupport(Colors)
 class PlacesAround extends Component<placeProps,placeState> {
   constructor(props) {
     super(props);
@@ -40,7 +42,7 @@ const {lat,long} = this.props;
     return (
       <View style={styles.optionsContainer}>
        <TouchableOpacity style={styles.options} onPress={() => this.findPlaces("restaurant")}>
-         
+
            <Image
               style={styles.iconSize}
               source={require("../assets/restaurant.png")}/>
@@ -60,7 +62,7 @@ const {lat,long} = this.props;
               style={styles.iconSize}
               source={require("../assets/museum.png")}/>
               </TouchableOpacity>
-       
+
       </View>
     );
   }
