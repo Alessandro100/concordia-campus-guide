@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, ImageStyle, ViewStyle } from 'react-native';
 import { Svg, Line } from 'react-native-svg';
 import { Graph } from '@dagrejs/graphlib';
 import IndoorFloorFactory from './indoorFloorFactory';
@@ -10,6 +10,8 @@ import Building from './building';
 // save the different indoor POI logos in const variables
 const waterFountainIcon = require('../assets/indoor-floor-plans/waterfountain.png')
 const toiletIcon = require('../assets/indoor-floor-plans/toilet.png')
+const staircaseIcon = require('../assets/indoor-floor-plans/staircase.png')
+const elevatorIcon = require('../assets/indoor-floor-plans/elevator.png')
 
 class IndoorFloor {
     graphWidth = 30;
@@ -43,63 +45,124 @@ class IndoorFloor {
         this.initialHeightPosition = newInitialHeightPosition;
     }
 
-    setImageWidth(newImageWidth: number) {
+    setImageWidth (newImageWidth: number) {
         this.imageWidth = newImageWidth;
         const ratio = this.floorData.imageWidthPX / this.floorData.imageHeightPX;
         this.imageHeight = newImageWidth * ratio;
     }
 
+    setFloorImageStyle():ImageStyle{
+        return{
+            width: this.imageWidth, height: this.imageHeight, position: "absolute", top: this.initialHeightPosition, left: this.initialWidthPosition, zIndex: 4
+        }
+    }
     showFloorImage() {
         return (
             <Image
                 resizeMode={'cover'}
-                style={{ width: this.imageWidth, height: this.imageHeight, position: "absolute", top: this.initialHeightPosition, left: this.initialWidthPosition, zIndex: 4 }}
+                style={this.setFloorImageStyle()}
                 source={this.floorData.floorImage}
             />
         )
     }
+    // This function has been commented out because it's out of use. It could be useful when updating the infloormap data in the future though
+    // Concerning the walkables paths
 
-    getWalkwayTileColor(xIndex, yIndex) {
-        let color = 'red';
-        this.floorData.walkways.forEach(obj => {
-            if (xIndex >= obj.topLeft.x && xIndex <= obj.bottomRight.x && yIndex >= obj.topLeft.y && yIndex <= obj.bottomRight.y) {
-                color = 'blue';
+    // getWalkwayTileColor(xIndex, yIndex) {
+    //     let color = 'red';
+    //     this.floorData.walkways.forEach(obj => {
+    //         if (xIndex >= obj.topLeft.x && xIndex <= obj.bottomRight.x && yIndex >= obj.topLeft.y && yIndex <= obj.bottomRight.y) {
+    //             color = 'blue';
+    //         }
+    //     })
+    //     if (this.floorData.entrance && xIndex === this.floorData.entrance.x && yIndex === this.floorData.entrance.y) {
+    //         color = 'white'
+    //     }
+    //     if (this.floorData.elevator && xIndex === this.floorData.elevator.x && yIndex === this.floorData.elevator.y) {
+    //         color = 'black'
+    //     }
+    //     if (this.floorData.bathrooms) {
+    //         this.floorData.bathrooms.forEach(bathroom => {
+    //             if (xIndex === bathroom.x && yIndex === bathroom.y) {
+    //                 color = 'yellow'
+    //             }
+    //         })
+    //     }
+    //     if (this.floorData.waterFountains) {
+    //         this.floorData.waterFountains.forEach(waterFountain => {
+    //             if (xIndex === waterFountain.x && yIndex === waterFountain.y) {
+    //                 color = 'purple'
+    //             }
+    //         })
+    //     }
+    //     if (this.floorData.classRooms) {
+    //         this.floorData.classRooms.forEach(classRoom => {
+    //             if (xIndex === classRoom.location.x && yIndex === classRoom.location.y) {
+    //                 color = 'orange'
+    //             }
+    //         })
+    //     }
+    //     return color;
+    // }
+
+// this function returns proper styles for the icons
+    setLogoStyle=( xPosition, yPosition, type): ImageStyle => {
+
+        if (type === "toilet") {
+            return {
+                zIndex: 7,
+                position: 'absolute',
+                top: yPosition,
+                left: xPosition,
+                borderRadius: 25 / 2,
+                width: 25,
+                height: 25,
+                opacity: 1,
             }
-        })
-        if (this.floorData.entrance && xIndex === this.floorData.entrance.x && yIndex === this.floorData.entrance.y) {
-            color = 'white'
+
         }
-        if (this.floorData.elevator && xIndex === this.floorData.elevator.x && yIndex === this.floorData.elevator.y) {
-            color = 'black'
+        else if (type === "waterfountain"){
+            return {
+                zIndex: 7,
+                position: 'absolute',
+                top: yPosition,
+                left: xPosition,
+                borderRadius: 23 / 2,
+                width: 23,
+                height: 23,
+                opacity: 1
+            }
         }
-        if (this.floorData.bathrooms) {
-            this.floorData.bathrooms.forEach(bathroom => {
-                if (xIndex === bathroom.x && yIndex === bathroom.y) {
-                    color = 'yellow'
-                }
-            })
+        else if (type === "elevator"){
+            return {
+                zIndex: 7,
+                    position: 'absolute',
+                    top: yPosition,
+                    left: xPosition,
+                    width: 25,
+                    height: 25,
+                    opacity: 1
+            }
         }
-        if (this.floorData.waterFountains) {
-            this.floorData.waterFountains.forEach(waterFountain => {
-                if (xIndex === waterFountain.x && yIndex === waterFountain.y) {
-                    color = 'purple'
-                }
-            })
+        else if (type === "staircase"){
+            return {
+                zIndex: 7,
+                    position: 'absolute',
+                    top: yPosition,
+                    left: xPosition,
+                    width: 25,
+                    height: 25,
+                    opacity: 1
+            }
         }
-        if (this.floorData.classRooms) {
-            this.floorData.classRooms.forEach(classRoom => {
-                if (xIndex === classRoom.location.x && yIndex === classRoom.location.y) {
-                    color = 'orange'
-                }
-            })
-        }
-        return color;
+        return {}
     }
 
     // this function is called when a set of coordina  i - z return a match with the TYPE of indoor poit
     // this function returns an image (logo) of the specified indoor poi
     // function is called in showIndoorTile()
-    setIndoorPoiLogo(i, z, xPosition, yPosition, type) {
+    // this function calls setLogoStyle to apply the correct style to each type of icon
+    setIndoorPOILogo(i, z, xPosition, yPosition, type) {
         let img
 
         // toilet icon
@@ -107,38 +170,48 @@ class IndoorFloor {
             img = <Image
                 source={toiletIcon}
                 key={i + " " + z}
-                style={{
-                    zIndex: 7,
-                    position: 'absolute',
-                    top: yPosition,
-                    left: xPosition,
-                    borderRadius: 25 / 2,
-                    width: 25,
-                    height: 25,
-                    opacity: 1
-                }}>
+                style={this.setLogoStyle(xPosition, yPosition, type)}
+            >
             </Image>
         }
-        
         // waterfountain icon
         else if (type === "waterfountain") {
             img = <Image
                 source={waterFountainIcon}
                 key={i + " " + z}
-                style={{
-                    zIndex: 7,
-                    position: 'absolute',
-                    top: yPosition,
-                    left: xPosition,
-                    borderRadius: 23 / 2,
-                    width: 23,
-                    height: 23,
-                    opacity: 1
-                }}>
+                style={this.setLogoStyle(xPosition, yPosition, type)}>
             </Image>
         }
-
+        // staircase icon
+        else if (type === "staircase") {
+            img = <Image
+                source={staircaseIcon}
+                key={i + " " + z}
+                style={this.setLogoStyle( xPosition, yPosition, type)}>
+            </Image>
+        }
+        // elevator icon
+        else if (type === "elevator") {
+            img = <Image
+                source={elevatorIcon}
+                key={i + " " + z}
+                style={this.setLogoStyle( xPosition, yPosition, type)}>
+            </Image>
+        }
+        
         return img
+    }
+    setViewStyle=(xPosition,yPosition,widthPerTile,heightPerTile):ViewStyle =>{
+        return{
+            zIndex: 5,
+            position: 'absolute',
+            top: yPosition,
+            left: xPosition,
+            borderRadius: 2,
+            width: widthPerTile,
+            height: heightPerTile,
+            opacity: 0.5
+        }
     }
     showIndoorTile() {
         let array = [];
@@ -152,38 +225,43 @@ class IndoorFloor {
                 array.push(
                     <View
                         key={i + " " + z}
-                        style={{
-                            zIndex: 5,
-                            position: 'absolute',
-                            top: yPosition,
-                            left: xPosition,
-                            borderRadius: 2,
-                            // backgroundColor: this.getWalkwayTileColor(z, i),
-                            width: widthPerTile,
-                            height: heightPerTile,
-                            opacity: 0.5
-                        }}>
+                        style={this.setViewStyle(xPosition,yPosition,widthPerTile,heightPerTile)}>
                     </View>
                 )
                 // This section goes through the bathrooms coordinates
-                // Then proceeds to call the setIndoorPoiLogo when a match is given
+                // Then proceeds to call the setIndoorPOILogo when a match is given
                 this.floorData.bathrooms.forEach(bathroom => {
                     if (z === bathroom.x && i === bathroom.y) {
                         array.push(
-                            this.setIndoorPoiLogo(i, z, xPosition, yPosition, 'toilet')
+                            this.setIndoorPOILogo(i, z, xPosition, yPosition, 'toilet')
                         )
                     }
                 })
+
                 // This section goes through the waterfountain coordinates
-                // Then proceeds to call the setIndoorPoiLogo when a match is given
+                // Then proceeds to call the setIndoorPOILogo when a match is given
                 this.floorData.waterFountains.forEach(waterfountain => {
                     if (z === waterfountain.x && i === waterfountain.y) {
 
                         array.push(
-                            this.setIndoorPoiLogo(i, z, xPosition, yPosition, 'waterfountain')
+                            this.setIndoorPOILogo(i, z, xPosition, yPosition, 'waterfountain')
                         )
                     }
                 })
+                // This section checks the elevator coordinates
+                // Then proceeds to call the setIndoorPOILogo if a match is given
+                if (this.floorData.elevator && z === this.floorData.elevator.x && i === this.floorData.elevator.y) {
+                    array.push(
+                        this.setIndoorPOILogo(i, z, xPosition, yPosition, 'elevator')
+                    )
+                }
+                // This section checks the staircase coordinates
+                // Then proceeds to call the setIndoorPOILogo if a match is given
+                if (this.floorData.staircase && z === this.floorData.staircase.x && i === this.floorData.staircase.y) {
+                    array.push(
+                        this.setIndoorPOILogo(i, z, xPosition, yPosition, 'staircase')
+                    )
+                }
             }
         }
 

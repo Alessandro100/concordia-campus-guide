@@ -5,8 +5,8 @@ const elevatorData = {
     y: 23
 }
 const staircaseData = {
-    x: 27,
-    y: 25
+    x: 17,
+    y: 26
 }
 const bathroomData = [
     

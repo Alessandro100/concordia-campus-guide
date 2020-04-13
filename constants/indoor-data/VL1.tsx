@@ -2,7 +2,7 @@ import IndoorFloorData from '../../classes/indoorFloorData';
 // COV-ID PREVENTS US TO CHECK THAT DATA -- example coordinates
 const elevatorData = {
   x: 6,
-  y: 19
+  y: 17
 }
 // COV-ID PREVENTS US TO CHECK THAT DATA -- example coordinates
 const staircaseData = {
