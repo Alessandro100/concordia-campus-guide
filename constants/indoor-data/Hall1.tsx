@@ -31,7 +31,7 @@ const entranceData =
 const waterFountainsData =
 [{
     x: 14,
-    y: 20
+    y: 22
 }]
 
 const classRoomsData = [

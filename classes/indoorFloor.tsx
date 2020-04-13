@@ -7,6 +7,10 @@ import Coordinate from './coordinate';
 import IndoorFloorData from './indoorFloorData'
 import Building from './building';
 
+// save the different indoor POI logos in const variables
+const waterFountainIcon = require('../assets/indoor-floor-plans/waterfountain.png')
+const toiletIcon = require('../assets/indoor-floor-plans/toilet.png')
+
 class IndoorFloor {
     graphWidth = 30;
     graphHeight = 30;
@@ -21,7 +25,7 @@ class IndoorFloor {
     indoorFloorFactory: IndoorFloorFactory;
     isBuildingEntrance: boolean;
 
-    constructor(building:Building, floorData: IndoorFloorData) {
+    constructor(building: Building, floorData: IndoorFloorData) {
         this.building = building;
         this.floorData = floorData;
 
@@ -39,17 +43,17 @@ class IndoorFloor {
         this.initialHeightPosition = newInitialHeightPosition;
     }
 
-    setImageWidth(newImageWidth: number){
+    setImageWidth(newImageWidth: number) {
         this.imageWidth = newImageWidth;
         const ratio = this.floorData.imageWidthPX / this.floorData.imageHeightPX;
-        this.imageHeight = newImageWidth*ratio;
+        this.imageHeight = newImageWidth * ratio;
     }
 
-    showFloorImage(){
-        return(
+    showFloorImage() {
+        return (
             <Image
                 resizeMode={'cover'}
-                style={{width: this.imageWidth, height: this.imageHeight, position: "absolute", top: this.initialHeightPosition, left: this.initialWidthPosition, zIndex: 4}}
+                style={{ width: this.imageWidth, height: this.imageHeight, position: "absolute", top: this.initialHeightPosition, left: this.initialWidthPosition, zIndex: 4 }}
                 source={this.floorData.floorImage}
             />
         )
@@ -57,34 +61,34 @@ class IndoorFloor {
 
     getWalkwayTileColor(xIndex, yIndex) {
         let color = 'red';
-        this.floorData.walkways.forEach(obj =>{
-            if(xIndex >= obj.topLeft.x && xIndex <= obj.bottomRight.x && yIndex >= obj.topLeft.y && yIndex <= obj.bottomRight.y) {
+        this.floorData.walkways.forEach(obj => {
+            if (xIndex >= obj.topLeft.x && xIndex <= obj.bottomRight.x && yIndex >= obj.topLeft.y && yIndex <= obj.bottomRight.y) {
                 color = 'blue';
             }
         })
-        if(this.floorData.entrance && xIndex === this.floorData.entrance.x && yIndex === this.floorData.entrance.y) {
+        if (this.floorData.entrance && xIndex === this.floorData.entrance.x && yIndex === this.floorData.entrance.y) {
             color = 'white'
         }
-        if(this.floorData.elevator && xIndex === this.floorData.elevator.x && yIndex === this.floorData.elevator.y) {
+        if (this.floorData.elevator && xIndex === this.floorData.elevator.x && yIndex === this.floorData.elevator.y) {
             color = 'black'
         }
-        if(this.floorData.bathrooms) {
-            this.floorData.bathrooms.forEach(bathroom =>{
-                if(xIndex === bathroom.x && yIndex === bathroom.y) {
+        if (this.floorData.bathrooms) {
+            this.floorData.bathrooms.forEach(bathroom => {
+                if (xIndex === bathroom.x && yIndex === bathroom.y) {
                     color = 'yellow'
                 }
             })
         }
-        if(this.floorData.waterFountains) {
-            this.floorData.waterFountains.forEach(waterFountain =>{
-                if(xIndex === waterFountain.x && yIndex === waterFountain.y) {
+        if (this.floorData.waterFountains) {
+            this.floorData.waterFountains.forEach(waterFountain => {
+                if (xIndex === waterFountain.x && yIndex === waterFountain.y) {
                     color = 'purple'
                 }
             })
         }
-        if(this.floorData.classRooms) {
-            this.floorData.classRooms.forEach(classRoom =>{
-                if(xIndex === classRoom.location.x && yIndex === classRoom.location.y) {
+        if (this.floorData.classRooms) {
+            this.floorData.classRooms.forEach(classRoom => {
+                if (xIndex === classRoom.location.x && yIndex === classRoom.location.y) {
                     color = 'orange'
                 }
             })
@@ -92,6 +96,50 @@ class IndoorFloor {
         return color;
     }
 
+    // this function is called when a set of coordina  i - z return a match with the TYPE of indoor poit
+    // this function returns an image (logo) of the specified indoor poi
+    // function is called in showIndoorTile()
+    setIndoorPoiLogo(i, z, xPosition, yPosition, type) {
+        let img
+
+        // toilet icon
+        if (type === "toilet") {
+            img = <Image
+                source={toiletIcon}
+                key={i + " " + z}
+                style={{
+                    zIndex: 7,
+                    position: 'absolute',
+                    top: yPosition,
+                    left: xPosition,
+                    borderRadius: 25 / 2,
+                    width: 25,
+                    height: 25,
+                    opacity: 1
+                }}>
+            </Image>
+        }
+        
+        // waterfountain icon
+        else if (type === "waterfountain") {
+            img = <Image
+                source={waterFountainIcon}
+                key={i + " " + z}
+                style={{
+                    zIndex: 7,
+                    position: 'absolute',
+                    top: yPosition,
+                    left: xPosition,
+                    borderRadius: 23 / 2,
+                    width: 23,
+                    height: 23,
+                    opacity: 1
+                }}>
+            </Image>
+        }
+
+        return img
+    }
     showIndoorTile() {
         let array = [];
         const widthPerTile = this.imageWidth / this.graphHeight;
@@ -102,23 +150,43 @@ class IndoorFloor {
             for (let z = 0; z < this.graphWidth; z = z + 1) {
                 let xPosition = z * widthPerTile + this.initialWidthPosition;
                 array.push(
-                    <View 
-                        key={i + " " + z} 
-                        style={{ 
-                            zIndex: 5, 
-                            position: 'absolute', 
-                            top: yPosition, 
-                            left: xPosition, 
-                            borderRadius: 2, 
-                            backgroundColor: this.getWalkwayTileColor(z, i), 
-                            width: widthPerTile, 
-                            height: heightPerTile, 
-                            opacity: 0.5 
-                    }}>
+                    <View
+                        key={i + " " + z}
+                        style={{
+                            zIndex: 5,
+                            position: 'absolute',
+                            top: yPosition,
+                            left: xPosition,
+                            borderRadius: 2,
+                            // backgroundColor: this.getWalkwayTileColor(z, i),
+                            width: widthPerTile,
+                            height: heightPerTile,
+                            opacity: 0.5
+                        }}>
                     </View>
                 )
+                // This section goes through the bathrooms coordinates
+                // Then proceeds to call the setIndoorPoiLogo when a match is given
+                this.floorData.bathrooms.forEach(bathroom => {
+                    if (z === bathroom.x && i === bathroom.y) {
+                        array.push(
+                            this.setIndoorPoiLogo(i, z, xPosition, yPosition, 'toilet')
+                        )
+                    }
+                })
+                // This section goes through the waterfountain coordinates
+                // Then proceeds to call the setIndoorPoiLogo when a match is given
+                this.floorData.waterFountains.forEach(waterfountain => {
+                    if (z === waterfountain.x && i === waterfountain.y) {
+
+                        array.push(
+                            this.setIndoorPoiLogo(i, z, xPosition, yPosition, 'waterfountain')
+                        )
+                    }
+                })
             }
         }
+
         return array;
     }
 
@@ -152,87 +220,87 @@ class IndoorFloor {
 
     //returns the data on how to get from one tile to another
     getPath(startingNode: Coordinate, endingNode: Coordinate): Coordinate[] {
-        const startKey = startingNode.x +'-' + startingNode.y;
+        const startKey = startingNode.x + '-' + startingNode.y;
         const endKey = endingNode.x + '-' + endingNode.y;
         const pathArray = this.shortestPath(startKey, endKey);
         //const pathArray = this.shortestPath('5-27', '8-26'); A way to test
 
         let coordPath = []
-        pathArray.forEach(key =>{
+        pathArray.forEach(key => {
             const value = key.split('-');
-            coordPath.push({x: value[0], y: value[1]})
+            coordPath.push({ x: value[0], y: value[1] })
         });
 
         return coordPath;
     }
-    
+
     bfs(start) {
         if (!this.graph.neighbors(start) || !this.graph.neighbors(start).length) {
-          return [start]
+            return [start]
         }
-    
-        var results = {"nodes": []},
+
+        var results = { "nodes": [] },
             queue = this.graph.neighbors(start),
             count = 1
-    
-        while(queue.length) {
-          var node = queue.shift()
-          if (!results[node] || !results[node].visited) {
-            results[node] = {visited: true, steps: count}
-            results["nodes"].push(node)
-            if (this.graph.neighbors[node]) {
-              if (this.graph.neighbors[node].length) {
-                count++
-                queue.push(...this.graph.neighbors[node])
-              } else {
-                continue
-              }
+
+        while (queue.length) {
+            var node = queue.shift()
+            if (!results[node] || !results[node].visited) {
+                results[node] = { visited: true, steps: count }
+                results["nodes"].push(node)
+                if (this.graph.neighbors[node]) {
+                    if (this.graph.neighbors[node].length) {
+                        count++
+                        queue.push(...this.graph.neighbors[node])
+                    } else {
+                        continue
+                    }
+                }
             }
-          }
         }
         return results
     }
-    
-      shortestPath(start, end) {
+
+    shortestPath(start, end) {
         if (start == end) {
-          return [start, end]
+            return [start, end]
         }
-    
+
         var queue = [start],
             visited = {},
             predecessor = {},
             tail = 0,
             path
-    
-        while(tail < queue.length) {
-          var u = queue[tail++]
-          if (!this.graph.neighbors(u)) {
-            continue
-          }
-    
-          var neighbors = this.graph.neighbors(u)
-          for(var i = 0; i < neighbors.length; ++i) {
-            var v = neighbors[i]
-            if (visited[v]) {
-              continue
+
+        while (tail < queue.length) {
+            var u = queue[tail++]
+            if (!this.graph.neighbors(u)) {
+                continue
             }
-            visited[v] = true
-            if (v === end) {   // Check if the path is complete.
-              path = [ v ]   // If so, backtrack through the path.
-              while (u !== start) {
-                path.push(u)
-                u = predecessor[u]
-              }
-              path.push(u)
-              path.reverse()
-              return path
+
+            var neighbors = this.graph.neighbors(u)
+            for (var i = 0; i < neighbors.length; ++i) {
+                var v = neighbors[i]
+                if (visited[v]) {
+                    continue
+                }
+                visited[v] = true
+                if (v === end) {   // Check if the path is complete.
+                    path = [v]   // If so, backtrack through the path.
+                    while (u !== start) {
+                        path.push(u)
+                        u = predecessor[u]
+                    }
+                    path.push(u)
+                    path.reverse()
+                    return path
+                }
+                predecessor[v] = u
+                queue.push(v)
             }
-            predecessor[v] = u
-            queue.push(v)
-          }
         }
         return path
-      }
+    }
 }
 
 export default IndoorFloor;

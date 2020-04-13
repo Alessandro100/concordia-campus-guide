@@ -26,7 +26,7 @@ const entranceData =
 // COV-ID PREVENTS US TO CHECK THAT DATA -- example coordinates
 const waterFountainsData =
   [{
-    x: 11,
+    x: 12,
     y: 10
   }]
 // COV-ID PREVENTS US TO CHECK THAT DATA -- example coordinates

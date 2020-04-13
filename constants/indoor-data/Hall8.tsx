@@ -27,7 +27,7 @@ const bathroomData = [
 
 const waterFountainsData =
 [{
-  x: 19,
+  x: 20,
   y: 7
 }]
 
