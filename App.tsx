@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
+import { View} from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
 import Location from './classes/location';
 import CampusPolygons from './constants/CampusPolygons';
-import Colors from './constants/Colors';
-import OutdoorPOI from './classes/outdoorPOI';
 import IndoorFloor from './classes/indoorFloor';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
 import IndoorFloorService from './services/indoorFloorService';
-import SearchBar from './components/SearchBar';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/buildingService';
@@ -19,9 +16,9 @@ import IndoorFloorMap from './components/IndoorFloorMap';
 import CurrentPosition from "./components/CurrentPosition";
 import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
-import Navbtn from "./components/NavBtn";
 import styles from "./constants/AppStyling";
 import PointOfInterest from './classes/pointOfInterest';
+import PlacesOfInterestAround from './components/PlacesOfInterestAround';
 
 
 type appState = {
@@ -137,15 +134,12 @@ class App extends Component<{}, appState> {
       userPosition,
       startDirection,
       endDirection,
-      start_identifier,
       indoorFloor,
-      end_identifier
     } = this.state;
 
     if (displayIndoor === false) {
       return (
         <View style={styles.container}>
-          {/* <SearchBar setMapLocation={this.setMapLocation} /> */}
           <Autocomplete
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
@@ -163,15 +157,10 @@ class App extends Component<{}, appState> {
             lat={userPosition.getLatitude()}
             lng={userPosition.getLongitude()}
           />
-          <Navbtn
-            getNavInfo={this.callbackAllInfo}
-            // start_x={start_x}
-            // start_y={start_y}
-            // end_x={end_x}
-            // end_y={end_y}
-            // sid={start_identifier}
-            // eid={end_identifier}
-          />
+          <PlacesOfInterestAround  
+            lat={userPosition.getLatitude()}
+            long={userPosition.getLongitude()}
+           />
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}
