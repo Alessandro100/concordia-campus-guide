@@ -34,7 +34,7 @@
     "events": "^3.1.0",
     "expo": "~36.0.0",
     "mapbox": "^1.0.0-beta10",
-    "react": "~16.9.0",
+    "react": "^16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-autocomplete-input": "^4.1.0",
@@ -43,13 +43,15 @@
     "react-native-geolocation-service": "^4.0.0",
     "react-native-google-maps-directions": "^2.1.1",
     "react-native-google-places-autocomplete": "^1.4.1",
-    "react-native-maps": "0.26.1",
+    "react-native-maps": "^0.26.1",
+    "react-native-pdf": "^6.1.1",
     "react-native-screens": "2.0.0-alpha.12",
     "react-native-svg": "9.13.3",
     "react-native-svg-uri": "^1.2.3",
-    "react-native-web": "~0.11.7",
     "react-native-vector-icons": "^6.6.0",
-    "rn-bottom-drawer": "^1.4.3"
+    "react-native-web": "~0.11.7",
+    "rn-bottom-drawer": "^1.4.3",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

@@ -22,8 +22,10 @@ import Autocomplete from "./components/AutoCompleteInput";
 import Navbtn from "./components/NavBtn";
 import styles from "./constants/AppStyling";
 import PointOfInterest from './classes/pointOfInterest';
-
-
+import ShowBusMarker from './components/ShowBusMarker';
+import ShuttleBusMarkers from './constants/CampusShuttleBusStop';
+import ShowBusSchedule from './components/ShowBusSchedule';
+import SomeInterestPointMarkers from './components/SomeInterestPointMarkers';
 type appState = {
   userPosition: Location;
   region: {
@@ -38,6 +40,7 @@ type appState = {
   building: Building;
   buildings: Building[];
   displayIndoor: boolean;
+  busScheduleDisplay: boolean;
   indoorFloor: IndoorFloor;
   startDirection: PointOfInterest;
   endDirection: PointOfInterest;
@@ -67,6 +70,7 @@ class App extends Component<{}, appState> {
       buildings: obtainBuildings(),
       displayInfo: false,
       displayIndoor: false,
+      busScheduleDisplay:false,
       startDirection: null,
       endDirection: null,
       indoorFloor: null,
@@ -114,6 +118,14 @@ class App extends Component<{}, appState> {
     }
   };
 
+  callbackShowBusSchedule = (status: boolean) => {
+    if(status) {
+        this.setState({ displayIndoor: status, busScheduleDisplay: status});}
+    else {
+      this.setState({ displayIndoor: status, busScheduleDisplay: status });
+    }
+  };
+
   /* Needed to pass callback to child (PolygonsAndMarkers.tsx) to update parent state (App.tsx) */
   displayBuildingInfo = (building: Building, displayInfo: boolean) => {
     this.setState({ displayInfo });
@@ -134,6 +146,7 @@ class App extends Component<{}, appState> {
       displayInfo,
       building,
       displayIndoor,
+      busScheduleDisplay,
       userPosition,
       startDirection,
       endDirection,
@@ -186,6 +199,9 @@ class App extends Component<{}, appState> {
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}
             />
+            <SomeInterestPointMarkers/>
+            <ShowBusMarker indoorDisplay={this.callbackShowBusSchedule} busScheduleDisplay ={busScheduleDisplay} shuttleBusMarkers={ShuttleBusMarkers}/>
+            
             {(startDirection && endDirection) && (
               <ShowDirection
                 startLocation={startDirection}
@@ -203,8 +219,12 @@ class App extends Component<{}, appState> {
           />
         </View>
       );
-    } else {
+    } else if (busScheduleDisplay === true) {
       return(
+        <ShowBusSchedule indoorDisplay={this.callbackShowBusSchedule} busScheduleDisplay={busScheduleDisplay}/>
+        );}
+        else{
+          return(
         <IndoorFloorMap 
           indoorFloor={indoorFloor} 
           indoorDisplay={this.callbackInOut}
