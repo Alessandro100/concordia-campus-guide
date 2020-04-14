@@ -5,8 +5,8 @@ const elevatorData = {
     y: 23
 }
 const staircaseData = {
-    x: 27,
-    y: 25
+    x: 17,
+    y: 26
 }
 const bathroomData = [
     
@@ -31,7 +31,7 @@ const entranceData =
 const waterFountainsData =
 [{
     x: 14,
-    y: 20
+    y: 22
 }]
 
 const classRoomsData = [
