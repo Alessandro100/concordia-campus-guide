@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Marker, Polygon } from 'react-native-maps';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
-import ShuttleBusMarkers from '../constants/CampusShuttleBusStop';
 import Building from '../classes/building';
 import {
   obtainCoordinateFromBuilding,
@@ -41,7 +40,6 @@ type markersAndPolygonsProps = {
 
 type markersAndPolygonsState = {
   polygons: Polygon[];
-  shuttleBusMarkers: Marker[];
   building: Building;
   buildings: Building[];
 };
@@ -56,7 +54,6 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
       building: new Building('', '', [], null, null, ''),
       location: new Location(0, 0),
       campus: new Campus(null, '', ''),
-      shuttleBusMarkers: ShuttleBusMarkers.slice(0),
     };
   }
 
@@ -66,7 +63,7 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
   };
 
   render() {
-    const { buildings, polygons, shuttleBusMarkers, location, campus, building } = this.state;
+    const { buildings, polygons, location, campus, building } = this.state;
     return (
       <View>
         {polygons.map(polygon => (
@@ -104,16 +101,6 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
             <View style={styles.circle}>
               <Text style={styles.pinText}>{buildingMarker.getIdentifier()}</Text>
             </View>
-          </Marker>
-        ))}
-        {shuttleBusMarkers.map(marker => (
-          <Marker
-            key={marker.title}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            description={marker.description}
-          >
-            <Image source={busIcon} style={styles.icon} />
           </Marker>
         ))}
       </View>
