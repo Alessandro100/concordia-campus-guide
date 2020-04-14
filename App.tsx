@@ -1,36 +1,35 @@
-import React, { Component } from 'react';
-import { View} from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import CampusToggleButton from './components/CampusToggleButton';
-import ShowDirection from './components/ShowDirection';
-import transportMode from './classes/transportMode';
-import Location from './classes/location';
-import CampusPolygons from './constants/CampusPolygons';
-import IndoorFloor from './classes/indoorFloor';
-import PolygonsAndMarkers from './components/PolygonsAndMarkers';
-import IndoorFloorService from './services/indoorFloorService';
-import BottomDrawerBuilding from './components/BottomDrawerBuilding';
-import Building from './classes/building';
-import { obtainBuildings } from './services/buildingService';
-import IndoorFloorMap from './components/IndoorFloorMap';
+import React, { Component } from "react";
+import { View } from "react-native";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import CampusToggleButton from "./components/CampusToggleButton";
+import ShowDirection from "./components/ShowDirection";
+import transportMode from "./classes/transportMode";
+import Location from "./classes/location";
+import CampusPolygons from "./constants/CampusPolygons";
+import IndoorFloor from "./classes/indoorFloor";
+import PolygonsAndMarkers from "./components/PolygonsAndMarkers";
+import IndoorFloorService from "./services/indoorFloorService";
+import BottomDrawerBuilding from "./components/BottomDrawerBuilding";
+import Building from "./classes/building";
+import { obtainBuildings } from "./services/buildingService";
+import IndoorFloorMap from "./components/IndoorFloorMap";
 import CurrentPosition from "./components/CurrentPosition";
 import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
 import styles from "./constants/AppStyling";
-import PointOfInterest from './classes/pointOfInterest';
-import PlacesOfInterestAround from './components/PlacesOfInterestAround';
-
+import PointOfInterest from "./classes/pointOfInterest";
+import PlacesOfInterestAround from "./components/PlacesOfInterestAround";
 
 type appState = {
+  places: any[];
   userPosition: Location;
+  polygons: any[];
   region: {
     latitude: number;
     longitude: number;
     latitudeDelta: number;
     longitudeDelta: number;
   };
-  polygons: any[];
-  markers: any[];
   displayInfo: boolean;
   building: Building;
   buildings: Building[];
@@ -38,7 +37,6 @@ type appState = {
   indoorFloor: IndoorFloor;
   startDirection: PointOfInterest;
   endDirection: PointOfInterest;
-  places:any[];
 };
 
 class App extends Component<{}, appState> {
@@ -55,9 +53,9 @@ class App extends Component<{}, appState> {
         latitude: 45.497406,
         longitude: -73.577102,
         latitudeDelta: 0,
-        longitudeDelta: 0.01
+        longitudeDelta: 0.01,
       },
-      places:[],
+      places: [],
       building: null,
       markers: [],
       polygons: CampusPolygons.slice(0),
@@ -69,21 +67,18 @@ class App extends Component<{}, appState> {
       indoorFloor: null,
     };
   }
-  setGooglePlacesMarkers= (allpaces:any[]) => { 
-    this.setState({places: allpaces})};
+  setGooglePlacesMarkers = (allpaces: any[]) => {
+    this.setState({ places: allpaces });
+  };
 
-  callbackAllInfo = (
-    type: string,
-    poi: PointOfInterest,
-    inOrOut: boolean
-  ) => {
+  callbackAllInfo = (type: string, poi: PointOfInterest, inOrOut: boolean) => {
     if (type === "Start") {
-      this.setState({startDirection: poi})
+      this.setState({ startDirection: poi });
       if (inOrOut === true) {
         //this.setState({ start_identifier: id });
       }
     } else {
-      this.setState({endDirection: poi})
+      this.setState({ endDirection: poi });
       if (inOrOut === true) {
         //this.setState({ end_identifier: id });
       }
@@ -96,17 +91,17 @@ class App extends Component<{}, appState> {
         latitude: location.getLatitude(),
         longitude: location.getLongitude(),
         latitudeDelta: 0,
-        longitudeDelta: 0.01
-      }
+        longitudeDelta: 0.01,
+      },
     });
   };
 
   callbackInOut = (status: boolean) => {
-    const {building} = this.state;
-    if(status) {
+    const { building } = this.state;
+    if (status) {
       let floor = IndoorFloorService.getFloor(building.title, 1);
       this.setState({ displayIndoor: status, indoorFloor: floor });
-    }else {
+    } else {
       this.setState({ displayIndoor: status, indoorFloor: null });
     }
   };
@@ -131,10 +126,10 @@ class App extends Component<{}, appState> {
       displayInfo,
       building,
       displayIndoor,
-      userPosition,
       startDirection,
       endDirection,
       indoorFloor,
+      places,
     } = this.state;
 
     if (displayIndoor === false) {
@@ -147,41 +142,43 @@ class App extends Component<{}, appState> {
             styleSugg={styles.searchSugg}
             styleInput={styles.searchInput}
             type="Search"
-            lat={userPosition.getLatitude()}
-            lng={userPosition.getLongitude()}
+            lat={region.latitude}
+            lng={region.longitude}
+          />
+          <PlacesOfInterestAround
+            lat={region.latitude}
+            long={region.longitude}
+            showPlaces={this.setGooglePlacesMarkers}
           />
           <CampusToggleButton setMapLocation={this.setMapLocation} />
           <InputBtn
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
-            lat={userPosition.getLatitude()}
-            lng={userPosition.getLongitude()}
+            lat={region.latitude}
+            lng={region.longitude}
           />
-          <PlacesOfInterestAround  
-            lat={userPosition.getLatitude()}
-            long={userPosition.getLongitude()}
-            showPlaces={this.setGooglePlacesMarkers}
-           />
+
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}
             region={region}
             showsUserLocation={true}
-            onUserLocationChange={coordinates =>
+            onUserLocationChange={(coordinates) =>
               this.changeCurrentPosition(coordinates)
             }
           >
             <PolygonsAndMarkers
+              places={places}
               buildings={buildings}
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}
             />
-            {(startDirection && endDirection) && (
+            {startDirection && endDirection && (
               <ShowDirection
                 startLocation={startDirection}
                 endLocation={endDirection}
                 transportType={transportMode.transit}
-              /> 
+              />
             )}
           </MapView>
           <CurrentPosition setMapLocation={this.setMapLocation} />
@@ -194,14 +191,14 @@ class App extends Component<{}, appState> {
         </View>
       );
     } else {
-      return(
-        <IndoorFloorMap 
-          indoorFloor={indoorFloor} 
+      return (
+        <IndoorFloorMap
+          indoorFloor={indoorFloor}
           indoorDisplay={this.callbackInOut}
           startLocation={startDirection}
           endLocation={endDirection}
-        />  
-      )
+        />
+      );
     }
   }
 
