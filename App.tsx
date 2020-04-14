@@ -38,8 +38,7 @@ type appState = {
   indoorFloor: IndoorFloor;
   startDirection: PointOfInterest;
   endDirection: PointOfInterest;
-  start_identifier: string;
-  end_identifier: string;
+  places:any[];
 };
 
 class App extends Component<{}, appState> {
@@ -58,6 +57,7 @@ class App extends Component<{}, appState> {
         latitudeDelta: 0,
         longitudeDelta: 0.01
       },
+      places:[],
       building: null,
       markers: [],
       polygons: CampusPolygons.slice(0),
@@ -67,10 +67,10 @@ class App extends Component<{}, appState> {
       startDirection: null,
       endDirection: null,
       indoorFloor: null,
-      start_identifier: "",
-      end_identifier: ""
     };
   }
+  setGooglePlacesMarkers= (allpaces:any[]) => { 
+    this.setState({places: allpaces})};
 
   callbackAllInfo = (
     type: string,
@@ -160,6 +160,7 @@ class App extends Component<{}, appState> {
           <PlacesOfInterestAround  
             lat={userPosition.getLatitude()}
             long={userPosition.getLongitude()}
+            showPlaces={this.setGooglePlacesMarkers}
            />
           <MapView
             provider={PROVIDER_GOOGLE}
