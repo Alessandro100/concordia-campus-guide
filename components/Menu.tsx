@@ -187,6 +187,7 @@ class Menu extends Component<
     return (
       <View style={styles.container}>
         <TouchableOpacity
+          testID="menuModal"
           style={styles.hamburger}
           onPress={() => this.ShowZeMenu()}
         >
@@ -197,6 +198,7 @@ class Menu extends Component<
         </TouchableOpacity>
         <Modal animationType="fade" transparent={true} visible={showMenu}>
           <TouchableOpacity
+            testID="closeMenuModal"
             onPress={() => this.closeZeMenu()}
             style={styles.outsideModal}
           ></TouchableOpacity>
@@ -218,6 +220,7 @@ class Menu extends Component<
               <Text>Shuttle Bus Schedule</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              testID="eventModal"
               onPress={() => this.switchToEvent()}
               style={styles.menuOptions}
             >
@@ -228,6 +231,7 @@ class Menu extends Component<
               <Text>Events</Text>
             </TouchableOpacity>
             <TouchableOpacity
+            testID="settingsModal"
               onPress={() => this.switchToSettings()}
               style={styles.menuOptions}
             >
@@ -246,6 +250,7 @@ class Menu extends Component<
 
         <Modal animationType="fade" transparent={true} visible={showEvent}>
           <TouchableOpacity
+            testID="closeEventModal"
             onPress={() => this.closeZeEvents()}
             style={styles.outsideModal}
           ></TouchableOpacity>
@@ -275,6 +280,7 @@ class Menu extends Component<
 
         <Modal animationType="fade" transparent={true} visible={showSettings}>
           <TouchableOpacity
+            testID="closeSettingsModal"
             onPress={() => this.closeZeSettings()}
             style={styles.outsideModal}
           ></TouchableOpacity>

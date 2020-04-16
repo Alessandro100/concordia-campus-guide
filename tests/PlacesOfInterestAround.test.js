@@ -1,8 +1,6 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
-import { shallow, mount, render } from 'enzyme';
-import DirectionInput from '../components/DirectionInput';
-import { TouchableOpacity,Image, TextInput } from 'react-native';
+import { mount } from 'enzyme';
+import { TouchableOpacity,Image } from 'react-native';
 import PlacesOfInterestAround from '../components/PlacesOfInterestAround';
 
 
