@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import BottomDrawer from 'rn-bottom-drawer';
 import Building from '../classes/building';
 import Colors from '../constants/Colors';
@@ -103,7 +103,7 @@ class BottomDrawerBuilding extends Component<BottomDrawerBuildingProps, BottomDr
             />
           )}
         </View>
-        <Text style={styles.description}>{building.getDescription()}</Text>
+        <ScrollView><Text style={styles.description}>{building.getDescription()}</Text></ScrollView>
         <Text>{'\n'}Today's Events:</Text>
         <CampusEventContainer buildingId={this.state.building.identifier}/>
       </View>

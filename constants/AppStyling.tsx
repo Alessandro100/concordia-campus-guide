@@ -18,7 +18,10 @@ const styles = StyleSheet.create({
       top: 50,
       borderColor: Colors.black,
       borderWidth: 0.5,
-      padding: 10
+      paddingLeft: 50,
+      paddingRight:10,
+      paddingTop:10,
+      paddingBottom:10,
     },
     iconSize: {
       height: 20,

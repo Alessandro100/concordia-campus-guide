@@ -19,6 +19,7 @@ import Autocomplete from "./components/AutoCompleteInput";
 import styles from "./constants/AppStyling";
 import PointOfInterest from "./classes/pointOfInterest";
 import PlacesOfInterestAround from "./components/PlacesOfInterestAround";
+import Menu from "./components/Menu";
 
 type appState = {
   places: any[];
@@ -57,7 +58,6 @@ class App extends Component<{}, appState> {
       },
       places: [],
       building: null,
-      markers: [],
       polygons: CampusPolygons.slice(0),
       buildings: obtainBuildings(),
       displayInfo: false,
@@ -145,6 +145,7 @@ class App extends Component<{}, appState> {
             lat={region.latitude}
             lng={region.longitude}
           />
+           <Menu/>
           <PlacesOfInterestAround
             lat={region.latitude}
             long={region.longitude}
