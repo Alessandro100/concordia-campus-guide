@@ -7,8 +7,12 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  Picker,
 } from "react-native";
 import Colors from "../constants/Colors";
+import CampusEventContainer from "./CampusEventContainer";
+import Building from "../classes/building";
+import { obtainBuildings } from "../services/buildingService";
 
 const styles = StyleSheet.create({
   container: {
@@ -39,6 +43,27 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height,
     zIndex: 2,
     position: "absolute",
+    backgroundColor: Colors.white,
+    padding: 10,
+    shadowColor: Colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+
+  modalEventSettingsContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 2,
+    top: 120,
+    width: 300,
+    height: 350,
+    position: "absolute",
+    alignSelf: "center",
     backgroundColor: Colors.white,
     padding: 10,
     shadowColor: Colors.black,
@@ -96,12 +121,24 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
+  pickContainer: {
+    marginTop: 15,
+    borderWidth: 0.4,
+  },
+  buildPicker: {
+    width: 250,
+    height: 30,
+  },
 });
 
 class Menu extends Component<
   {},
   {
     showMenu: boolean;
+    showEvent: boolean;
+    showSettings: boolean;
+    buildings: Building[];
+    building: Building;
   }
 > {
   constructor(props) {
@@ -109,8 +146,10 @@ class Menu extends Component<
 
     this.state = {
       showMenu: false,
-     
-    
+      showEvent: false,
+      showSettings: false,
+      buildings: obtainBuildings(),
+      building: new Building("", "", null, null, "", null, "H"),
     };
   }
 
@@ -120,10 +159,30 @@ class Menu extends Component<
   closeZeMenu() {
     this.setState({ showMenu: false });
   }
-  
+  closeZeEvents() {
+    this.setState({ showEvent: false });
+  }
+  closeZeSettings() {
+    this.setState({ showSettings: false });
+  }
+  switchToEvent() {
+    this.setState({ showMenu: false });
+    this.setState({ showSettings: false });
+    this.setState({ showEvent: true });
+  }
+  switchToSettings() {
+    this.setState({ showMenu: false });
+    this.setState({ showEvent: false });
+    this.setState({ showSettings: true });
+  }
+
   render() {
     const {
       showMenu,
+      showEvent,
+      showSettings,
+      buildings,
+      building,
     } = this.state;
     return (
       <View style={styles.container}>
@@ -158,16 +217,71 @@ class Menu extends Component<
               />
               <Text>Shuttle Bus Schedule</Text>
             </TouchableOpacity>
-           {/*  */}
+            <TouchableOpacity
+              onPress={() => this.switchToEvent()}
+              style={styles.menuOptions}
+            >
+              <Image
+                style={styles.iconMenu}
+                source={require("../assets/event.png")}
+              />
+              <Text>Events</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.switchToSettings()}
+              style={styles.menuOptions}
+            >
+              <Image
+                style={styles.iconMenu}
+                source={require("../assets/settings.png")}
+              />
+              <Text>Settings</Text>
+            </TouchableOpacity>
             <View style={styles.aboutLine}></View>
             <TouchableOpacity style={styles.menuOptions}>
               <Text>About</Text>
             </TouchableOpacity>
-            {/*  */}
           </View>
         </Modal>
 
-       
+        <Modal animationType="fade" transparent={true} visible={showEvent}>
+          <TouchableOpacity
+            onPress={() => this.closeZeEvents()}
+            style={styles.outsideModal}
+          ></TouchableOpacity>
+          <View style={styles.modalEventSettingsContainer}>
+            <Text>Choose a buiding to display the events ... </Text>
+            <View style={styles.pickContainer}>
+              <Picker
+                selectedValue={building}
+                style={styles.buildPicker}
+                onValueChange={(itemValue) =>
+                  this.setState({ building: itemValue })
+                }
+              >
+                {buildings.map((buildingItem) => (
+                  <Picker.Item
+                    key={buildingItem.getIdentifier()}
+                    label={buildingItem.getName()}
+                    value={buildingItem.getName()}
+                  />
+                ))}
+              </Picker>
+            </View>
+            <Text>{"\n"}Today's Events:</Text>
+            <CampusEventContainer buildingId={this.state.building.identifier} />
+          </View>
+        </Modal>
+
+        <Modal animationType="fade" transparent={true} visible={showSettings}>
+          <TouchableOpacity
+            onPress={() => this.closeZeSettings()}
+            style={styles.outsideModal}
+          ></TouchableOpacity>
+          <View style={styles.modalEventSettingsContainer}>
+            <Text>Settings</Text>
+          </View>
+        </Modal>
       </View>
     );
   }
