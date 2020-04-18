@@ -16,13 +16,13 @@ import IndoorFloorMap from "./components/IndoorFloorMap";
 import CurrentPosition from "./components/CurrentPosition";
 import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
-import {stylesWithColorBlindSupport} from "./constants/AppStyling";
+import { stylesWithColorBlindSupport } from "./constants/AppStyling";
 import PointOfInterest from "./classes/pointOfInterest";
 import PlacesOfInterestAround from "./components/PlacesOfInterestAround";
 import Menu from "./components/Menu";
-import colorBlindMode from './classes/colorBlindMode';
-import Colors, { ColorPicker } from './constants/Colors';
-let styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode.normal))
+import colorBlindMode from "./classes/colorBlindMode";
+import Colors, { ColorPicker } from "./constants/Colors";
+let styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode.normal));
 type appState = {
   places: any[];
   userPosition: Location;
@@ -33,8 +33,7 @@ type appState = {
     latitudeDelta: number;
     longitudeDelta: number;
   };
-  colorBlindMode: colorBlindMode,
-  polygons: any[];
+  colorBlindMode: colorBlindMode;
   markers: any[];
   displayInfo: boolean;
   building: Building;
@@ -63,7 +62,7 @@ class App extends Component<{}, appState> {
       },
 
       colorBlindMode: colorBlindMode.normal,
-      places:[],
+      places: [],
       building: null,
       polygons: CampusPolygons.slice(0),
       buildings: obtainBuildings(),
@@ -113,8 +112,8 @@ class App extends Component<{}, appState> {
     }
   };
   setColorBlindMode = (colorBlindMode: colorBlindMode) => {
-    this.setState({colorBlindMode: colorBlindMode});
-  }
+    this.setState({ colorBlindMode: colorBlindMode });
+  };
   /* Needed to pass callback to child (PolygonsAndMarkers.tsx) to update parent state (App.tsx) */
   displayBuildingInfo = (building: Building, displayInfo: boolean) => {
     this.setState({ displayInfo });
@@ -126,7 +125,9 @@ class App extends Component<{}, appState> {
     userPosition.setLatitude(coordinate.latitude);
     userPosition.setLongitude(coordinate.longitude);
   };
-
+  setColorBlindMode = (colorBlindMode: colorBlindMode) => {
+    this.setState({ colorBlindMode: colorBlindMode });
+  };
   inOrOutView() {
     const {
       userPosition,
@@ -142,7 +143,7 @@ class App extends Component<{}, appState> {
       indoorFloor,
       places,
     } = this.state;
-    styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode))
+    styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode));
     if (displayIndoor === false) {
       return (
         <View style={styles.container}>
@@ -156,12 +157,19 @@ class App extends Component<{}, appState> {
             lat={region.latitude}
             lng={region.longitude}
           />
-          <Menu setColorBlindMode={this.setColorBlindMode.bind(this)} colorBlindMode={colorBlindMode}/>
+          <Menu
+            setColorBlindMode={this.setColorBlindMode.bind(this)}
+            colorBlindMode={colorBlindMode}
+          />
           <PlacesOfInterestAround
-            lat={userPosition.getLatitude()}
-            long={userPosition.getLongitude()}
-            showPlaces={this.callBackMarkers}/>
-          <CampusToggleButton setMapLocation={this.setMapLocation} colorBlindMode={colorBlindMode}/>
+            lat={region.latitude}
+            long={region.longitude}
+            showPlaces={this.setGooglePlacesMarkers}
+          />
+          <CampusToggleButton
+            setMapLocation={this.setMapLocation}
+            colorBlindMode={colorBlindMode}
+          />
           <InputBtn
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
@@ -215,7 +223,6 @@ class App extends Component<{}, appState> {
   }
 
   render() {
-
     return this.inOrOutView();
   }
 }
