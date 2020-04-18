@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import CampusEvent from '../classes/CampusEvent';
 import GoogleEventComponent from './GoogleEventComponent';
+import * as Google from 'expo-google-app-auth';
+import { REACT_APP_GOOGLE_AUTH_ANDROID_CLIENT_ID } from 'react-native-dotenv'
 
 type GoogleEventContainerProps = {
 };
@@ -15,6 +17,15 @@ class GoogleEventContainer extends Component<GoogleEventContainerProps, GoogleEv
         super(props);
         this.state = {
         };
+        const { type, accessToken, user } = await Google.logInAsync({
+            androidClientId: REACT_APP_GOOGLE_AUTH_ANDROID_CLIENT_ID,
+            scopes: ['profile', 'email', 'calendar']
+        });
+          
+        if (type === 'success') {
+            //`accessToken` is now valid and can be used to get data from the Google API with HTTP requests
+            console.log(user);
+        }
     }
 
     getNextClass(): CampusEvent{
