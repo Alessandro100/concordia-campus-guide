@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Marker, Polygon } from "react-native-maps";
 import { Image, StyleSheet, Text, View } from "react-native";
-import Colors from "../constants/Colors";
+import {ColorPicker} from "../constants/Colors";
+import colorBlindMode from '../classes/colorBlindMode';
 import ShuttleBusMarkers from "../constants/CampusShuttleBusStop";
 import Building from "../classes/building";
 import {
@@ -13,7 +14,7 @@ import Campus from "../classes/campus";
 import GoogleMapsAdapter from "../classes/googleMapsAdapter";
 
 const busIcon = require("./../assets/shuttle_bus_icon.png");
-
+let Colors = ColorPicker(colorBlindMode.normal)
 const styles = StyleSheet.create({
   circle: {
     width: 30,
@@ -38,6 +39,7 @@ type markersAndPolygonsProps = {
   places: any[];
   buildings: Building[];
   polygons: Polygon[];
+  colorBlindMode: colorBlindMode;
   displaybuilding(building: Building, displayInfo: boolean): void;
 };
 
@@ -57,10 +59,11 @@ class PolygonsAndMarkers extends Component<
 > {
   constructor(props) {
     super(props);
-    const { buildings, polygons } = this.props;
+    const { buildings, polygons, colorBlindMode } = this.props;
     this.state = {
       buildings,
       polygons,
+      colorBlindMode,
       building: new Building("", "", [], null, "", null, ""),
       location: new Location(0, 0),
       campus: new Campus(null, "", ""),
@@ -73,11 +76,16 @@ class PolygonsAndMarkers extends Component<
     const { displaybuilding } = this.props;
     displaybuilding(building, displayInfo);
   };
-
+  componentDidUpdate(prevProps) {
+  if (this.props.colorBlindMode !== prevProps.colorBlindMode) {
+    this.setState({colorBlindMode: this.props.colorBlindMode});
+  }
+}
   render() {
     const {
       buildings,
       polygons,
+      colorBlindMode,
       shuttleBusMarkers,
       location,
       campus,
@@ -85,7 +93,7 @@ class PolygonsAndMarkers extends Component<
       placesCoordinates,
     } = this.state;
     const { places } = this.props;
-
+    Colors = ColorPicker(colorBlindMode)
     return (
       <View>
         {polygons.map((polygon) => (

@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { TouchableOpacity, View, Image } from "react-native";
-import styles from "../constants/AppStyling";
 import { REACT_APP_GOOGLE_PLACES_API } from "react-native-dotenv";
-
+import colorBlindMode from '../classes/colorBlindMode';
+import Colors, {ColorPicker} from '../constants/Colors';
+import {stylesWithColorBlindSupport} from '../constants/AppStyling';
+let styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode.normal))
 type placeProps = {
   lat: number;
   long: number;

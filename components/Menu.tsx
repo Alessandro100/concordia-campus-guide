@@ -1,31 +1,142 @@
-import React, { Component } from "react";
-import {
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  Modal,
-  Picker,
-} from "react-native";
-import CampusEventContainer from "./CampusEventContainer";
-import Building from "../classes/building";
-import { obtainBuildings } from "../services/buildingService";
-import styles from "../constants/MenuStyling";
+import React, { Component } from 'react';
+import { View,Image, StyleSheet, Text, TouchableOpacity, Modal, Dimensions, Picker } from 'react-native';
+import CampusEventContainer from './CampusEventContainer';
+import Building from '../classes/building';
+import ColorBlindSettings from '../components/ColorBlindSettings';
+import colorBlindMode from '../classes/colorBlindMode';
+import Colors, { ColorPicker } from '../constants/Colors';
+import { obtainBuildings } from '../services/buildingService';
+
+
+const styles = StyleSheet.create({
+  container:{
+    alignSelf: "flex-start",
+
+  },
+  iconSize:{
+    width: 30,
+    height: 30,},
+
+    hamburger:{
+        position: "absolute",
+        zIndex: 9,
+        alignSelf: "flex-start",
+        top: 50,
+        left:25,
+        margin:5,
+    },
+    outsideModal:{
+      width: Dimensions.get("window").width,
+      height: Dimensions.get("window").height,
+      backgroundColor:Colors.black,
+      zIndex:1,
+      opacity:0.7
+    },
+    modalContainer:{
+      width: Dimensions.get("window").width-100,
+      height: Dimensions.get("window").height,
+      zIndex:2,
+      position:'absolute',
+      backgroundColor:Colors.white,
+      padding:10,
+      shadowColor: Colors.black,
+      shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+    },
+
+    modalEventSettingsContainer:{
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex:2,
+      top:120,
+      width:300,
+      height:350,
+      position:'absolute',
+      alignSelf:"center",
+      backgroundColor:Colors.white,
+      padding:10,
+      shadowColor: Colors.black,
+      shadowOffset: {
+      width: 0,
+      height: 2
+                     },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+    },
+
+    modalLogo:{
+      height:200,
+      width: "100%",
+      backgroundColor:Colors.menuBeige,
+      marginBottom:10,
+      justifyContent:'center',
+      alignItems:'center',
+      padding:15,
+    },
+    logoSize:{
+    alignSelf:'center',
+    marginBottom:10,
+    },
+    syncBtn:{
+      backgroundColor:Colors.primaryColor,
+      height:30,
+      width:"100%",
+      color:Colors.white,
+      justifyContent:'center',
+      alignItems:'center',
+    },
+    syncText:{
+      color:Colors.white,
+    },
+    menuOptions:{
+      width:"100%",
+      height:40,
+      alignSelf:'flex-start',
+      flexDirection:'row',
+      padding:5,
+      justifyContent:'flex-start',
+      alignItems:'center',
+      marginBottom:10
+    },
+    aboutLine:{
+      backgroundColor:Colors.grey,
+      width:"100%",
+      height:1,
+      opacity:0.4,
+    },
+    iconMenu:{
+    marginRight:10,
+    width: 25,
+    height: 25,
+    },
+    pickContainer:{
+      marginTop:15,
+      borderWidth:0.4,
+    },
+    buildPicker:{
+      width:250,
+      height:30,
+    }
+
+});
 
 class Menu extends Component<
   {},
-  {
-    showMenu: boolean;
-    showEvent: boolean;
-    showSettings: boolean;
-    buildings: Building[];
-    building: Building;
-  }
+  { showMenu: boolean; showEvent:boolean; showSettings:boolean;buildings:Building[];building:Building;
+    colorBlindMode: colorBlindMode; setColorBlindMode:Function}
 > {
   constructor(props) {
     super(props);
 
     this.state = {
+      colorBlindMode: props.colorBlindMode,
+      setColorBlindMode: props.setColorBlindMode,
       showMenu: false,
       showEvent: false,
       showSettings: false,
@@ -33,6 +144,12 @@ class Menu extends Component<
       building: new Building("", "", null, null, "", null, "H"),
     };
   }
+  componentDidUpdate(prevProps) {
+  // Typical usage (don't forget to compare props):
+  if (this.props.colorBlindMode !== prevProps.colorBlindMode) {
+    this.setState({colorBlindMode: this.props.colorBlindMode});
+  }
+}
   // boolean state to show menu (modal)
   ShowMenu() {
     this.setState({ showMenu: true });
@@ -67,6 +184,8 @@ class Menu extends Component<
 
   render() {
     const {
+      colorBlindMode,
+      setColorBlindMode,
       showMenu,
       showEvent,
       showSettings,
@@ -180,7 +299,7 @@ class Menu extends Component<
             style={styles.outsideModal}
           ></TouchableOpacity>
           <View style={styles.modalEventSettingsContainer}>
-            <Text>Settings</Text>
+            <ColorBlindSettings setColorBlindMode={setColorBlindMode.bind(this)} colorBlindMode={colorBlindMode} closeSettings={this.closeSettings.bind(this)}/>
           </View>
         </Modal>
       </View>
