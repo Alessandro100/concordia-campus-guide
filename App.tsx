@@ -156,8 +156,6 @@ class App extends Component<{}, appState> {
             lat={region.latitude}
             lng={region.longitude}
           />
-          <Text />
-          <Text /><Text /><Text /><Text /><Text />
           <Menu setColorBlindMode={this.setColorBlindMode.bind(this)} colorBlindMode={colorBlindMode}/>
           <PlacesOfInterestAround
             lat={userPosition.getLatitude()}
