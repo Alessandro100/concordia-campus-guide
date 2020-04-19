@@ -1,43 +1,51 @@
-import React, { Component } from "react";
-import { View } from "react-native";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import CampusToggleButton from "./components/CampusToggleButton";
-import ShowDirection from "./components/ShowDirection";
-import transportMode from "./classes/transportMode";
-import Location from "./classes/location";
-import CampusPolygons from "./constants/CampusPolygons";
-import IndoorFloor from "./classes/indoorFloor";
-import PolygonsAndMarkers from "./components/PolygonsAndMarkers";
-import IndoorFloorService from "./services/indoorFloorService";
-import BottomDrawerBuilding from "./components/BottomDrawerBuilding";
-import Building from "./classes/building";
-import { obtainBuildings } from "./services/buildingService";
-import IndoorFloorMap from "./components/IndoorFloorMap";
+import React, { Component } from 'react';
+import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
+import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
+import CampusToggleButton from './components/CampusToggleButton';
+import ShowDirection from './components/ShowDirection';
+import transportMode from './classes/transportMode';
+import Location from './classes/location';
+import CampusPolygons from './constants/CampusPolygons';
+import Colors from './constants/Colors';
+import OutdoorPOI from './classes/outdoorPOI';
+import IndoorFloor from './classes/indoorFloor';
+import PolygonsAndMarkers from './components/PolygonsAndMarkers';
+import IndoorFloorService from './services/indoorFloorService';
+import SearchBar from './components/SearchBar';
+import BottomDrawerBuilding from './components/BottomDrawerBuilding';
+import Building from './classes/building';
+import { obtainBuildings } from './services/buildingService';
+import IndoorFloorMap from './components/IndoorFloorMap';
 import CurrentPosition from "./components/CurrentPosition";
 import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
+import Navbtn from "./components/NavBtn";
 import styles from "./constants/AppStyling";
-import PointOfInterest from "./classes/pointOfInterest";
-import PlacesOfInterestAround from "./components/PlacesOfInterestAround";
-import Menu from "./components/Menu";
-
+import PointOfInterest from './classes/pointOfInterest';
+import ShowBusMarker from './components/ShowBusMarker';
+import ShuttleBusMarkers from './constants/CampusShuttleBusStop';
+import ShowBusSchedule from './components/ShowBusSchedule';
+import SomeInterestPointMarkers from './components/SomeInterestPointMarkers';
 type appState = {
-  places: any[];
   userPosition: Location;
-  polygons: any[];
   region: {
     latitude: number;
     longitude: number;
     latitudeDelta: number;
     longitudeDelta: number;
   };
+  polygons: any[];
+  markers: any[];
   displayInfo: boolean;
   building: Building;
   buildings: Building[];
   displayIndoor: boolean;
+  busScheduleDisplay: boolean;
   indoorFloor: IndoorFloor;
   startDirection: PointOfInterest;
   endDirection: PointOfInterest;
+  start_identifier: string;
+  end_identifier: string;
 };
 
 class App extends Component<{}, appState> {
@@ -54,31 +62,35 @@ class App extends Component<{}, appState> {
         latitude: 45.497406,
         longitude: -73.577102,
         latitudeDelta: 0,
-        longitudeDelta: 0.01,
+        longitudeDelta: 0.01
       },
-      places: [],
       building: null,
+      markers: [],
       polygons: CampusPolygons.slice(0),
       buildings: obtainBuildings(),
       displayInfo: false,
       displayIndoor: false,
+      busScheduleDisplay:false,
       startDirection: null,
       endDirection: null,
       indoorFloor: null,
+      start_identifier: "",
+      end_identifier: ""
     };
   }
-  setGooglePlacesMarkers = (allpaces: any[]) => {
-    this.setState({ places: allpaces });
-  };
 
-  callbackAllInfo = (type: string, poi: PointOfInterest, inOrOut: boolean) => {
+  callbackAllInfo = (
+    type: string,
+    poi: PointOfInterest,
+    inOrOut: boolean
+  ) => {
     if (type === "Start") {
-      this.setState({ startDirection: poi });
+      this.setState({startDirection: poi})
       if (inOrOut === true) {
         //this.setState({ start_identifier: id });
       }
     } else {
-      this.setState({ endDirection: poi });
+      this.setState({endDirection: poi})
       if (inOrOut === true) {
         //this.setState({ end_identifier: id });
       }
@@ -91,18 +103,26 @@ class App extends Component<{}, appState> {
         latitude: location.getLatitude(),
         longitude: location.getLongitude(),
         latitudeDelta: 0,
-        longitudeDelta: 0.01,
-      },
+        longitudeDelta: 0.01
+      }
     });
   };
 
   callbackInOut = (status: boolean) => {
-    const { building } = this.state;
-    if (status) {
+    const {building} = this.state;
+    if(status) {
       let floor = IndoorFloorService.getFloor(building.title, 1);
       this.setState({ displayIndoor: status, indoorFloor: floor });
-    } else {
+    }else {
       this.setState({ displayIndoor: status, indoorFloor: null });
+    }
+  };
+
+  callbackShowBusSchedule = (status: boolean) => {
+    if(status) {
+        this.setState({ displayIndoor: status, busScheduleDisplay: status});}
+    else {
+      this.setState({ displayIndoor: status, busScheduleDisplay: status });
     }
   };
 
@@ -126,15 +146,19 @@ class App extends Component<{}, appState> {
       displayInfo,
       building,
       displayIndoor,
+      busScheduleDisplay,
+      userPosition,
       startDirection,
       endDirection,
+      start_identifier,
       indoorFloor,
-      places,
+      end_identifier
     } = this.state;
 
     if (displayIndoor === false) {
       return (
         <View style={styles.container}>
+          {/* <SearchBar setMapLocation={this.setMapLocation} /> */}
           <Autocomplete
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
@@ -142,44 +166,48 @@ class App extends Component<{}, appState> {
             styleSugg={styles.searchSugg}
             styleInput={styles.searchInput}
             type="Search"
-            lat={region.latitude}
-            lng={region.longitude}
-          />
-           <Menu/>
-          <PlacesOfInterestAround
-            lat={region.latitude}
-            long={region.longitude}
-            showPlaces={this.setGooglePlacesMarkers}
+            lat={userPosition.getLatitude()}
+            lng={userPosition.getLongitude()}
           />
           <CampusToggleButton setMapLocation={this.setMapLocation} />
           <InputBtn
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
-            lat={region.latitude}
-            lng={region.longitude}
+            lat={userPosition.getLatitude()}
+            lng={userPosition.getLongitude()}
           />
-
+          <Navbtn
+            getNavInfo={this.callbackAllInfo}
+            // start_x={start_x}
+            // start_y={start_y}
+            // end_x={end_x}
+            // end_y={end_y}
+            // sid={start_identifier}
+            // eid={end_identifier}
+          />
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}
             region={region}
             showsUserLocation={true}
-            onUserLocationChange={(coordinates) =>
+            onUserLocationChange={coordinates =>
               this.changeCurrentPosition(coordinates)
             }
           >
             <PolygonsAndMarkers
-              places={places}
               buildings={buildings}
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}
             />
-            {startDirection && endDirection && (
+            
+            <ShowBusMarker indoorDisplay={this.callbackShowBusSchedule} busScheduleDisplay ={busScheduleDisplay} shuttleBusMarkers={ShuttleBusMarkers}/>
+            
+            {(startDirection && endDirection) && (
               <ShowDirection
                 startLocation={startDirection}
                 endLocation={endDirection}
                 transportType={transportMode.transit}
-              />
+              /> 
             )}
           </MapView>
           <CurrentPosition setMapLocation={this.setMapLocation} />
@@ -191,15 +219,19 @@ class App extends Component<{}, appState> {
           />
         </View>
       );
-    } else {
-      return (
-        <IndoorFloorMap
-          indoorFloor={indoorFloor}
+    } else if (busScheduleDisplay === true) {
+      return(
+        <ShowBusSchedule indoorDisplay={this.callbackShowBusSchedule} busScheduleDisplay={busScheduleDisplay}/>
+        );}
+        else{
+          return(
+        <IndoorFloorMap 
+          indoorFloor={indoorFloor} 
           indoorDisplay={this.callbackInOut}
           startLocation={startDirection}
           endLocation={endDirection}
-        />
-      );
+        />  
+      )
     }
   }
 
