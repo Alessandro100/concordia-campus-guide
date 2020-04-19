@@ -45,6 +45,7 @@
     "react-native-google-maps-directions": "^2.1.1",
     "react-native-google-places-autocomplete": "^1.4.1",
     "react-native-maps": "0.26.1",
+    "react-native-paper": "^3.8.0",
     "react-native-screens": "2.0.0-alpha.12",
     "react-native-svg": "9.13.3",
     "react-native-svg-uri": "^1.2.3",

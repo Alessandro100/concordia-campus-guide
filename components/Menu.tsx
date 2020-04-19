@@ -11,6 +11,9 @@ import CampusEventContainer from "./CampusEventContainer";
 import Building from "../classes/building";
 import { obtainBuildings } from "../services/buildingService";
 import styles from "../constants/MenuStyling";
+import ColorBlindSettings from "../components/ColorBlindSettings";
+import colorBlindMode from "../classes/colorBlindMode";
+import Colors, { ColorPicker } from "../constants/Colors";
 import GoogleCalendarEventContainer from "./GoogleCalendarEventContainer";
 
 class Menu extends Component<
@@ -21,6 +24,8 @@ class Menu extends Component<
     showSettings: boolean;
     buildings: Building[];
     building: Building;
+    colorBlindMode: colorBlindMode;
+    setColorBlindMode: Function;
   }
 > {
   constructor(props) {
@@ -32,7 +37,15 @@ class Menu extends Component<
       showSettings: false,
       buildings: obtainBuildings(),
       building: new Building("", "", null, null, "", null, "H"),
+      setColorBlindMode: props.setColorBlindMode,
+      colorBlindMode: props.colorBlindMode,
     };
+  }
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.colorBlindMode !== prevProps.colorBlindMode) {
+      this.setState({ colorBlindMode: this.props.colorBlindMode });
+    }
   }
   // boolean state to show menu (modal)
   ShowMenu() {
@@ -68,6 +81,8 @@ class Menu extends Component<
 
   render() {
     const {
+      colorBlindMode,
+      setColorBlindMode,
       showMenu,
       showEvent,
       showSettings,
@@ -179,7 +194,11 @@ class Menu extends Component<
             style={styles.outsideModal}
           ></TouchableOpacity>
           <View style={styles.modalEventSettingsContainer}>
-            <Text>Settings</Text>
+          <ColorBlindSettings
+              setColorBlindMode={setColorBlindMode.bind(this)}
+              colorBlindMode={colorBlindMode}
+              closeSettings={this.closeSettings.bind(this)}
+            />
           </View>
         </Modal>
       </View>

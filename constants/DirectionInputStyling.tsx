@@ -107,9 +107,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 50,
     right: 30,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.primaryColor,
     borderRadius: 50,
-    padding: 20,
+    padding: 18,
     shadowColor: Colors.black,
     shadowOffset: {
       width: 0,
@@ -118,7 +118,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5
-  }
+  },
+  iconSizeNavBtn:{
+    height: 30,
+    width: 30
+  },
 });
 
 export default styles;
