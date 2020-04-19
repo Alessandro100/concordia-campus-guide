@@ -18,13 +18,27 @@ type directionState = {
 class ShowDirection extends Component<directionProps, directionState> {
   constructor(props) {
     super(props);
+    
+    this.setTrip();
+    this.loadRoute();
+  }
+
+  setTrip() {
     const { startLocation, endLocation, transportType } = this.props;
     const routeCalculator = new PathCalculator(startLocation, endLocation, transportType);
     this.state = {
       trip: new Trip(startLocation, endLocation, routeCalculator),
     };
 
-    this.loadRoute();
+  }
+
+  // update the point of interest when the props changes
+  componentDidUpdate(prevProps) {
+    const { startLocation, endLocation, transportType } = this.props;
+    if (prevProps.startLocation !== startLocation || prevProps.endLocation !== endLocation || prevProps.transportType !== transportType) {
+      this.setTrip();
+      this.loadRoute();
+    }
   }
 
   getPinLocation = (location: Location) => {
@@ -53,21 +67,6 @@ class ShowDirection extends Component<directionProps, directionState> {
       <>
         {trip.getRoute() != null && (
           <>
-            {/* Get ending location is an issue as this takes the location of the entire trip. The beginning and 
-            ending might be indoors with and outdoor component in the middle. This currently does not support that */}
-            {/* <Marker
-              coordinate={this.getPinLocation(trip.getRoute().getEndingLocation())}
-              title="Ending Point"
-              description="Ending point of the trip"
-            />
-            <Marker
-              coordinate={this.getPinLocation(trip.getRoute().getStartingLocation())}
-              title="Starting Point"
-              description="Starting point of the trip"
-              opacity={0.7}
-            >
-              <Image source={require('../assets/starting_icon.png')} style={styles.imageSize} />
-            </Marker> */}
             {trip.getRoute().displayPath(false)}
           </>
         )}
