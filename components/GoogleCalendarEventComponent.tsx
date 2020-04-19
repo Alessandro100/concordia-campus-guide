@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import CampusEvent from '../classes/CampusEvent';
 
-type GoogleEventComponentProps = {
+type GoogleCalendarEventComponentProps = {
     campusEvent: CampusEvent;
 };
 
-type GoogleEventComponentState = {
+type GoogleCalendarEventComponentState = {
 };
 
-class GoogleEventComponent extends Component<GoogleEventComponentProps, GoogleEventComponentState> {
+class GoogleCalendarEventComponent extends Component<GoogleCalendarEventComponentProps, GoogleCalendarEventComponentState> {
    
     constructor(props) {
         super(props);
@@ -29,4 +29,4 @@ class GoogleEventComponent extends Component<GoogleEventComponentProps, GoogleEv
         );
     }
 }
-export default GoogleEventComponent;
+export default GoogleCalendarEventComponent;

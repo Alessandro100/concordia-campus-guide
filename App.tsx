@@ -66,6 +66,8 @@ class App extends Component<{}, appState> {
       endDirection: null,
       indoorFloor: null,
     };
+    //Global for GoogleCalendarEventContainer
+    global.signedIn = false;
   }
   setGooglePlacesMarkers = (allpaces: any[]) => {
     this.setState({ places: allpaces });

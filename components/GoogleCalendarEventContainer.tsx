@@ -1,26 +1,22 @@
 import React, { Component } from 'react';
 import { Text, View, Button } from 'react-native';
 import CampusEvent from '../classes/CampusEvent';
-import GoogleEventComponent from './GoogleEventComponent';
+import GoogleCalendarEventComponent from './GoogleCalendarEventComponent';
 import * as Google from 'expo-google-app-auth';
 import { REACT_APP_GOOGLE_AUTH_ANDROID_CLIENT_ID } from 'react-native-dotenv'
 
-type GoogleEventContainerProps = {
+type GoogleCalendarEventContainerProps = {
 };
 
-type GoogleEventContainerState = {
-    signedIn: boolean;
-    accessToken: string;
+type GoogleCalendarEventContainerState = {
     campusEvent: CampusEvent;
 };
 
-class GoogleEventContainer extends Component<GoogleEventContainerProps, GoogleEventContainerState> {
+class GoogleCalendarEventContainer extends Component<GoogleCalendarEventContainerProps, GoogleCalendarEventContainerState> {
    
-    constructor(props: GoogleEventContainerProps) {
+    constructor(props: GoogleCalendarEventContainerProps) {
         super(props);
         this.state = {
-            signedIn: false,
-            accessToken: '',
             campusEvent: null
         };
     }
@@ -37,16 +33,12 @@ class GoogleEventContainer extends Component<GoogleEventContainerProps, GoogleEv
               
             if (result.type === 'success') {
                 //`accessToken` is now valid and can be used to get data from the Google API with HTTP requests
-                console.log("accessToken Valid");
-                console.log(result.accessToken);
-                this.setState({
-                    signedIn: true,
-                    accessToken: result.accessToken
-                });
-                this.getNextClass();
+                global.signedIn = true;
+                global.accessToken = result.accessToken;
+                this.setState(this.state);
             }else {
                 //Add handle for login failed.
-                console.log("accessToken Invalid")
+                console.error("accessToken Invalid")
             }
             return result;
         }catch (e){
@@ -58,7 +50,7 @@ class GoogleEventContainer extends Component<GoogleEventContainerProps, GoogleEv
     getNextClass(){
         //this function assumes that the user is signed in.
         const calendarId = fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList', {
-                headers: { Authorization: `Bearer ${this.state.accessToken}` }
+                headers: { Authorization: `Bearer ${global.accessToken}` }
             })
             .then((response) => response.json())
             .then((json) => 
@@ -67,7 +59,7 @@ class GoogleEventContainer extends Component<GoogleEventContainerProps, GoogleEv
                         console.log(element.id);
                         //timeMin parameter is the lowerbound for endTime, therefore will return an event that is ongoing until it is done.
                         fetch('https://www.googleapis.com/calendar/v3/calendars/'+ element.id +'/events?singleEvents=true&orderBy=startTime&maxResults=1&timeMin='+ new Date().toISOString(), {
-                            headers: { Authorization: `Bearer ${this.state.accessToken}` }
+                            headers: { Authorization: `Bearer ${global.accessToken}` }
                         })
                         .then((response) => response.json())
                         .then((json) => {
@@ -87,13 +79,14 @@ class GoogleEventContainer extends Component<GoogleEventContainerProps, GoogleEv
     }
 
     render() {
-        if(this.state.signedIn == false){
+        if(global.signedIn == false){
             return (
                 <View>
                     <Button title="sync calendar" onPress={ this.signin.bind(this) }></Button>
                 </View>
             );
         }else if(this.state.campusEvent == null) {
+            this.getNextClass();
             return (
                 <View>
                     <Text>Fetching...</Text>
@@ -102,11 +95,11 @@ class GoogleEventContainer extends Component<GoogleEventContainerProps, GoogleEv
         }else{
             return (
                 <View>
-                    <GoogleEventComponent campusEvent={ this.state.campusEvent }></GoogleEventComponent>
+                    <GoogleCalendarEventComponent campusEvent={ this.state.campusEvent }></GoogleCalendarEventComponent>
                     <Button title="refresh" onPress={ () => this.getNextClass() }></Button>
                 </View>
             );
         }
     }
 }
-export default GoogleEventContainer;
+export default GoogleCalendarEventContainer;
