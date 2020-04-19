@@ -41,6 +41,17 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5
   },
+  row3: {
+    alignSelf: "stretch",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: Colors.white,
+    zIndex: 3,
+    position: "absolute",
+    paddingLeft: 5,
+    paddingRight: 5,
+    bottom: 0
+  },
   iconSize: {
     height: 25,
     width: 25

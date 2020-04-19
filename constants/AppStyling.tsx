@@ -47,6 +47,12 @@ const styles = StyleSheet.create({
     mapStyle: {
       width: Dimensions.get("window").width,
       height: Dimensions.get("window").height
+    },
+    listStyle: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center'
     }
   });
 export default styles;

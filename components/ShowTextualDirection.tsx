@@ -4,7 +4,8 @@ import Location from '../classes/location';
 import Trip from '../classes/trip';
 import PointOfInterest from '../classes/pointOfInterest';
 import PathCalculator from '../classes/pathCalculator';
-import { TouchableOpacity, View, Text, Image, ScrollView, SafeAreaView } from "react-native";
+import { TouchableOpacity, View, Text, Image, ScrollView, SafeAreaView, FlatList } from "react-native";
+import styles from '../constants/DirectionInputStyling';
 
 type directionProps = {
   startLocation: PointOfInterest;
@@ -15,8 +16,7 @@ type directionProps = {
 type directionState = {
   trip: Trip;
 };
-
-class ShowDirection extends Component<directionProps, directionState> {
+class ShowTextualDirection extends Component<directionProps, directionState> {
   constructor(props) {
     super(props);
     const { startLocation, endLocation, transportType } = this.props;
@@ -46,7 +46,6 @@ class ShowDirection extends Component<directionProps, directionState> {
       this.setState({ trip });
     });
   }
-
   render() {
     const { trip } = this.state;
 
@@ -70,12 +69,33 @@ class ShowDirection extends Component<directionProps, directionState> {
             >
               <Image source={require('../assets/starting_icon.png')} style={styles.imageSize} />
             </Marker> */}
-            {trip.getRoute().displayPath(false)}
+            <View style={styles.row3}>
+              <FlatList
+                data={trip.getRoute().getPathInstruction(false)}
+                renderItem={({item}) => <Text>{item}</Text>}
+              />
+            </View>
+
+            {/* {trip.getRoute().getPathInstruction(false)} */}
           </>
         )}
       </>
     );
   }
+
+  
+
+  //render() {
+    //const { trip } = this.state;
+
+    //return (
+        //<View style={styles.row3}>
+          //<ScrollView>
+            //<Text>Some Text</Text>
+          //</ScrollView>
+          //</View>
+    //)
+  //}
 }
 
-export default ShowDirection;
+export default ShowTextualDirection;

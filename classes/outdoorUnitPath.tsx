@@ -16,18 +16,22 @@ class OutdoorUnitPath implements UnitPath {
 
   pathColor: String;
 
+  pathInstruction: string;
+
   constructor(
     transportType: transportMode,
     origin: OutdoorPOI,
     destination: OutdoorPOI,
     pathGraphic: Location,
-    pathColor: String
+    pathColor: String,
+    pathInstruction: string,
   ) {
     this.transportType = transportType;
     this.origin = origin;
     this.destination = destination;
     this.pathGraphic = pathGraphic; // exclusive to outdoor
     this.pathColor = pathColor;
+    this.pathInstruction = pathInstruction;
   }
 
   displayPath(isIndoor) {
@@ -44,6 +48,13 @@ class OutdoorUnitPath implements UnitPath {
 
     // returns empty html
     return <></>;
+  }
+
+  getPathInstruction(isIndoor){
+     //console.log(this.pathInstruction);
+     if(!isIndoor){
+      return this.pathInstruction;
+     }
   }
 
   getStartingLocation() {
@@ -65,6 +76,7 @@ class OutdoorUnitPath implements UnitPath {
   getpathColor() {
     return this.pathColor;
   }
+
 }
 
 export default OutdoorUnitPath;
