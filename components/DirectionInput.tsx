@@ -2,49 +2,51 @@ import React, { Component } from "react";
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import Autocomplete from "./AutoCompleteInput";
 import Location from "../classes/location";
-import autocompleteStyle from "../constants/AutocompleteStylingProps"
-import styles from "../constants/DirectionInputStyling"
+import autocompleteStyle from "../constants/AutocompleteStylingProps";
+import styles from "../constants/DirectionInputStyling";
 import PointOfInterest from "../classes/pointOfInterest";
+import OutdoorPOI from "../classes/outdoorPOI";
 
 type inputState = {
   inputModal: boolean;
-  startInput: string;
-  endInput: string;
   lat: number;
   long: number;
   position: Location;
+  destination: OutdoorPOI;
 };
 type inputProps = {
   lat: number;
   lng: number;
+  destination: OutdoorPOI;
   setMapLocation(position: Location): void;
-  getNavInfo(
-    type: string,
-    poi: PointOfInterest,
-    inOrOut: boolean
-  ): void;
+  getNavInfo(type: string, poi: PointOfInterest, inOrOut: boolean): void;
 };
 class DirectionInput extends Component<inputProps, inputState> {
   constructor(props) {
     super(props);
-    const { lat, lng } = this.props;
+    const { lat, lng, destination } = this.props;
     this.state = {
       inputModal: false,
-      startInput: "",
-      endInput: "",
+      destination,
       lat: lat,
       long: lng,
-      position: new Location(0, 0)
+      position: new Location(0, 0),
     };
   }
 
-  handleStartChange = (text: string) => {
-    this.setState({ startInput: text });
-  };
+  // update the point of interest when the props changes
+  componentDidUpdate(prevProps) {
+    const { destination } = this.props;
+    const { inputModal } = this.state;
+    if (prevProps.destination !== destination) {
+      this.setState({ destination: destination });
 
-  handleEndChange = (text: string) => {
-    this.setState({ endInput: text });
-  };
+      // open the input modal is the destination (point of interest) is not null and the input modal is closed
+      if (destination.identifier.length > 0 && inputModal === false) {
+        this.showInput();
+      }
+    }
+  }
 
   showInput() {
     const { inputModal } = this.state;
@@ -54,20 +56,17 @@ class DirectionInput extends Component<inputProps, inputState> {
   }
 
   hideInput() {
-    const { inputModal } = this.state;
+    const { inputModal, destination } = this.state;
     if (inputModal === true) {
       this.setState({ inputModal: false });
+      // when user is done whith input set the point of interest to null
+      destination.setLongitude("");
     }
   }
 
-  invertInputs() {
-    const { startInput, endInput } = this.state;
-    this.setState({ endInput: startInput });
-    this.setState({ startInput: endInput });
-  }
-
   displayInputs() {
-    const { inputModal, lat, long, position } = this.state;
+    const { inputModal, lat, long, position, destination } = this.state;
+    const { getNavInfo, setMapLocation } = this.props;
     position.setLatitude(Number(lat));
     position.setLongitude(Number(long));
     if (inputModal === false) {
@@ -76,8 +75,8 @@ class DirectionInput extends Component<inputProps, inputState> {
         <View style={styles.navBtn}>
           <TouchableOpacity testID="navBtn" onPress={() => this.showInput()}>
             <Image
-              style={styles.iconSize}
-              source={require("../assets/nav.png")}
+              style={styles.iconSizeNavBtn}
+              source={require("../assets/directions.png")}
             />
           </TouchableOpacity>
         </View>
@@ -106,22 +105,24 @@ class DirectionInput extends Component<inputProps, inputState> {
 
           <View style={styles.sizeColumn3}>
             <Autocomplete
-              getNavInfo={this.props.getNavInfo}
-              setMapLocation={this.props.setMapLocation}
+              getNavInfo={getNavInfo}
+              setMapLocation={setMapLocation}
               btnStyle={autocompleteStyle.btnStyling}
               styleSugg={autocompleteStyle.startSuggestions}
               styleInput={autocompleteStyle.startInput}
               type="Start"
+              defaultInput={null}
               lat={lat}
               lng={long}
             />
             <Autocomplete
-              getNavInfo={this.props.getNavInfo}
-              setMapLocation={this.props.setMapLocation}
+              getNavInfo={getNavInfo}
+              setMapLocation={setMapLocation}
               btnStyle={autocompleteStyle.btnStyling}
               styleSugg={autocompleteStyle.destSuggestions}
               styleInput={autocompleteStyle.destInput}
               type="Destination"
+              defaultInput={destination}
               lat={lat}
               lng={long}
             />
