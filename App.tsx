@@ -76,6 +76,8 @@ class App extends Component<{}, appState> {
       indoorFloor: null,
       selectedTransportMode: null
     };
+    //Global for GoogleCalendarEventContainer
+    global.signedIn = false;
   }
   //callback for setting the colorBlindMode for the application
   setColorBlindMode = (colorBlindMode: colorBlindMode) => {

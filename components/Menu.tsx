@@ -14,6 +14,7 @@ import styles from "../constants/MenuStyling";
 import ColorBlindSettings from "../components/ColorBlindSettings";
 import colorBlindMode from "../classes/colorBlindMode";
 import Colors, { ColorPicker } from "../constants/Colors";
+import GoogleCalendarEventContainer from "./GoogleCalendarEventContainer";
 
 class Menu extends Component<
   {},
@@ -116,9 +117,7 @@ class Menu extends Component<
                 style={styles.logoSize}
                 source={require("../assets/logo.png")}
               />
-              <TouchableOpacity style={styles.syncBtn}>
-                <Text style={styles.syncText}> Sync. Calendar</Text>
-              </TouchableOpacity>
+              <GoogleCalendarEventContainer/>
             </View>
             <TouchableOpacity style={styles.menuOptions}>
               <Image
