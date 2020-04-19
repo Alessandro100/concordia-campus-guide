@@ -40,6 +40,7 @@ type appState = {
   indoorFloor: IndoorFloor;
   startDirection: PointOfInterest;
   endDirection: PointOfInterest;
+  selectedTransportMode: transportMode;
 };
 
 class App extends Component<{}, appState> {
@@ -68,6 +69,7 @@ class App extends Component<{}, appState> {
       startDirection: null,
       endDirection: null,
       indoorFloor: null,
+      selectedTransportMode: null
     };
   }
 
@@ -110,6 +112,10 @@ class App extends Component<{}, appState> {
     });
   };
 
+  setTransportationMethod = (selectedTransportMode: transportMode) => {
+    this.setState({selectedTransportMode: selectedTransportMode})
+  }
+
   //call back function to display indoor or outdoor map
   callbackInOut = (status: boolean) => {
     const { building } = this.state;
@@ -147,6 +153,7 @@ class App extends Component<{}, appState> {
       indoorFloor,
       places,
       outdoorPoint,
+      selectedTransportMode
     } = this.state;
 
     if (displayIndoor === false) {
@@ -174,6 +181,7 @@ class App extends Component<{}, appState> {
             destination={outdoorPoint}
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
+            setTransportationMethod={this.setTransportationMethod}
             lat={region.latitude}
             lng={region.longitude}
           />
@@ -193,11 +201,11 @@ class App extends Component<{}, appState> {
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}
             />
-            {startDirection && endDirection && (
+            {startDirection && endDirection && selectedTransportMode &&(
               <ShowDirection
                 startLocation={startDirection}
                 endLocation={endDirection}
-                transportType={transportMode.transit}
+                transportType={selectedTransportMode}
               />
             )}
           </MapView>
