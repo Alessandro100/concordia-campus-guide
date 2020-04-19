@@ -1,7 +1,7 @@
 import CampusPolygons from './../constants/CampusPolygons';
 import { MarkersSGW, MarkersLoyola } from './../constants/CampusMarkers';
 import ShuttleBusMarkers from "../constants/CampusShuttleBusStop";
-import { obtainBuildings } from "../services/BuildingService";
+import { obtainBuildings } from "../services/buildingService";
 
 function getBuildings() {
     return obtainBuildings();

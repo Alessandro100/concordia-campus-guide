@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { shallow, mount, render } from 'enzyme';
 import CampusToggleButton from '../components/CampusToggleButton';
-import { obtainBuildings } from "../services/BuildingService";
+import { obtainBuildings } from "../services/buildingService";
 import { MarkersSGW, MarkersLoyola } from './../constants/CampusMarkers';
 import ShuttleBusMarkers from "../constants/CampusShuttleBusStop";
 import { TouchableHighlight, Text, TouchableOpacity, Button } from 'react-native';
