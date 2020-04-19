@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { Marker, Polygon } from "react-native-maps";
-import { Image, StyleSheet, Text, View } from "react-native";
-import Colors from "../constants/Colors";
-import ShuttleBusMarkers from "../constants/CampusShuttleBusStop";
-import Building from "../classes/building";
+import React, { Component } from 'react';
+import { Marker, Polygon } from 'react-native-maps';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import Colors from '../constants/Colors';
+import ShuttleBusMarkers from '../constants/CampusShuttleBusStop';
+import Building from '../classes/building';
 import {
   obtainCoordinateFromBuilding,
   parseLocationToLatLngType,
-} from "../services/buildingService";
-import Location from "../classes/location";
-import Campus from "../classes/campus";
-import GoogleMapsAdapter from "../classes/googleMapsAdapter";
+} from '../services/buildingService';
+import Location from '../classes/location';
+import Campus from '../classes/campus';
+import GoogleMapsAdapter from '../classes/googleMapsAdapter';
 
-const busIcon = require("./../assets/shuttle_bus_icon.png");
+const busIcon = require('./../assets/shuttle_bus_icon.png');
 
 const styles = StyleSheet.create({
   circle: {
@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
   },
   pinText: {
     color: Colors.white,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
     fontSize: 20,
     marginBottom: 10,
   },
@@ -51,19 +51,16 @@ type markersAndPolygonsState = {
   campus: Campus;
 };
 
-class PolygonsAndMarkers extends Component<
-  markersAndPolygonsProps,
-  markersAndPolygonsState
-> {
+class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPolygonsState> {
   constructor(props) {
     super(props);
     const { buildings, polygons } = this.props;
     this.state = {
       buildings,
       polygons,
-      building: new Building("", "", [], null, "", null, ""),
+      building: new Building('', '', [], null, '', null, ''),
       location: new Location(0, 0),
-      campus: new Campus(null, "", ""),
+      campus: new Campus(null, '', ''),
       shuttleBusMarkers: ShuttleBusMarkers.slice(0),
       placesCoordinates: new GoogleMapsAdapter(),
     };
@@ -72,6 +69,11 @@ class PolygonsAndMarkers extends Component<
   displayBuildingInfo = (building: Building, displayInfo: boolean) => {
     const { displaybuilding } = this.props;
     displaybuilding(building, displayInfo);
+  };
+
+  displayPlace = (place: Building, displayInfo: boolean) => {
+    const { displaybuilding } = this.props;
+    displaybuilding(place, displayInfo);
   };
 
   render() {
@@ -88,10 +90,8 @@ class PolygonsAndMarkers extends Component<
 
     return (
       <View>
-        {polygons.map((polygon) => (
-          <View
-            key={`${String(polygon.latitude)}-${String(polygon.longitude)}`}
-          >
+        {polygons.map(polygon => (
+          <View key={`${String(polygon.latitude)}-${String(polygon.longitude)}`}>
             <Polygon
               coordinates={polygon}
               strokeColor={Colors.polygonStroke}
@@ -100,21 +100,17 @@ class PolygonsAndMarkers extends Component<
             />
           </View>
         ))}
-        {buildings.map((buildingMarker) => (
+        {buildings.map(buildingMarker => (
           <Marker
             testID={buildingMarker.getIdentifier()}
             key={buildingMarker.getIdentifier()}
-            coordinate={parseLocationToLatLngType(
-              obtainCoordinateFromBuilding(buildingMarker)
-            )}
+            coordinate={parseLocationToLatLngType(obtainCoordinateFromBuilding(buildingMarker))}
             title={buildingMarker.getIdentifier()}
             description={buildingMarker.getName()}
             pinColor={Colors.markersPinColor}
             onPress={() => {
               location.setLatitude(buildingMarker.getLocation().getLatitude());
-              location.setLongitude(
-                buildingMarker.getLocation().getLongitude()
-              );
+              location.setLongitude(buildingMarker.getLocation().getLongitude());
               campus.setLocation(buildingMarker.getLocation());
               building.setName(buildingMarker.getName());
               building.setDescription(buildingMarker.getDescription());
@@ -127,13 +123,11 @@ class PolygonsAndMarkers extends Component<
             }}
           >
             <View style={styles.circle}>
-              <Text style={styles.pinText}>
-                {buildingMarker.getIdentifier()}
-              </Text>
+              <Text style={styles.pinText}>{buildingMarker.getIdentifier()}</Text>
             </View>
           </Marker>
         ))}
-        {shuttleBusMarkers.map((marker) => (
+        {shuttleBusMarkers.map(marker => (
           <Marker
             key={marker.title}
             coordinate={marker.coordinate}
@@ -144,16 +138,27 @@ class PolygonsAndMarkers extends Component<
           </Marker>
         ))}
 
-        {places.map((marker) => (
+        {places.map(marker => (
           <Marker
             key={marker.id}
-            coordinate={placesCoordinates.parseGoogleMapLocation(
-              marker.geometry.location
-            )}
+            coordinate={placesCoordinates.parseGoogleMapLocation(marker.geometry.location)}
             title={marker.name}
             description={marker.formatted_address}
             pinColor={Colors.primaryColor}
-          ></Marker>
+            onPress={() => {
+              location.setLatitude(
+                placesCoordinates.parseGoogleMapLocation(marker.geometry.location).latitude
+              );
+              location.setLongitude(
+                placesCoordinates.parseGoogleMapLocation(marker.geometry.location).longitude
+              );
+              building.setIdentifier(marker.id);
+              building.setLocation(location);
+              building.setDescription(marker.formatted_address);
+              building.setName(marker.name);
+              this.displayPlace(building, true);
+            }}
+          />
         ))}
       </View>
     );
