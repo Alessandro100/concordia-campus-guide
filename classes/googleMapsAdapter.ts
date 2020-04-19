@@ -57,6 +57,14 @@ class GoogleMapsAdapter {
     }
     return Colors.mapsPolyline;
   };
+  
+  parseGoogleMapLocation = (location: any) =>{
+    const coord = {
+      latitude: location.lat,
+      longitude: location.lng
+    }
+    return coord;
+  }
 
   formatOutdoorSteps(steps: any[]) {
     const formattedSteps = new CompoundPath();

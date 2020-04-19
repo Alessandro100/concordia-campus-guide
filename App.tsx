@@ -1,39 +1,42 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
-import CampusToggleButton from './components/CampusToggleButton';
-import ShowDirection from './components/ShowDirection';
-import transportMode from './classes/transportMode';
-import Location from './classes/location';
-import CampusPolygons from './constants/CampusPolygons';
-import Colors from './constants/Colors';
-import OutdoorPOI from './classes/outdoorPOI';
-import IndoorFloor from './classes/indoorFloor';
-import PolygonsAndMarkers from './components/PolygonsAndMarkers';
-import IndoorFloorService from './services/indoorFloorService';
-import SearchBar from './components/SearchBar';
-import BottomDrawerBuilding from './components/BottomDrawerBuilding';
-import Building from './classes/building';
-import { obtainBuildings } from './services/buildingService';
-import IndoorFloorMap from './components/IndoorFloorMap';
+import React, { Component } from "react";
+import { View } from "react-native";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import CampusToggleButton from "./components/CampusToggleButton";
+import ShowDirection from "./components/ShowDirection";
+import transportMode from "./classes/transportMode";
+import Location from "./classes/location";
+import CampusPolygons from "./constants/CampusPolygons";
+import IndoorFloor from "./classes/indoorFloor";
+import PolygonsAndMarkers from "./components/PolygonsAndMarkers";
+import IndoorFloorService from "./services/indoorFloorService";
+import BottomDrawerBuilding from "./components/BottomDrawerBuilding";
+import Building from "./classes/building";
+import { obtainBuildings } from "./services/buildingService";
+import IndoorFloorMap from "./components/IndoorFloorMap";
 import CurrentPosition from "./components/CurrentPosition";
-import InputBtn from "./components/DirectionInput";
+import DirectionInput from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
-import Navbtn from "./components/NavBtn";
-import styles from "./constants/AppStyling";
-import PointOfInterest from './classes/pointOfInterest';
-
+import { stylesWithColorBlindSupport } from "./constants/AppStyling";
+import PointOfInterest from "./classes/pointOfInterest";
+import PlacesOfInterestAround from "./components/PlacesOfInterestAround";
+import Menu from "./components/Menu";
+import colorBlindMode from "./classes/colorBlindMode";
+import Colors, { ColorPicker } from "./constants/Colors";
+let styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode.normal));
+import OutdoorPOI from "./classes/outdoorPOI";
 
 type appState = {
+  places: any[];
   userPosition: Location;
+  outdoorPoint: OutdoorPOI;
+  polygons: any[];
   region: {
     latitude: number;
     longitude: number;
     latitudeDelta: number;
     longitudeDelta: number;
   };
-  polygons: any[];
-  markers: any[];
+  colorBlindMode: colorBlindMode;
   displayInfo: boolean;
   building: Building;
   buildings: Building[];
@@ -41,8 +44,7 @@ type appState = {
   indoorFloor: IndoorFloor;
   startDirection: PointOfInterest;
   endDirection: PointOfInterest;
-  start_identifier: string;
-  end_identifier: string;
+  selectedTransportMode: transportMode;
 };
 
 class App extends Component<{}, appState> {
@@ -54,15 +56,17 @@ class App extends Component<{}, appState> {
 
     this.state = {
       userPosition: new Location(45.497406, -73.577102),
+      outdoorPoint: new OutdoorPOI(null, ""),
       region: {
         // this is the SGW campus location
         latitude: 45.497406,
         longitude: -73.577102,
         latitudeDelta: 0,
-        longitudeDelta: 0.01
+        longitudeDelta: 0.01,
       },
+      colorBlindMode: colorBlindMode.normal,
+      places: [],
       building: null,
-      markers: [],
       polygons: CampusPolygons.slice(0),
       buildings: obtainBuildings(),
       displayInfo: false,
@@ -70,46 +74,66 @@ class App extends Component<{}, appState> {
       startDirection: null,
       endDirection: null,
       indoorFloor: null,
-      start_identifier: "",
-      end_identifier: ""
+      selectedTransportMode: null
     };
+    //Global for GoogleCalendarEventContainer
+    global.signedIn = false;
   }
+  //callback for setting the colorBlindMode for the application
+  setColorBlindMode = (colorBlindMode: colorBlindMode) => {
+    this.setState({ colorBlindMode: colorBlindMode });
+  };
 
-  callbackAllInfo = (
-    type: string,
-    poi: PointOfInterest,
-    inOrOut: boolean
-  ) => {
+  //set all places (around region) to be display in markersAndPolygone
+  setGooglePlacesMarkers = (allpaces: any[]) => {
+    this.setState({ places: allpaces });
+  };
+
+  callbackAllInfo = (type: string, poi: PointOfInterest, inOrOut: boolean) => {
     if (type === "Start") {
-      this.setState({startDirection: poi})
-      if (inOrOut === true) {
-        //this.setState({ start_identifier: id });
-      }
+      this.setState({ startDirection: poi });
     } else {
-      this.setState({endDirection: poi})
-      if (inOrOut === true) {
-        //this.setState({ end_identifier: id });
-      }
+      this.setState({ endDirection: poi });
     }
   };
 
+  //navigate to building from current location
+  navigateFromCurrentPosition = (poi: OutdoorPOI) => {
+    const { outdoorPoint, userPosition } = this.state;
+    outdoorPoint.setLocation(userPosition);
+    this.setState({ startDirection: outdoorPoint });
+    this.setState({ endDirection: poi });
+  };
+
+  //sets the input destination
+  setDestinationPoint = (poi: OutdoorPOI) => {
+    this.setState({ outdoorPoint: poi });
+    this.setState({ endDirection: poi });
+  };
+
+  //changes region in the mapview
   setMapLocation = (location: Location) => {
     this.setState({
       region: {
         latitude: location.getLatitude(),
         longitude: location.getLongitude(),
         latitudeDelta: 0,
-        longitudeDelta: 0.01
-      }
+        longitudeDelta: 0.01,
+      },
     });
   };
 
+  setTransportationMethod = (selectedTransportMode: transportMode) => {
+    this.setState({selectedTransportMode: selectedTransportMode})
+  }
+
+  //call back function to display indoor or outdoor map
   callbackInOut = (status: boolean) => {
-    const {building} = this.state;
-    if(status) {
+    const { building } = this.state;
+    if (status) {
       let floor = IndoorFloorService.getFloor(building.title, 1);
       this.setState({ displayIndoor: status, indoorFloor: floor });
-    }else {
+    } else {
       this.setState({ displayIndoor: status, indoorFloor: null });
     }
   };
@@ -120,6 +144,7 @@ class App extends Component<{}, appState> {
     this.setState({ building });
   };
 
+  //update current position
   changeCurrentPosition = (coordinate: any) => {
     const { userPosition } = this.state;
     userPosition.setLatitude(coordinate.latitude);
@@ -129,23 +154,23 @@ class App extends Component<{}, appState> {
   inOrOutView() {
     const {
       region,
+      colorBlindMode,
       buildings,
       polygons,
       displayInfo,
       building,
       displayIndoor,
-      userPosition,
       startDirection,
       endDirection,
-      start_identifier,
       indoorFloor,
-      end_identifier
+      places,
+      outdoorPoint,
+      selectedTransportMode
     } = this.state;
-
+    styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode));
     if (displayIndoor === false) {
       return (
         <View style={styles.container}>
-          {/* <SearchBar setMapLocation={this.setMapLocation} /> */}
           <Autocomplete
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
@@ -153,49 +178,61 @@ class App extends Component<{}, appState> {
             styleSugg={styles.searchSugg}
             styleInput={styles.searchInput}
             type="Search"
-            lat={userPosition.getLatitude()}
-            lng={userPosition.getLongitude()}
+            defaultInput={null}
+            lat={region.latitude}
+            lng={region.longitude}
           />
-          <CampusToggleButton setMapLocation={this.setMapLocation} />
-          <InputBtn
+           <Menu
+            setColorBlindMode={this.setColorBlindMode.bind(this)}
+            colorBlindMode={colorBlindMode}
+          />
+          <PlacesOfInterestAround
+            lat={region.latitude}
+            long={region.longitude}
+            showPlaces={this.setGooglePlacesMarkers}
+          />
+          <CampusToggleButton
+            setMapLocation={this.setMapLocation}
+            colorBlindMode={colorBlindMode}
+          />
+          <DirectionInput
+            destination={outdoorPoint}
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
-            lat={userPosition.getLatitude()}
-            lng={userPosition.getLongitude()}
+            setTransportationMethod={this.setTransportationMethod}
+            lat={region.latitude}
+            lng={region.longitude}
           />
-          <Navbtn
-            getNavInfo={this.callbackAllInfo}
-            // start_x={start_x}
-            // start_y={start_y}
-            // end_x={end_x}
-            // end_y={end_y}
-            // sid={start_identifier}
-            // eid={end_identifier}
-          />
+
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}
             region={region}
             showsUserLocation={true}
-            onUserLocationChange={coordinates =>
-              this.changeCurrentPosition(coordinates)
+            onUserLocationChange={(e) =>
+              this.changeCurrentPosition(e.nativeEvent.coordinate)
             }
           >
             <PolygonsAndMarkers
+              places={places}
               buildings={buildings}
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}
+              colorBlindMode={colorBlindMode}
             />
-            {(startDirection && endDirection) && (
+            {startDirection && endDirection && selectedTransportMode &&(
               <ShowDirection
                 startLocation={startDirection}
                 endLocation={endDirection}
-                transportType={transportMode.transit}
-              /> 
+                transportType={selectedTransportMode}
+              />
             )}
           </MapView>
           <CurrentPosition setMapLocation={this.setMapLocation} />
+
           <BottomDrawerBuilding
+            setDestination={this.setDestinationPoint}
+            navigate={this.navigateFromCurrentPosition}
             displayInfo={displayInfo}
             building={building}
             displayBuildingInfo={this.displayBuildingInfo}
@@ -204,14 +241,14 @@ class App extends Component<{}, appState> {
         </View>
       );
     } else {
-      return(
-        <IndoorFloorMap 
-          indoorFloor={indoorFloor} 
+      return (
+        <IndoorFloorMap
+          indoorFloor={indoorFloor}
           indoorDisplay={this.callbackInOut}
           startLocation={startDirection}
           endLocation={endDirection}
-        />  
-      )
+        />
+      );
     }
   }
 

@@ -5,10 +5,11 @@ import {
   Text,
   TextInput,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import Colors from "../constants/Colors";
-import IndoorPOIService from '../services/indoorPOIService';
+import IndoorPOIService from "../services/indoorPOIService";
 import { REACT_APP_GOOGLE_PLACES_API } from "react-native-dotenv";
 import Location from "../classes/location";
 import IndoorPOI from "../classes/indoorPOI";
@@ -17,11 +18,17 @@ import PointOfInterest from "../classes/pointOfInterest";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   mytext: {
-    color: Colors.grey
-  }
+    color: Colors.grey,
+  },
+  closeModal: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+    zIndex: 1,
+    position: "absolute",
+  },
 });
 type autoStates = {
   query: string;
@@ -34,6 +41,7 @@ type autoStates = {
   position: Location;
 };
 type autoProps = {
+  defaultInput: OutdoorPOI;
   lat: number;
   lng: number;
   type: string;
@@ -41,11 +49,7 @@ type autoProps = {
   styleSugg: any;
   btnStyle: any;
   setMapLocation(location: Location): void;
-  getNavInfo(
-    type: string,
-    poi: PointOfInterest,
-    inOrOut: boolean
-  ): void;
+  getNavInfo(type: string, poi: PointOfInterest, inOrOut: boolean): void;
 };
 
 class Autocomplete extends Component<autoProps, autoStates> {
@@ -60,9 +64,18 @@ class Autocomplete extends Component<autoProps, autoStates> {
       indoorResults: [],
       lat: lat,
       long: lng,
-      position: new Location(0, 0)
+      position: new Location(0, 0),
     };
   }
+  componentDidMount() {
+    //when autocomplete is mounted, set the state query to the point selected (considered here as defaultInput)
+    // if the default point of interest is not null
+    const { defaultInput } = this.props;
+    if (defaultInput !== null) {
+      this.setState({ query: defaultInput.identifier });
+    }
+  }
+
   async onChangeQuery(query: string) {
     const { indoor, lat, long } = this.state;
 
@@ -74,7 +87,7 @@ class Autocomplete extends Component<autoProps, autoStates> {
     if (query.length === 0) {
       this.setState({ indoorResults: [] });
     } else {
-      const filteredData = indoor.filter(x =>
+      const filteredData = indoor.filter((x) =>
         String(x.identifier.toLowerCase()).includes(query.toLowerCase())
       );
       this.setState({ indoorResults: filteredData });
@@ -91,11 +104,7 @@ class Autocomplete extends Component<autoProps, autoStates> {
     this.setState({ modalVisible: false });
     this.setState({ query: String(sugg.getIdentifier()) });
     //indoor is true
-    getNavInfo(
-      type,
-      sugg,
-      true
-    );
+    getNavInfo(type, sugg, true);
   }
 
   async getOutdoorInfo(sugg: any) {
@@ -114,28 +123,29 @@ class Autocomplete extends Component<autoProps, autoStates> {
     position.setLongitude(Number(json.result.geometry.location.lng));
     setMapLocation(position);
     //outdoor is false
-    const outdoorPOI = new OutdoorPOI(position, '')
-    getNavInfo(
-      type,
-      outdoorPOI,
-      false
-    );
+    const outdoorPOI = new OutdoorPOI(position, "");
+
+    getNavInfo(type, outdoorPOI, false);
   }
 
   modalVisible() {
     this.setState({ modalVisible: true });
+  }
+  modalNotVisible() {
+    this.setState({ modalVisible: false });
   }
 
   render() {
     const { indoorResults, places, query, modalVisible } = this.state;
     const { styleInput, styleSugg, btnStyle, type } = this.props;
     let value = "";
+
     if (query.length > 0) {
       value = query;
     } else {
       value = type;
     }
-    const indoorSuggestions = indoorResults.map(suggestion => (
+    const indoorSuggestions = indoorResults.map((suggestion) => (
       <Text
         onPress={() => this.getIndoorInfo(suggestion)}
         key={suggestion.identifier}
@@ -144,7 +154,7 @@ class Autocomplete extends Component<autoProps, autoStates> {
         {suggestion.identifier}
       </Text>
     ));
-    const placesSuggestions = places.map(prediction => (
+    const placesSuggestions = places.map((prediction) => (
       <Text
         onPress={() => this.getOutdoorInfo(prediction)}
         key={prediction.id}
@@ -165,12 +175,16 @@ class Autocomplete extends Component<autoProps, autoStates> {
         </TouchableOpacity>
 
         <Modal transparent={true} visible={modalVisible}>
+          <TouchableOpacity
+            onPress={() => this.modalNotVisible()}
+            style={styles.closeModal}
+          ></TouchableOpacity>
           <TextInput
             autoFocus={true}
             style={styleInput}
             placeholder={type}
             value={query}
-            onChangeText={query => this.onChangeQuery(query)}
+            onChangeText={(query) => this.onChangeQuery(query)}
           />
           {indoorSuggestions}
           {placesSuggestions}

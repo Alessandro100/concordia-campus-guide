@@ -8,7 +8,7 @@ class campusEvent {
   private _location : string;
   private _buildingId : string;
 
-  constructor(title: string, description: string, startDate: Date, endDate: Date, location: string, buildingId: string) {
+  constructor(title: string, description: string, startDate: Date, endDate: Date, location: string, buildingId: string = '') {
     this._title = title;
     this._description = description;
     this._startDate = startDate;
