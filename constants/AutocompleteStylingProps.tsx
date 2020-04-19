@@ -24,6 +24,7 @@ const autocompleteStyle = StyleSheet.create({
   },
   startInput: {
     position: "absolute",
+    zIndex:3,
     left: 65,
     top: 18,
     width: 250,
@@ -47,6 +48,7 @@ const autocompleteStyle = StyleSheet.create({
   },
   destInput: {
     position: "relative",
+    zIndex:4,
     left: 65,
     top: 69.5,
     width: 250,

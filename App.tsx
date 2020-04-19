@@ -14,16 +14,18 @@ import Building from "./classes/building";
 import { obtainBuildings } from "./services/buildingService";
 import IndoorFloorMap from "./components/IndoorFloorMap";
 import CurrentPosition from "./components/CurrentPosition";
-import InputBtn from "./components/DirectionInput";
+import DirectionInput from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
 import styles from "./constants/AppStyling";
 import PointOfInterest from "./classes/pointOfInterest";
 import PlacesOfInterestAround from "./components/PlacesOfInterestAround";
 import Menu from "./components/Menu";
+import OutdoorPOI from "./classes/outdoorPOI";
 
 type appState = {
   places: any[];
   userPosition: Location;
+  outdoorPoint: OutdoorPOI;
   polygons: any[];
   region: {
     latitude: number;
@@ -49,6 +51,7 @@ class App extends Component<{}, appState> {
 
     this.state = {
       userPosition: new Location(45.497406, -73.577102),
+      outdoorPoint: new OutdoorPOI(null, ""),
       region: {
         // this is the SGW campus location
         latitude: 45.497406,
@@ -67,6 +70,8 @@ class App extends Component<{}, appState> {
       indoorFloor: null,
     };
   }
+
+  //set all places (around region) to be display in markersAndPolygone
   setGooglePlacesMarkers = (allpaces: any[]) => {
     this.setState({ places: allpaces });
   };
@@ -74,17 +79,26 @@ class App extends Component<{}, appState> {
   callbackAllInfo = (type: string, poi: PointOfInterest, inOrOut: boolean) => {
     if (type === "Start") {
       this.setState({ startDirection: poi });
-      if (inOrOut === true) {
-        //this.setState({ start_identifier: id });
-      }
     } else {
       this.setState({ endDirection: poi });
-      if (inOrOut === true) {
-        //this.setState({ end_identifier: id });
-      }
     }
   };
 
+  //navigate to building from current location
+  navigateFromCurrentPosition = (poi: OutdoorPOI) => {
+    const { outdoorPoint, userPosition } = this.state;
+    outdoorPoint.setLocation(userPosition);
+    this.setState({ startDirection: outdoorPoint });
+    this.setState({ endDirection: poi });
+  };
+
+  //sets the input destination
+  setDestinationPoint = (poi: OutdoorPOI) => {
+    this.setState({ outdoorPoint: poi });
+    this.setState({ endDirection: poi });
+  };
+
+  //changes region in the mapview
   setMapLocation = (location: Location) => {
     this.setState({
       region: {
@@ -96,6 +110,7 @@ class App extends Component<{}, appState> {
     });
   };
 
+  //call back function to display indoor or outdoor map
   callbackInOut = (status: boolean) => {
     const { building } = this.state;
     if (status) {
@@ -112,6 +127,7 @@ class App extends Component<{}, appState> {
     this.setState({ building });
   };
 
+  //update current position
   changeCurrentPosition = (coordinate: any) => {
     const { userPosition } = this.state;
     userPosition.setLatitude(coordinate.latitude);
@@ -130,6 +146,7 @@ class App extends Component<{}, appState> {
       endDirection,
       indoorFloor,
       places,
+      outdoorPoint,
     } = this.state;
 
     if (displayIndoor === false) {
@@ -142,17 +159,19 @@ class App extends Component<{}, appState> {
             styleSugg={styles.searchSugg}
             styleInput={styles.searchInput}
             type="Search"
+            defaultInput={null}
             lat={region.latitude}
             lng={region.longitude}
           />
-           <Menu/>
+          <Menu />
           <PlacesOfInterestAround
             lat={region.latitude}
             long={region.longitude}
             showPlaces={this.setGooglePlacesMarkers}
           />
           <CampusToggleButton setMapLocation={this.setMapLocation} />
-          <InputBtn
+          <DirectionInput
+            destination={outdoorPoint}
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
             lat={region.latitude}
@@ -164,8 +183,8 @@ class App extends Component<{}, appState> {
             style={styles.mapStyle}
             region={region}
             showsUserLocation={true}
-            onUserLocationChange={(coordinates) =>
-              this.changeCurrentPosition(coordinates)
+            onUserLocationChange={(e) =>
+              this.changeCurrentPosition(e.nativeEvent.coordinate)
             }
           >
             <PolygonsAndMarkers
@@ -183,7 +202,10 @@ class App extends Component<{}, appState> {
             )}
           </MapView>
           <CurrentPosition setMapLocation={this.setMapLocation} />
+
           <BottomDrawerBuilding
+            setDestination={this.setDestinationPoint}
+            navigate={this.navigateFromCurrentPosition}
             displayInfo={displayInfo}
             building={building}
             displayBuildingInfo={this.displayBuildingInfo}
