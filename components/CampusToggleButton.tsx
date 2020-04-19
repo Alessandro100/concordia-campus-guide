@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableHighlight } from 'react-native';
-import Colors from '../constants/Colors';
+import { ColorPicker } from '../constants/Colors';
 import CampusLocations from '../constants/CampusLocations';
 import Location from '../classes/location';
-
+import colorBlindMode from "../classes/colorBlindMode";
+let Colors = ColorPicker(colorBlindMode.normal);
 const styles = StyleSheet.create({
   campusToggle: {
     display: 'flex',
@@ -24,20 +25,30 @@ const styles = StyleSheet.create({
 
 class CampusToggleButton extends Component<
   { setMapLocation(location: Location): void },
-  { currentCampusView: String }
+  { currentCampusView: String; colorBlindMode: colorBlindMode  }
 > {
   constructor(props) {
     super(props);
 
     this.state = {
       currentCampusView: CampusLocations.SGW.getIdentifier(),
+      colorBlindMode: props.colorBlindMode
     };
   }
-
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.colorBlindMode !== prevProps.colorBlindMode) {
+      this.setState({ colorBlindMode: this.props.colorBlindMode });
+    }
+  }
   buttonStyling(campusSelected) {
-    const { currentCampusView } = this.state;
+    const { currentCampusView, colorBlindMode } = this.state;
+    let colors = ColorPicker(colorBlindMode); //button color can change with colorBlindMode
     return {
-      backgroundColor: campusSelected === currentCampusView ? Colors.primaryColor : Colors.grey,
+      backgroundColor:
+        campusSelected === currentCampusView
+          ? colors.primaryColor
+          : colors.grey,
       opacity: campusSelected === currentCampusView ? 1 : 0.7,
       padding: 7,
       width: 100,
@@ -63,6 +74,7 @@ class CampusToggleButton extends Component<
   }
 
   render() {
+    Colors = ColorPicker(this.state.colorBlindMode);
     return (
       <View style={styles.campusToggle}>
         <TouchableHighlight

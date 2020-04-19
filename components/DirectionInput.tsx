@@ -6,6 +6,8 @@ import autocompleteStyle from "../constants/AutocompleteStylingProps";
 import styles from "../constants/DirectionInputStyling";
 import PointOfInterest from "../classes/pointOfInterest";
 import OutdoorPOI from "../classes/outdoorPOI";
+import transportMode from "../classes/transportMode";
+import Colors from "../constants/Colors";
 
 type inputState = {
   inputModal: boolean;
@@ -13,6 +15,7 @@ type inputState = {
   long: number;
   position: Location;
   destination: OutdoorPOI;
+  selectedTransportOption: transportMode;
 };
 type inputProps = {
   lat: number;
@@ -20,6 +23,7 @@ type inputProps = {
   destination: OutdoorPOI;
   setMapLocation(position: Location): void;
   getNavInfo(type: string, poi: PointOfInterest, inOrOut: boolean): void;
+  setTransportationMethod(selectedTransportMode: transportMode);
 };
 class DirectionInput extends Component<inputProps, inputState> {
   constructor(props) {
@@ -31,6 +35,7 @@ class DirectionInput extends Component<inputProps, inputState> {
       lat: lat,
       long: lng,
       position: new Location(0, 0),
+      selectedTransportOption: null,
     };
   }
 
@@ -61,6 +66,20 @@ class DirectionInput extends Component<inputProps, inputState> {
       this.setState({ inputModal: false });
       // when user is done whith input set the point of interest to null
       destination.setLongitude("");
+    }
+  }
+
+  selectTransportOption = (selectedTransportMode: transportMode) => {
+    const {setTransportationMethod} = this.props;
+    this.setState({selectedTransportOption: selectedTransportMode})
+    setTransportationMethod(selectedTransportMode)
+  }
+
+  getTransportModeStyle(transportOption: transportMode) {
+    const {selectedTransportOption} = this.state;
+    return {
+      backgroundColor: (transportOption === selectedTransportOption) ? Colors.primaryColor : Colors.white,
+      borderRadius: 50
     }
   }
 
@@ -143,34 +162,38 @@ class DirectionInput extends Component<inputProps, inputState> {
           </View>
         </View>
         <View style={styles.row2}>
-          <View style={styles.navOptions}>
-            <Image
-              style={styles.iconSize}
-              source={require("../assets/concordia.png")}
-            />
-            <Text style={styles.optionTxt}>25min</Text>
-          </View>
-          <View style={styles.navOptions}>
-            <Image
-              style={styles.iconSize}
-              source={require("../assets/car.png")}
-            />
-            <Text style={styles.optionTxt}>15min</Text>
-          </View>
-          <View style={styles.navOptions}>
-            <Image
-              style={styles.iconSize}
-              source={require("../assets/walk.png")}
-            />
-            <Text style={styles.optionTxt}>55min</Text>
-          </View>
-          <View style={styles.navOptions}>
-            <Image
-              style={styles.iconSize}
-              source={require("../assets/bike.png")}
-            />
-            <Text style={styles.optionTxt}>35min</Text>
-          </View>
+          <TouchableOpacity style={this.getTransportModeStyle(transportMode.transit)} onPress={() => this.selectTransportOption(transportMode.transit)}> 
+            <View style={styles.navOptions}>
+              <Image
+                style={styles.iconSize}
+                source={require("../assets/concordia.png")}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={this.getTransportModeStyle(transportMode.driving)} onPress={() => this.selectTransportOption(transportMode.driving)}> 
+            <View style={styles.navOptions}>
+              <Image
+                style={styles.iconSize}
+                source={require("../assets/car.png")}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={this.getTransportModeStyle(transportMode.walking)} onPress={() => this.selectTransportOption(transportMode.walking)}> 
+            <View style={styles.navOptions}>
+              <Image
+                style={styles.iconSize}
+                source={require("../assets/walk.png")}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={this.getTransportModeStyle(transportMode.bicycle)} onPress={() => this.selectTransportOption(transportMode.bicycle)}> 
+            <View style={styles.navOptions}>
+              <Image
+                style={styles.iconSize}
+                source={require("../assets/bike.png")}
+              />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );

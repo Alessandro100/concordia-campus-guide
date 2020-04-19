@@ -16,10 +16,13 @@ import IndoorFloorMap from "./components/IndoorFloorMap";
 import CurrentPosition from "./components/CurrentPosition";
 import DirectionInput from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
-import styles from "./constants/AppStyling";
+import { stylesWithColorBlindSupport } from "./constants/AppStyling";
 import PointOfInterest from "./classes/pointOfInterest";
 import PlacesOfInterestAround from "./components/PlacesOfInterestAround";
 import Menu from "./components/Menu";
+import colorBlindMode from "./classes/colorBlindMode";
+import Colors, { ColorPicker } from "./constants/Colors";
+let styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode.normal));
 import OutdoorPOI from "./classes/outdoorPOI";
 
 type appState = {
@@ -33,6 +36,7 @@ type appState = {
     latitudeDelta: number;
     longitudeDelta: number;
   };
+  colorBlindMode: colorBlindMode;
   displayInfo: boolean;
   building: Building;
   buildings: Building[];
@@ -40,6 +44,7 @@ type appState = {
   indoorFloor: IndoorFloor;
   startDirection: PointOfInterest;
   endDirection: PointOfInterest;
+  selectedTransportMode: transportMode;
 };
 
 class App extends Component<{}, appState> {
@@ -59,6 +64,7 @@ class App extends Component<{}, appState> {
         latitudeDelta: 0,
         longitudeDelta: 0.01,
       },
+      colorBlindMode: colorBlindMode.normal,
       places: [],
       building: null,
       polygons: CampusPolygons.slice(0),
@@ -68,8 +74,13 @@ class App extends Component<{}, appState> {
       startDirection: null,
       endDirection: null,
       indoorFloor: null,
+      selectedTransportMode: null
     };
   }
+  //callback for setting the colorBlindMode for the application
+  setColorBlindMode = (colorBlindMode: colorBlindMode) => {
+    this.setState({ colorBlindMode: colorBlindMode });
+  };
 
   //set all places (around region) to be display in markersAndPolygone
   setGooglePlacesMarkers = (allpaces: any[]) => {
@@ -110,6 +121,10 @@ class App extends Component<{}, appState> {
     });
   };
 
+  setTransportationMethod = (selectedTransportMode: transportMode) => {
+    this.setState({selectedTransportMode: selectedTransportMode})
+  }
+
   //call back function to display indoor or outdoor map
   callbackInOut = (status: boolean) => {
     const { building } = this.state;
@@ -137,6 +152,7 @@ class App extends Component<{}, appState> {
   inOrOutView() {
     const {
       region,
+      colorBlindMode,
       buildings,
       polygons,
       displayInfo,
@@ -147,8 +163,9 @@ class App extends Component<{}, appState> {
       indoorFloor,
       places,
       outdoorPoint,
+      selectedTransportMode
     } = this.state;
-
+    styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode));
     if (displayIndoor === false) {
       return (
         <View style={styles.container}>
@@ -163,17 +180,24 @@ class App extends Component<{}, appState> {
             lat={region.latitude}
             lng={region.longitude}
           />
-          <Menu />
+           <Menu
+            setColorBlindMode={this.setColorBlindMode.bind(this)}
+            colorBlindMode={colorBlindMode}
+          />
           <PlacesOfInterestAround
             lat={region.latitude}
             long={region.longitude}
             showPlaces={this.setGooglePlacesMarkers}
           />
-          <CampusToggleButton setMapLocation={this.setMapLocation} />
+          <CampusToggleButton
+            setMapLocation={this.setMapLocation}
+            colorBlindMode={colorBlindMode}
+          />
           <DirectionInput
             destination={outdoorPoint}
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
+            setTransportationMethod={this.setTransportationMethod}
             lat={region.latitude}
             lng={region.longitude}
           />
@@ -192,12 +216,13 @@ class App extends Component<{}, appState> {
               buildings={buildings}
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}
+              colorBlindMode={colorBlindMode}
             />
-            {startDirection && endDirection && (
+            {startDirection && endDirection && selectedTransportMode &&(
               <ShowDirection
                 startLocation={startDirection}
                 endLocation={endDirection}
-                transportType={transportMode.transit}
+                transportType={selectedTransportMode}
               />
             )}
           </MapView>

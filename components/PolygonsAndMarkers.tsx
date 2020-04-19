@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { Marker, Polygon } from 'react-native-maps';
 import { Image, StyleSheet, Text, View } from 'react-native';
@@ -38,6 +39,7 @@ type markersAndPolygonsProps = {
   places: any[];
   buildings: Building[];
   polygons: Polygon[];
+  colorBlindMode: colorBlindMode;
   displaybuilding(building: Building, displayInfo: boolean): void;
 };
 
@@ -54,7 +56,7 @@ type markersAndPolygonsState = {
 class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPolygonsState> {
   constructor(props) {
     super(props);
-    const { buildings, polygons } = this.props;
+    const { buildings, polygons, colorBlindMode } = this.props;
     this.state = {
       buildings,
       polygons,
@@ -66,6 +68,11 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.colorBlindMode !== prevProps.colorBlindMode) {
+      this.setState({colorBlindMode: this.props.colorBlindMode});
+    }
+  }
   displayBuildingInfo = (building: Building, displayInfo: boolean) => {
     const { displaybuilding } = this.props;
     displaybuilding(building, displayInfo);
@@ -80,6 +87,7 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
     const {
       buildings,
       polygons,
+      colorBlindMode,
       shuttleBusMarkers,
       location,
       campus,
@@ -87,7 +95,7 @@ class PolygonsAndMarkers extends Component<markersAndPolygonsProps, markersAndPo
       placesCoordinates,
     } = this.state;
     const { places } = this.props;
-
+    Colors = ColorPicker(colorBlindMode)
     return (
       <View>
         {polygons.map(polygon => (
