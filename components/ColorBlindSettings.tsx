@@ -24,8 +24,7 @@ export default class ColorBlindSettings extends Component<{}> {
     const styles = StyleSheet.create({
       title: {
         fontSize: 23,
-        position: "absolute",
-        top: -75,
+        marginBottom: 20
       },
     });
     return (

@@ -14,7 +14,7 @@ import Building from "./classes/building";
 import { obtainBuildings } from "./services/buildingService";
 import IndoorFloorMap from "./components/IndoorFloorMap";
 import CurrentPosition from "./components/CurrentPosition";
-import InputBtn from "./components/DirectionInput";
+import DirectionInput from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
 import { stylesWithColorBlindSupport } from "./constants/AppStyling";
 import PointOfInterest from "./classes/pointOfInterest";
@@ -23,10 +23,12 @@ import Menu from "./components/Menu";
 import colorBlindMode from "./classes/colorBlindMode";
 import Colors, { ColorPicker } from "./constants/Colors";
 let styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode.normal));
+import OutdoorPOI from "./classes/outdoorPOI";
 
 type appState = {
   places: any[];
   userPosition: Location;
+  outdoorPoint: OutdoorPOI;
   polygons: any[];
   region: {
     latitude: number;
@@ -42,6 +44,7 @@ type appState = {
   indoorFloor: IndoorFloor;
   startDirection: PointOfInterest;
   endDirection: PointOfInterest;
+  selectedTransportMode: transportMode;
 };
 
 class App extends Component<{}, appState> {
@@ -53,6 +56,7 @@ class App extends Component<{}, appState> {
 
     this.state = {
       userPosition: new Location(45.497406, -73.577102),
+      outdoorPoint: new OutdoorPOI(null, ""),
       region: {
         // this is the SGW campus location
         latitude: 45.497406,
@@ -70,12 +74,15 @@ class App extends Component<{}, appState> {
       startDirection: null,
       endDirection: null,
       indoorFloor: null,
+      selectedTransportMode: null
     };
   }
   //callback for setting the colorBlindMode for the application
   setColorBlindMode = (colorBlindMode: colorBlindMode) => {
     this.setState({ colorBlindMode: colorBlindMode });
   };
+
+  //set all places (around region) to be display in markersAndPolygone
   setGooglePlacesMarkers = (allpaces: any[]) => {
     this.setState({ places: allpaces });
   };
@@ -83,17 +90,26 @@ class App extends Component<{}, appState> {
   callbackAllInfo = (type: string, poi: PointOfInterest, inOrOut: boolean) => {
     if (type === "Start") {
       this.setState({ startDirection: poi });
-      if (inOrOut === true) {
-        //this.setState({ start_identifier: id });
-      }
     } else {
       this.setState({ endDirection: poi });
-      if (inOrOut === true) {
-        //this.setState({ end_identifier: id });
-      }
     }
   };
 
+  //navigate to building from current location
+  navigateFromCurrentPosition = (poi: OutdoorPOI) => {
+    const { outdoorPoint, userPosition } = this.state;
+    outdoorPoint.setLocation(userPosition);
+    this.setState({ startDirection: outdoorPoint });
+    this.setState({ endDirection: poi });
+  };
+
+  //sets the input destination
+  setDestinationPoint = (poi: OutdoorPOI) => {
+    this.setState({ outdoorPoint: poi });
+    this.setState({ endDirection: poi });
+  };
+
+  //changes region in the mapview
   setMapLocation = (location: Location) => {
     this.setState({
       region: {
@@ -105,6 +121,11 @@ class App extends Component<{}, appState> {
     });
   };
 
+  setTransportationMethod = (selectedTransportMode: transportMode) => {
+    this.setState({selectedTransportMode: selectedTransportMode})
+  }
+
+  //call back function to display indoor or outdoor map
   callbackInOut = (status: boolean) => {
     const { building } = this.state;
     if (status) {
@@ -121,6 +142,7 @@ class App extends Component<{}, appState> {
     this.setState({ building });
   };
 
+  //update current position
   changeCurrentPosition = (coordinate: any) => {
     const { userPosition } = this.state;
     userPosition.setLatitude(coordinate.latitude);
@@ -140,6 +162,8 @@ class App extends Component<{}, appState> {
       endDirection,
       indoorFloor,
       places,
+      outdoorPoint,
+      selectedTransportMode
     } = this.state;
     styles = stylesWithColorBlindSupport(ColorPicker(colorBlindMode));
     if (displayIndoor === false) {
@@ -152,6 +176,7 @@ class App extends Component<{}, appState> {
             styleSugg={styles.searchSugg}
             styleInput={styles.searchInput}
             type="Search"
+            defaultInput={null}
             lat={region.latitude}
             lng={region.longitude}
           />
@@ -168,9 +193,11 @@ class App extends Component<{}, appState> {
             setMapLocation={this.setMapLocation}
             colorBlindMode={colorBlindMode}
           />
-          <InputBtn
+          <DirectionInput
+            destination={outdoorPoint}
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
+            setTransportationMethod={this.setTransportationMethod}
             lat={region.latitude}
             lng={region.longitude}
           />
@@ -180,8 +207,8 @@ class App extends Component<{}, appState> {
             style={styles.mapStyle}
             region={region}
             showsUserLocation={true}
-            onUserLocationChange={(coordinates) =>
-              this.changeCurrentPosition(coordinates)
+            onUserLocationChange={(e) =>
+              this.changeCurrentPosition(e.nativeEvent.coordinate)
             }
           >
             <PolygonsAndMarkers
@@ -191,16 +218,19 @@ class App extends Component<{}, appState> {
               displaybuilding={this.displayBuildingInfo}
               colorBlindMode={colorBlindMode}
             />
-            {startDirection && endDirection && (
+            {startDirection && endDirection && selectedTransportMode &&(
               <ShowDirection
                 startLocation={startDirection}
                 endLocation={endDirection}
-                transportType={transportMode.transit}
+                transportType={selectedTransportMode}
               />
             )}
           </MapView>
           <CurrentPosition setMapLocation={this.setMapLocation} />
+
           <BottomDrawerBuilding
+            setDestination={this.setDestinationPoint}
+            navigate={this.navigateFromCurrentPosition}
             displayInfo={displayInfo}
             building={building}
             displayBuildingInfo={this.displayBuildingInfo}
