@@ -6,7 +6,7 @@ const entranceData = {
 }
 const elevatorData = {
   x: 7,
-  y: 11
+  y: 12
 }
 const staircaseData = {
   x: 14,
@@ -27,7 +27,7 @@ const bathroomData = [
 
 const waterFountainsData =
 [{
-  x: 19,
+  x: 20,
   y: 7
 }]
 

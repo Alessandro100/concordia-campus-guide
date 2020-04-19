@@ -3,7 +3,7 @@ import Location from '../classes/location';
 
 export default {
   Loyola: new Campus(
-    new Location(45.4582, -73.6405),
+    new Location(45.4582, -73.6405), 
     'Loyola',
     'This is the description for the Loyola Campus'
   ),

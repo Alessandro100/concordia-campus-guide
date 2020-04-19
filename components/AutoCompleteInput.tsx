@@ -5,7 +5,8 @@ import {
   Text,
   TextInput,
   Modal,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from "react-native";
 import Colors from "../constants/Colors";
 import IndoorPOIService from '../services/indoorPOIService';
@@ -21,7 +22,13 @@ const styles = StyleSheet.create({
   },
   mytext: {
     color: Colors.grey
-  }
+  },
+  closeModal:{
+       width: Dimensions.get("window").width,
+      height: Dimensions.get("window").height,
+      zIndex:1,
+      position:'absolute'
+  },
 });
 type autoStates = {
   query: string;
@@ -125,6 +132,9 @@ class Autocomplete extends Component<autoProps, autoStates> {
   modalVisible() {
     this.setState({ modalVisible: true });
   }
+  modalNotVisible() {
+    this.setState({ modalVisible: false });
+  }
 
   render() {
     const { indoorResults, places, query, modalVisible } = this.state;
@@ -165,6 +175,7 @@ class Autocomplete extends Component<autoProps, autoStates> {
         </TouchableOpacity>
 
         <Modal transparent={true} visible={modalVisible}>
+        <TouchableOpacity onPress={() => this.modalNotVisible()} style={styles.closeModal}></TouchableOpacity>
           <TextInput
             autoFocus={true}
             style={styleInput}
