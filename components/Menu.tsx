@@ -11,6 +11,7 @@ import CampusEventContainer from "./CampusEventContainer";
 import Building from "../classes/building";
 import { obtainBuildings } from "../services/buildingService";
 import styles from "../constants/MenuStyling";
+import GoogleEventContainer from "./GoogleEventContainer";
 
 class Menu extends Component<
   {},
@@ -101,9 +102,7 @@ class Menu extends Component<
                 style={styles.logoSize}
                 source={require("../assets/logo.png")}
               />
-              <TouchableOpacity style={styles.syncBtn}>
-                <Text style={styles.syncText}> Sync. Calendar</Text>
-              </TouchableOpacity>
+              <GoogleEventContainer/>
             </View>
             <TouchableOpacity style={styles.menuOptions}>
               <Image

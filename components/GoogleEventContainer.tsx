@@ -90,7 +90,7 @@ class GoogleEventContainer extends Component<GoogleEventContainerProps, GoogleEv
         if(this.state.signedIn == false){
             return (
                 <View>
-                    <Button title="sign in" onPress={ this.signin.bind(this) }></Button>
+                    <Button title="sync calendar" onPress={ this.signin.bind(this) }></Button>
                 </View>
             );
         }else if(this.state.campusEvent == null) {
