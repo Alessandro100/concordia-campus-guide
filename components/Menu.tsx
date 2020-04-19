@@ -195,7 +195,6 @@ class Menu extends Component<
             style={styles.outsideModal}
           ></TouchableOpacity>
           <View style={styles.modalEventSettingsContainer}>
-          /*The color blind settings */
           <ColorBlindSettings
               setColorBlindMode={setColorBlindMode.bind(this)}
               colorBlindMode={colorBlindMode}
