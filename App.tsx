@@ -17,6 +17,7 @@ import CurrentPosition from "./components/CurrentPosition";
 import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
 import styles from "./constants/AppStyling";
+import ShowTextualDirection from './components/ShowTextualDirection'
 import PointOfInterest from "./classes/pointOfInterest";
 import PlacesOfInterestAround from "./components/PlacesOfInterestAround";
 import Menu from "./components/Menu";
@@ -38,6 +39,10 @@ type appState = {
   indoorFloor: IndoorFloor;
   startDirection: PointOfInterest;
   endDirection: PointOfInterest;
+  start_identifier: string;
+  end_identifier: string;
+  isTransportMethodSelected: boolean;
+  transportMethod: transportMode;
 };
 
 class App extends Component<{}, appState> {
@@ -65,6 +70,10 @@ class App extends Component<{}, appState> {
       startDirection: null,
       endDirection: null,
       indoorFloor: null,
+      start_identifier: "",
+      end_identifier: "",
+      isTransportMethodSelected: false,
+      transportMethod: null,
     };
   }
   setGooglePlacesMarkers = (allpaces: any[]) => {
@@ -83,6 +92,13 @@ class App extends Component<{}, appState> {
         //this.setState({ end_identifier: id });
       }
     }
+  };
+
+  transportMethod = (
+    type:transportMode
+  ) =>{
+    this.setState({isTransportMethodSelected: true})
+    this.setState({transportMethod: type})
   };
 
   setMapLocation = (location: Location) => {
@@ -129,6 +145,7 @@ class App extends Component<{}, appState> {
       startDirection,
       endDirection,
       indoorFloor,
+      end_identifier,
       places,
     } = this.state;
 
@@ -153,12 +170,12 @@ class App extends Component<{}, appState> {
           />
           <CampusToggleButton setMapLocation={this.setMapLocation} />
           <InputBtn
+            setIsTransportMethodSelected = {this.transportMethod}
             getNavInfo={this.callbackAllInfo}
             setMapLocation={this.setMapLocation}
             lat={region.latitude}
             lng={region.longitude}
           />
-
           <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.mapStyle}
@@ -174,15 +191,15 @@ class App extends Component<{}, appState> {
               polygons={polygons}
               displaybuilding={this.displayBuildingInfo}
             />
-            {startDirection && endDirection && (
+            {(startDirection && endDirection && this.state.isTransportMethodSelected) && (
               <ShowDirection
                 startLocation={startDirection}
                 endLocation={endDirection}
-                transportType={transportMode.transit}
-              />
+                transportType={this.state.transportMethod}
+              /> 
             )}
           </MapView>
-          <CurrentPosition setMapLocation={this.setMapLocation} />
+          <CurrentPosition setMapLocation={this.setMapLocation}/>
           <BottomDrawerBuilding
             displayInfo={displayInfo}
             building={building}

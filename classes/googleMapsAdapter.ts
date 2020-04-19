@@ -77,7 +77,8 @@ class GoogleMapsAdapter {
         ),
         new OutdoorPOI(new Location(step.end_location.lat, step.end_location.lng), 'test-end'),
         this.decodePoints(step.polyline.points),
-        this.getPolylineColor(step)
+        this.getPolylineColor(step),
+        step.html_instructions
       );
       formattedSteps.addUnitPath(formattedStep);
     });

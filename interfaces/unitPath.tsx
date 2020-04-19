@@ -7,6 +7,7 @@ interface UnitPath extends Path {
   origin: PointOfInterest;
   destination: PointOfInterest;
   pathColor: String;
+  pathInstruction: string;
 }
 
 export default UnitPath;

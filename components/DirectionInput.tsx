@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import { TouchableOpacity, View, Text, Image } from "react-native";
+import { TouchableOpacity, View, Text, Image, CheckBox, TouchableHighlightBase} from "react-native";
 import Autocomplete from "./AutoCompleteInput";
 import Location from "../classes/location";
 import autocompleteStyle from "../constants/AutocompleteStylingProps"
 import styles from "../constants/DirectionInputStyling"
 import PointOfInterest from "../classes/pointOfInterest";
+import transportMode from '../classes/transportMode';
+
+
 
 type inputState = {
   inputModal: boolean;
@@ -17,6 +20,9 @@ type inputState = {
 type inputProps = {
   lat: number;
   lng: number;
+  setIsTransportMethodSelected(
+    type: string,
+  ):void;
   setMapLocation(position: Location): void;
   getNavInfo(
     type: string,
@@ -127,7 +133,7 @@ class DirectionInput extends Component<inputProps, inputState> {
             />
           </View>
           <View style={styles.sizeColumn4}>
-            <TouchableOpacity>
+            <TouchableOpacity >
               <Image
                 style={styles.iconSize}
                 source={require("../assets/dots.png")}
@@ -143,32 +149,40 @@ class DirectionInput extends Component<inputProps, inputState> {
         </View>
         <View style={styles.row2}>
           <View style={styles.navOptions}>
-            <Image
-              style={styles.iconSize}
-              source={require("../assets/concordia.png")}
-            />
-            <Text style={styles.optionTxt}>25min</Text>
+            <TouchableOpacity onPress={() => this.props.setIsTransportMethodSelected(transportMode.transit)}>
+              <Image
+                style={styles.iconSize}
+                source={require("../assets/concordia.png")}
+              />
+            </TouchableOpacity>
+            {/* <Text style={styles.optionTxt}>25min</Text> */}
           </View>
           <View style={styles.navOptions}>
-            <Image
-              style={styles.iconSize}
-              source={require("../assets/car.png")}
-            />
-            <Text style={styles.optionTxt}>15min</Text>
+            <TouchableOpacity onPress={() => this.props.setIsTransportMethodSelected(transportMode.driving)}>
+              <Image
+                style={styles.iconSize}
+                source={require("../assets/car.png")}
+              />
+            </TouchableOpacity>
+            {/* <Text style={styles.optionTxt}>15min</Text> */}
           </View>
           <View style={styles.navOptions}>
-            <Image
-              style={styles.iconSize}
-              source={require("../assets/walk.png")}
-            />
-            <Text style={styles.optionTxt}>55min</Text>
+            <TouchableOpacity onPress={() => this.props.setIsTransportMethodSelected(transportMode.walking)}>
+              <Image
+                style={styles.iconSize}
+                source={require("../assets/walk.png")}
+              />
+            </TouchableOpacity>
+            {/* <Text style={styles.optionTxt}>55min</Text> */}
           </View>
           <View style={styles.navOptions}>
-            <Image
-              style={styles.iconSize}
-              source={require("../assets/bike.png")}
-            />
-            <Text style={styles.optionTxt}>35min</Text>
+            <TouchableOpacity onPress={() => this.props.setIsTransportMethodSelected(transportMode.bicycle)}>
+              <Image
+                style={styles.iconSize}
+                source={require("../assets/bike.png")}
+              />
+            </TouchableOpacity>
+            {/* <Text style={styles.optionTxt}>35min</Text> */}
           </View>
         </View>
       </View>

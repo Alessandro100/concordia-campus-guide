@@ -15,17 +15,21 @@ class IndoorUnitPath implements UnitPath {
 
   indoorFloor: IndoorFloor;
 
+  pathInstruction: string;
+
   constructor(
     transportType: transportMode,
     origin: IndoorPOI,
     destination: IndoorPOI,
     indoorFloor: IndoorFloor
+    /* pathInstruction: string */
   ) {
     this.transportType = transportType;
     this.origin = origin;
     this.destination = destination;
     this.indoorFloor = indoorFloor;
     this.pathColor = 'purple';
+    this.pathInstruction = 'dummy string';
   }
 
   displayPath(isIndoor, buildingName?, floorNumber?) {
@@ -39,6 +43,19 @@ class IndoorUnitPath implements UnitPath {
 
     // returns empty html
     return <></>;
+  }
+
+  getPathInstruction(isIndoor, buildingName?, floorNumber?) {
+    if (
+      isIndoor &&
+      this.indoorFloor.floorData.buildingName === buildingName &&
+      String(this.indoorFloor.floorData.floorNumber) === String(floorNumber)
+    ) {
+      return '';
+    }
+
+    // returns empty html
+    return '';
   }
 
   getStartingLocation() {
