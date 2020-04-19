@@ -22,8 +22,8 @@ class GoogleEventComponent extends Component<GoogleEventComponentProps, GoogleEv
         <View>
             <Text>{this.props.campusEvent.title}</Text>
             <Text>{this.props.campusEvent.description}</Text>
-            <Text>{this.props.campusEvent.startDate}</Text>
-            <Text>{this.props.campusEvent.endDate}</Text>
+            <Text>{this.props.campusEvent.startDate.toString()}</Text>
+            <Text>{this.props.campusEvent.endDate.toString()}</Text>
             <Text>{this.props.campusEvent.location}</Text>
         </View>
         );
