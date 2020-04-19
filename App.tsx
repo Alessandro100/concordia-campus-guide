@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
-import MapView, { Marker, Polygon, PROVIDER_GOOGLE } from 'react-native-maps';
+import { View } from 'react-native';
+import MapView, {  PROVIDER_GOOGLE } from 'react-native-maps';
 import CampusToggleButton from './components/CampusToggleButton';
 import ShowDirection from './components/ShowDirection';
 import transportMode from './classes/transportMode';
 import Location from './classes/location';
 import CampusPolygons from './constants/CampusPolygons';
-import Colors from './constants/Colors';
-import OutdoorPOI from './classes/outdoorPOI';
+//import Colors from './constants/Colors';
+//import OutdoorPOI from './classes/outdoorPOI';
 import IndoorFloor from './classes/indoorFloor';
 import PolygonsAndMarkers from './components/PolygonsAndMarkers';
 import IndoorFloorService from './services/indoorFloorService';
-import SearchBar from './components/SearchBar';
+//import SearchBar from './components/SearchBar';
 import BottomDrawerBuilding from './components/BottomDrawerBuilding';
 import Building from './classes/building';
 import { obtainBuildings } from './services/buildingService';
@@ -20,12 +20,13 @@ import CurrentPosition from "./components/CurrentPosition";
 import InputBtn from "./components/DirectionInput";
 import Autocomplete from "./components/AutoCompleteInput";
 import Navbtn from "./components/NavBtn";
+import Menu from "./components/Menu";
 import styles from "./constants/AppStyling";
 import PointOfInterest from './classes/pointOfInterest';
 import ShowBusMarker from './components/ShowBusMarker';
 import ShuttleBusMarkers from './constants/CampusShuttleBusStop';
 import ShowBusSchedule from './components/ShowBusSchedule';
-import SomeInterestPointMarkers from './components/SomeInterestPointMarkers';
+
 type appState = {
   userPosition: Location;
   region: {
@@ -65,7 +66,7 @@ class App extends Component<{}, appState> {
         longitudeDelta: 0.01
       },
       building: null,
-      markers: [],
+      //markers: [],
       polygons: CampusPolygons.slice(0),
       buildings: obtainBuildings(),
       displayInfo: false,
@@ -74,8 +75,8 @@ class App extends Component<{}, appState> {
       startDirection: null,
       endDirection: null,
       indoorFloor: null,
-      start_identifier: "",
-      end_identifier: ""
+      //start_identifier: "",
+     // end_identifier: ""
     };
   }
 
@@ -150,9 +151,9 @@ class App extends Component<{}, appState> {
       userPosition,
       startDirection,
       endDirection,
-      start_identifier,
+     //start_identifier,
       indoorFloor,
-      end_identifier
+      //end_identifier
     } = this.state;
 
     if (displayIndoor === false) {
@@ -169,6 +170,7 @@ class App extends Component<{}, appState> {
             lat={userPosition.getLatitude()}
             lng={userPosition.getLongitude()}
           />
+          <Menu/>
           <CampusToggleButton setMapLocation={this.setMapLocation} />
           <InputBtn
             getNavInfo={this.callbackAllInfo}

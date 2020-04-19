@@ -25,7 +25,7 @@ type appState = {
   };
 
 
-export default class ShowBusMarker extends React.Component <{indoorDisplay,busScheduleDisplay,shuttleBusMarkers}> {
+export default class ShowBusMarker extends React.Component <{indoorDisplay: any, busScheduleDisplay: any,shuttleBusMarkers:any}> {
   constructor(props) {
     super(props);
     
@@ -68,25 +68,3 @@ export default class ShowBusMarker extends React.Component <{indoorDisplay,busSc
   }
 }
 ;
-/*
-<TouchableHighlight
-                style={style1.outDoorNavButton}
-                onPress={() => {
-                this.changeToOutdoorView();}}>
-
-
-{this.state.markers.map((marker) => (
-    <MapView.Marker
-      coordinate={marker.coordinate}
-      title={marker.title}
-      description={marker.description}>
-        <MapView.Callout tooltip style={styles.customView}>
-            <TouchableHighlight onPress= {()=>this.markerClick()} underlayColor='#dddddd'>
-                <View style={styles.calloutText}>
-                    <Text>{marker.title}{"\n"}{marker.description}</Text>
-                </View>
-            </TouchableHighlight>
-          </MapView.Callout>
-      </MapView.Marker>
-      <Image source={busIcon} style={styles.icon} />
-  ))}*/

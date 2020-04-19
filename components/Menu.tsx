@@ -17,6 +17,7 @@ class Menu extends Component<
   {
     showMenu: boolean;
     showEvent: boolean;
+    showBusSchedule: boolean;
     showSettings: boolean;
     buildings: Building[];
     building: Building;
@@ -28,15 +29,13 @@ class Menu extends Component<
     this.state = {
       showMenu: false,
       showEvent: false,
+      showBusSchedule: false,
       showSettings: false,
       buildings: obtainBuildings(),
       building: new Building("", "", null, null, "", null, "H"),
     };
   }
-  // boolean state to show menu (modal)
-  ShowMenu() {
-    this.setState({ showMenu: true });
-  }
+  
   // boolean state to close menu (modal)
   closeMenu() {
     this.setState({ showMenu: false });
@@ -44,6 +43,10 @@ class Menu extends Component<
   // boolean state to close event (modal)
   closeEvents() {
     this.setState({ showEvent: false });
+  }
+
+  closeBusSchedule() {
+    this.setState({ showBusSchedule: false });
   }
   // boolean state to close settings (modal)
   closeSettings() {
@@ -54,21 +57,34 @@ class Menu extends Component<
     this.setState({ showMenu: false });
     this.setState({ showSettings: false });
     this.setState({ showEvent: true });
+    this.setState({ showBusSchedule: false });
+  }
+  switchToBusSchedule() {
+    this.setState({ showMenu: false });
+    this.setState({ showSettings: false });
+    this.setState({ showEvent: false });
+    this.setState({ showBusSchedule: true });
   }
   // closes menu and event and shows settings (modal)
   switchToSettings() {
     this.setState({ showMenu: false });
     this.setState({ showEvent: false });
     this.setState({ showSettings: true });
+    this.setState({ showBusSchedule: false });
   }
   changeBuildingSelected = (itemValue: Building) => {
     this.setState({ building: itemValue });
   };
+  // boolean state to show menu (modal)
+  ShowMenu() {
+    this.setState({ showMenu: true });
+  }
 
   render() {
     const {
       showMenu,
       showEvent,
+      showBusSchedule,
       showSettings,
       buildings,
       building,
@@ -105,7 +121,10 @@ class Menu extends Component<
                 <Text style={styles.syncText}> Sync. Calendar</Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.menuOptions}>
+            <TouchableOpacity 
+               //testID="busScheduleModal"
+               onPress={() => this.switchToBusSchedule()}
+               style={styles.menuOptions}>
               <Image
                 style={styles.iconMenu}
                 source={require("../assets/bus.png")}
@@ -141,6 +160,22 @@ class Menu extends Component<
           </View>
         </Modal>
         {/* Event modal */}
+
+        <Modal animationType="fade" transparent={true} visible={showBusSchedule}>
+          <TouchableOpacity
+            //testID="closeEventModal"
+            onPress={() => this.closeBusSchedule()}
+            style={styles.outsideModal}
+          ></TouchableOpacity>
+          <View style={styles.modalEventSettingsContainer}>
+          <Image
+            style={{ width: 450, height: 520 }}
+            resizeMode="stretch"
+            source={require('./schedule.png')}
+        />
+          </View>
+        </Modal>
+
         <Modal animationType="fade" transparent={true} visible={showEvent}>
           {/* button outside the modal to close event modal (All the screen except the event modal) */}
           <TouchableOpacity
