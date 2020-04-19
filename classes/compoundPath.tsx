@@ -38,18 +38,25 @@ class CompoundPath implements Path {
   }
 
   // based on the parameters specificed, it will return the html to display the instructions
-  getPathInstruction(isInside, buildingName = null, floorNumber = null){
-    let pathInstructions = this.paths.map(path => path.getPathInstruction(isInside, buildingName, floorNumber));
-    const regex1 = /(<b>)/ig;
-    const regex2 = /(<\/b>)/ig;
-    const regex3 = /<div style="font-size:0.9em">/ig;
-    const regex4 = /<\/div>/ig;
-    const regex5 =/<wbr\/>/ig;
-    let i = 1;
-    let instructionList: string[] = pathInstructions.map(function(pathInstruction){
-      return pathInstruction.replace(regex1, '').replace(regex2, '').replace(regex3, ' ').replace(regex4, '').replace(regex5, '')
-    }); 
-    return instructionList;
+  getPathInstruction(isInside, buildingName = null, floorNumber = null) {
+    const pathInstructions = this.paths.map(path =>
+      path.getPathInstruction(isInside, buildingName, floorNumber)
+    );
+    const regex1 = /(<b>)/gi;
+    const regex2 = /(<\/b>)/gi;
+    const regex3 = /<div style="font-size:0.9em">/gi;
+    const regex4 = /<\/div>/gi;
+    const regex5 = /<wbr\/>/gi;
+    const instructionList: string[] = pathInstructions.map(function(pathInstruction) {
+      return pathInstruction
+        .replace(regex1, '')
+        .replace(regex2, '')
+        .replace(regex3, ' ')
+        .replace(regex4, '')
+        .replace(regex5, '');
+    });
+    console.log(instructionList.filter(instruction => instruction !== ''));
+    return instructionList.filter(instruction => instruction !== '');
   }
 }
 

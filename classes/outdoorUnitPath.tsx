@@ -24,7 +24,7 @@ class OutdoorUnitPath implements UnitPath {
     destination: OutdoorPOI,
     pathGraphic: Location,
     pathColor: String,
-    pathInstruction: string,
+    pathInstruction: string
   ) {
     this.transportType = transportType;
     this.origin = origin;
@@ -50,11 +50,12 @@ class OutdoorUnitPath implements UnitPath {
     return <></>;
   }
 
-  getPathInstruction(isIndoor){
-     //console.log(this.pathInstruction);
-     if(!isIndoor){
+  getPathInstruction(isIndoor) {
+    // console.log(this.pathInstruction);
+    if (!isIndoor) {
       return this.pathInstruction;
-     }
+    }
+    return '';
   }
 
   getStartingLocation() {
@@ -76,7 +77,6 @@ class OutdoorUnitPath implements UnitPath {
   getpathColor() {
     return this.pathColor;
   }
-
 }
 
 export default OutdoorUnitPath;

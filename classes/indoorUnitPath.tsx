@@ -21,8 +21,8 @@ class IndoorUnitPath implements UnitPath {
     transportType: transportMode,
     origin: IndoorPOI,
     destination: IndoorPOI,
-    indoorFloor: IndoorFloor,
-    /*pathInstruction: string*/
+    indoorFloor: IndoorFloor
+    /* pathInstruction: string */
   ) {
     this.transportType = transportType;
     this.origin = origin;
@@ -45,8 +45,17 @@ class IndoorUnitPath implements UnitPath {
     return <></>;
   }
 
-  getPathInstruction(isIndoor, buildingName?, floorNumber?){
-    console.log("I am an indoor instruction");
+  getPathInstruction(isIndoor, buildingName?, floorNumber?) {
+    if (
+      isIndoor &&
+      this.indoorFloor.floorData.buildingName === buildingName &&
+      String(this.indoorFloor.floorData.floorNumber) === String(floorNumber)
+    ) {
+      return '';
+    }
+
+    // returns empty html
+    return '';
   }
 
   getStartingLocation() {
